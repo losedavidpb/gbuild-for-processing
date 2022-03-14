@@ -52,6 +52,15 @@ public class GContainer extends GComponent {
     }
     
     /**
+     * Set the background color for container
+     * 
+     * @param value integer value
+     */
+    public void setColor(float value) {
+        this.fillColor = manager().color(value);
+    }
+    
+    /**
      * Add a component to current container
      * 
      * @param component graphical component
@@ -68,7 +77,7 @@ public class GContainer extends GComponent {
      * @return component at i
      */
     public GComponent get(int i) {
-        boolean cond = i >= 0 && this.components.size() < i;
+        boolean cond = i >= 0 && i < this.components.size();
         return cond? this.components.get(i) : null;
     }
   

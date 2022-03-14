@@ -71,6 +71,15 @@ public class GText extends GComponent {
     }
     
     /**
+     * Set the color color for text
+     * 
+     * @param value integer value
+     */
+    public void setColor(float value) {
+        this.textColor = manager().color(value);
+    }
+    
+    /**
      * Specify the size of the text
      * 
      * @param tsize text size
