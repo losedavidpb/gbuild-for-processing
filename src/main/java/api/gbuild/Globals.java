@@ -49,4 +49,7 @@ public class Globals {
      * which is not been hovering by the user
      */
     public static final String CLOSE_NO_ACTIVE_BUTTON = BUTTON_PATH + "close_no_active_button.jpg";
+    
+    // Indicates if a new dialog is currently visible
+    public static boolean newDialog = false;
 }

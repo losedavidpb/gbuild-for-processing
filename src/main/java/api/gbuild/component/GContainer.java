@@ -41,6 +41,15 @@ public class GContainer extends GComponent {
     }
     
     /**
+     * Get the background color for container
+     * 
+     * @return integer value for color
+     */
+    public int color() {
+        return this.fillColor;
+    }
+    
+    /**
      * Set the background color for container
      * 
      * @param r red component
