@@ -70,6 +70,15 @@ public class GContainer extends GComponent {
     }
     
     /**
+     * Get number of components stored
+     * 
+     * @return size of container
+     */
+    public int size() {
+        return this.components.size();
+    }
+    
+    /**
      * Add a component to current container
      * 
      * @param component graphical component

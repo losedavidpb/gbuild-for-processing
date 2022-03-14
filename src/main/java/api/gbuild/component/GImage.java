@@ -21,16 +21,21 @@ public class GImage extends GComponent {
 
     public GImage(PApplet manager, String path, float x, float y, float w, float h) {
         super(manager);
-        this.image = manager.loadImage(path);
+        
         super.pos(x, y);
         super.dim(w, h);
+        
+        if (path != null)
+            this.image = manager.loadImage(path);
     }
   
     public GImage(PApplet manager, GContainer parent, String path, float x, float y, float w, float h) {
         super(manager, parent);
-        this.image = manager.loadImage(path);
         super.pos(x, y);
         super.dim(w, h);
+        
+        if (path != null)
+            this.image = manager.loadImage(path);
     }
     
     /**
@@ -39,7 +44,8 @@ public class GImage extends GComponent {
      * @param path local or external path
      */
     public void setImage(String path) {
-        this.image = manager().loadImage(path);
+        if (path != null)
+            this.image = manager().loadImage(path);
     }
   
     @Override

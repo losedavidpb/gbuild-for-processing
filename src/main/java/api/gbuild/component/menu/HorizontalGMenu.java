@@ -2,7 +2,6 @@ package api.gbuild.component.menu;
 
 import api.gbuild.Globals;
 import api.gbuild.component.GContainer;
-import api.gbuild.sound.GSound;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PShape;
@@ -19,7 +18,6 @@ import processing.core.PVector;
  */
 public class HorizontalGMenu extends GMenu {
     private int colorOption = -1, prevColorOption = -1;
-    private GSound transition;
     
     public HorizontalGMenu(PApplet manager, float x, float y) {
         super(manager, x, y);
@@ -33,15 +31,6 @@ public class HorizontalGMenu extends GMenu {
         prevColorOption = -1;
     }
     
-    /**
-     * Specify the sound when option is selected
-     * 
-     * @param transition 
-     */
-    public void setSound(GSound transition) {
-        this.transition = transition;
-    }
-  
     @Override
     public void draw() {
         if (this.isVisible()) {
@@ -77,13 +66,6 @@ public class HorizontalGMenu extends GMenu {
                             optSelected = true;
                             option.setColor(90, 155, 217);
               
-                            if (prevColorOption != colorOption) {
-                                if (this.transition != null) {
-                                    //transition.amp(0.4);
-                                    transition.play();
-                                }
-                            }
-                
                             prevColorOption = colorOption;
                         }
                     }
