@@ -73,7 +73,6 @@ public class VerticalGMenu extends GMenu {
                 if (option.isSelected()) {
                     optSelected = true;
                     this.colorOption = i;
-                    option.setSelected(false);
                 }
             }
     
