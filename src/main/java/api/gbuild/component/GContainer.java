@@ -1,9 +1,11 @@
 package api.gbuild.component;
 
+import api.gbuild.GColor;
 import api.gbuild.GComponent;
 import java.util.ArrayList;
 import java.util.List;
 import processing.core.PApplet;
+import static processing.core.PApplet.abs;
 import processing.core.PConstants;
 import processing.core.PShape;
 
@@ -22,22 +24,48 @@ import processing.core.PShape;
  */
 public class GContainer extends GComponent {
     protected final List<GComponent> components;
-    private int fillColor;
-  
-    public GContainer(PApplet manager, GContainer parent, float x, float y, float w, float h) {
+    private final GColor color;
+    private boolean noBackground;
+    
+    /**
+     * Create a new instance of a container
+     * 
+     * @param manager Processing manager
+     * @param parent parent component
+     * @param x x component for location
+     * @param y y component for location
+     * @param w w component for dimension
+     * @param h h component for dimension
+     */
+    public GContainer(PApplet manager, GComponent parent, float x, float y, float w, float h) {
         super(manager, parent);
         this.components = new ArrayList<>();
-        this.fillColor = manager.color(255, 255, 255);
+        this.color = new GColor(255, 255, 255);
+        this.noBackground = false;
         super.pos(x, y);
         super.dim(w, h);
     }
   
+    /**
+     * Create a new instance of a container
+     * 
+     * @param manager Processing manager
+     * @param x x component for location
+     * @param y y component for location
+     * @param w w component for dimension
+     * @param h h component for dimension
+     */
     public GContainer(PApplet manager, float x, float y, float w, float h) {
-        super(manager);
-        this.components = new ArrayList<>();
-        this.fillColor = manager.color(255, 255, 255);
-        super.pos(x, y);
-        super.dim(w, h);
+        this(manager, null, x, y, w, h);
+    }
+    
+    /**
+     * Return if container contains a background
+     * 
+     * @return background state
+     */
+    public boolean noBackground() {
+        return this.noBackground;
     }
     
     /**
@@ -46,27 +74,30 @@ public class GContainer extends GComponent {
      * @return integer value for color
      */
     public int color() {
-        return this.fillColor;
+        float[] c = color.color();
+        return manager().color(c[0], c[1], c[2]);
+    }
+    
+    public void setNoBackground(boolean noBackground) {
+        this.noBackground = noBackground;
     }
     
     /**
      * Set the background color for container
      * 
-     * @param r red component
-     * @param g green component
-     * @param b blue component
+     * @param component red, green, and blue component
      */
-    public void setColor(float r, float g, float b) {
-        this.fillColor = manager().color(r, g, b);
+    public void setColor(Float ... component) {
+        this.color.setColor(component);
     }
     
     /**
      * Set the background color for container
      * 
-     * @param value integer value
+     * @param component red, green, and blue component
      */
-    public void setColor(float value) {
-        this.fillColor = manager().color(value);
+    public void setColor(Integer ... component) {
+        this.color.setColor(component);
     }
     
     /**
@@ -104,13 +135,15 @@ public class GContainer extends GComponent {
         if (super.isVisible()) {
             manager().pushMatrix();
             
-            PShape rect = manager().createShape(
-                PConstants.RECT, this.pos().x, this.pos().y,
-                this.dim().x, this.dim().y
-            );
+            if (!noBackground) {
+                PShape rect = manager().createShape(
+                    PConstants.RECT, this.pos().x, this.pos().y,
+                    this.dim().x, this.dim().y
+                );
 
-            rect.setFill(this.fillColor);
-            manager().shape(rect);
+                rect.setFill(this.color());
+                manager().shape(rect);
+            }
 
             for (int i = 0; i < this.components.size(); i++)
                 this.components.get(i).draw();

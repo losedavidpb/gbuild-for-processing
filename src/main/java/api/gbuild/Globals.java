@@ -6,10 +6,6 @@ package api.gbuild;
  * @author David
  */
 public class Globals {
-    // DO NOT MODIFY ANY OF THESE VALUES UNLESS YOU
-    // KNOW EXACTLY WHAT THEY MEAN AND WHAT ARE THE
-    // CONSECUENCIES THAT EXISTS WHEN THEY'RE CHANGED
-    
     private Globals() { }
     
     /**
@@ -50,6 +46,14 @@ public class Globals {
      */
     public static final String CLOSE_NO_ACTIVE_BUTTON = BUTTON_PATH + "close_no_active_button.jpg";
     
-    // Indicates if a new dialog is currently visible
+    /**
+     * Default size for a GText value
+     */
+    public static int TEXT_SIZE = 11;
+    
+    /**
+     * Indicates if a new dialog is currently visible
+     */
     public static boolean newDialog = false;
+    
 }

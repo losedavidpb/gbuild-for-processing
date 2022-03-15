@@ -1,5 +1,6 @@
 package api.gbuild.component.menu;
 
+import api.gbuild.component.GOption;
 import api.gbuild.GComponent;
 import api.gbuild.component.GContainer;
 import processing.core.PApplet;
@@ -11,16 +12,31 @@ import processing.core.PApplet;
  * it is necessary to define subtypes of menus that
  * extends this model.
  * 
- * @author David
+ * @author David Parreño Barbuzano
  */
 public abstract class GMenu extends GContainer {
     protected int spaceValue = 50;
-
+    
+    /**
+     * Create a new instance of a menu
+     * 
+     * @param manager Processing manager
+     * @param x x component for location
+     * @param y y component for location
+     */
     public GMenu(PApplet manager, float x, float y) {
         super(manager, x, y, 0, 0);
     }
 
-    GMenu(PApplet manager, GContainer parent, float x, float y) {
+    /**
+     * Create a new instance of a menu
+     * 
+     * @param manager Processing manager
+     * @param parent component parent
+     * @param x x component for location
+     * @param y y component for location
+     */
+    public GMenu(PApplet manager, GComponent parent, float x, float y) {
         super(manager, parent, x, y, 0, 0);
     }
   

@@ -1,7 +1,10 @@
 package api.gbuild.component;
 
+import api.gbuild.GColor;
 import api.gbuild.GComponent;
+import api.gbuild.Globals;
 import processing.core.PApplet;
+import static processing.core.PApplet.abs;
 import processing.core.PConstants;
 
 /**
@@ -14,31 +17,42 @@ import processing.core.PConstants;
  * to customize a text, these class includes
  * properties for color, size, mode, and align.
  * 
- * @author David
+ * @author David Parreño Barbuzano
  */
 public class GText extends GComponent {
     private int tsize, talign, tmode;
     private String value;
-    private int textColor;
+    private final GColor textColor;
 
-    public GText(PApplet manager, String value, float x, float y) {
-        super(manager);
+    /**
+     * Create a new instance of a text
+     * 
+     * @param manager Processing manager
+     * @param parent component parent
+     * @param value text value
+     * @param x x component for location
+     * @param y y component for location
+     */
+    public GText(PApplet manager, GComponent parent, String value, float x, float y) {
+        super(manager, parent);
         super.pos(x, y);
-        this.textColor = manager.color(255, 255, 255);
+        this.textColor = new GColor(255, 255, 255);
         this.value = value;
-        this.tsize = 11;
+        this.tsize = Globals.TEXT_SIZE;
         this.tmode = PConstants.SHAPE;
         this.talign = PConstants.LEFT;
     }
     
-    public GText(PApplet manager, GContainer parent, String value, float x, float y) {
-        super(manager, parent);
-        super.pos(x, y);
-        this.textColor = manager.color(255, 255, 255);
-        this.value = value;
-        this.tsize = 11;
-        this.tmode = PConstants.SHAPE;
-        this.talign = PConstants.LEFT;
+    /**
+     * Create a new instance of a text
+     * 
+     * @param manager Processing manager
+     * @param value text value
+     * @param x x component for location
+     * @param y y component for location
+     */
+    public GText(PApplet manager, String value, float x, float y) {
+        this(manager, null, value, x, y);
     }
     
     /**
@@ -51,6 +65,33 @@ public class GText extends GComponent {
     }
     
     /**
+     * Get the text size
+     * 
+     * @return text size
+     */
+    public int size() {
+        return this.tsize;
+    }
+    
+    /**
+     * Return the alignment
+     * 
+     * @return text alignment
+     */
+    public int align() {
+        return this.talign;
+    }
+    
+    /**
+     * Return the text mode
+     * 
+     * @return text mode
+     */
+    public int mode() {
+        return this.tmode;
+    }
+    
+    /**
      * Specify the text that will be drawn
      * 
      * @param value text string
@@ -60,23 +101,21 @@ public class GText extends GComponent {
     }
     
     /**
-     * Set the color for text
+     * Set the background color for container
      * 
-     * @param r red component
-     * @param g green component
-     * @param b blue component
+     * @param component red, green, and blue component
      */
-    public void setColor(float r, float g, float b) {
-        this.textColor = manager().color(r, g, b);
+    public void setColor(Float ... component) {
+        this.textColor.setColor(component);
     }
     
     /**
-     * Set the color color for text
+     * Set the background color for container
      * 
-     * @param value integer value
+     * @param component red, green, and blue component
      */
-    public void setColor(float value) {
-        this.textColor = manager().color(value);
+    public void setColor(Integer ... component) {
+        this.textColor.setColor(component);
     }
     
     /**
@@ -113,12 +152,14 @@ public class GText extends GComponent {
     @Override
     public void draw() {
         if (this.isVisible()) {
+            float[] c = textColor.color();
+            
             manager().pushMatrix();
             manager().translate(this.pos().x, this.pos().y);
             manager().textAlign(this.talign);
             manager().textMode(this.tmode);
             manager().textSize(this.tsize);
-            manager().fill(this.textColor);
+            manager().fill(manager().color(c[0], c[1], c[2]));
             manager().text(this.value, 0, 0);
             manager().popMatrix();
         }

@@ -1,11 +1,10 @@
 package api.gbuild.component.menu;
 
-import api.gbuild.Globals;
-import api.gbuild.component.GContainer;
+import api.gbuild.GComponent;
+import api.gbuild.component.GOption;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PShape;
-import processing.core.PVector;
 
 /**
  * This is the implementation of a vertical menu
@@ -17,18 +16,53 @@ import processing.core.PVector;
  * click one of the options, it is necessary to control this state
  */
 public class HorizontalGMenu extends GMenu {
-    private int colorOption = -1, prevColorOption = -1;
+    private int colorOption, diffPosX;
     
+    /**
+     * Create a new instance of a horizontal menu
+     * 
+     * @param manager Processing manager
+     * @param x x component for location
+     * @param y y component for location
+     */
     public HorizontalGMenu(PApplet manager, float x, float y) {
         super(manager, x, y);
         colorOption = -1;
-        prevColorOption = -1;
+        diffPosX = super.spaceValue;
     }
-
-    public HorizontalGMenu(PApplet manager, GContainer parent, float x, float y) {
+    
+    /**
+     * Create a new instance of a menu
+     * 
+     * @param manager Processing manager
+     * @param parent component parent
+     * @param x x component for location
+     * @param y y component for location
+     */
+    public HorizontalGMenu(PApplet manager, GComponent parent, float x, float y) {
         super(manager, parent, x, y);
         colorOption = -1;
-        prevColorOption = -1;
+        diffPosX = super.spaceValue;
+    }
+    
+    @Override
+    public void add(GComponent component) {
+        super.add(component);
+
+        if (component instanceof GOption) {
+            GOption option = (GOption)component;
+            option.pos((float)diffPosX, this.pos().y + 20);
+            diffPosX = (int) (option.pos().x + option.dim().x + super.spaceValue); 
+        }
+    }
+    
+    /**
+     * Return the index of current option
+     * 
+     * @return index of option
+     */
+    public int colorOption() {
+        return this.colorOption;
     }
     
     @Override
@@ -37,7 +71,6 @@ public class HorizontalGMenu extends GMenu {
             super.manager().pushMatrix();
       
             boolean optSelected = false;
-            float diffPosX = this.pos().x;
       
             PShape rect = manager().createShape(
                 PConstants.RECT, this.pos().x, this.pos().y,
@@ -49,39 +82,19 @@ public class HorizontalGMenu extends GMenu {
     
             for (int i = 0; i < this.components.size(); i++) {
                 GOption option = (GOption) this.components.get(i);
-                if (option.isVisible()) option.pos(diffPosX + 20, this.dim().y / 2 + 5);
-        
-                String name = option.value();
-                PVector pos = option.pos();
-        
-                option.setColor(255, 255, 255);
-        
-                // Check if current option has been selected
-                if (!Globals.newDialog) {
-                    float rx = pos.x + 10 * name.length() + this.spaceValue;
-
-                    if (manager().mouseX >= pos.x && manager().mouseX <= rx) {
-                        if (manager().mouseY >= pos.y && manager().mouseY <= pos.y + 30) {
-                            this.colorOption = i;
-                            optSelected = true;
-                            option.setColor(90, 155, 217);
-              
-                            prevColorOption = colorOption;
-                        }
-                    }
-                }
-        
                 option.draw();
-                diffPosX += 10 * name.length() + this.spaceValue;
+                
+                if (option.isSelected()) {
+                    optSelected = true;
+                    this.colorOption = i;
+                    option.setSelected(false);
+                }
             }
     
             // Any option has been selected by the mouse.
             // So we prevent the color selection by restarting
             // current option marked as hovered
-            if (!optSelected) {
-                this.prevColorOption = -1;
-                this.colorOption = -1;
-            }
+            if (!optSelected) this.colorOption = -1;
     
             manager().popMatrix();
         }
