@@ -1,22 +1,39 @@
 package api.gbuild.component.menu;
 
 import api.gbuild.GComponent;
-import api.gbuild.component.GOption;
+import api.gbuild.component.button.GButtonOption;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PShape;
 
 /**
- * This is the implementation of a vertical menu
+ * <p>
+ * Horizontal Menu with clickable options
+ * </p>
  * 
- * The options included at this menu would be colored differently
- * when user hover the mouse pointer over them.
+ * <p>
+ * This class is the implementation of a menu with
+ * clickable options that are distributed horizontally.
+ * </p>
  * 
- * Since this component does not incorporate any action when user
- * click one of the options, it is necessary to control this state
+ * @author David Parreño Barbuzano
  */
 public class HorizontalGMenu extends GMenu {
-    private int colorOption, diffPosX;
+    private int diffPosX;
+    
+    /**
+     * Create a new instance of a horizontal menu
+     * 
+     * @param manager Processing manager
+     * @param parent component parent
+     * @param x x component for location
+     * @param y y component for location
+     * @see GMenu#GMenu(processing.core.PApplet, api.gbuild.GComponent, float, float) 
+     */
+    public HorizontalGMenu(PApplet manager, GComponent parent, float x, float y) {
+        super(manager, parent, x, y);
+        diffPosX = super.spaceValue;
+    }
     
     /**
      * Create a new instance of a horizontal menu
@@ -24,45 +41,21 @@ public class HorizontalGMenu extends GMenu {
      * @param manager Processing manager
      * @param x x component for location
      * @param y y component for location
+     * @see GMenu#GMenu(processing.core.PApplet, float, float) 
      */
     public HorizontalGMenu(PApplet manager, float x, float y) {
-        super(manager, x, y);
-        colorOption = -1;
-        diffPosX = super.spaceValue;
-    }
-    
-    /**
-     * Create a new instance of a menu
-     * 
-     * @param manager Processing manager
-     * @param parent component parent
-     * @param x x component for location
-     * @param y y component for location
-     */
-    public HorizontalGMenu(PApplet manager, GComponent parent, float x, float y) {
-        super(manager, parent, x, y);
-        colorOption = -1;
-        diffPosX = super.spaceValue;
+        this(manager, null, x, y);
     }
     
     @Override
     public void add(GComponent component) {
-        super.add(component);
-
-        if (component instanceof GOption) {
-            GOption option = (GOption)component;
+        if (component instanceof GButtonOption) {
+            GButtonOption option = (GButtonOption)component;
             option.pos((float)diffPosX, this.pos().y + 20);
             diffPosX = (int) (option.pos().x + option.dim().x + super.spaceValue); 
+            
+            super.add(component);
         }
-    }
-    
-    /**
-     * Return the index of current option
-     * 
-     * @return index of option
-     */
-    public int colorOption() {
-        return this.colorOption;
     }
     
     @Override
@@ -81,19 +74,19 @@ public class HorizontalGMenu extends GMenu {
             manager().shape(rect);
     
             for (int i = 0; i < this.components.size(); i++) {
-                GOption option = (GOption) this.components.get(i);
+                GButtonOption option = (GButtonOption) this.components.get(i);
                 option.draw();
                 
                 if (option.isSelected()) {
                     optSelected = true;
-                    this.colorOption = i;
+                    super.setColorOption(i);
                 }
             }
     
             // Any option has been selected by the mouse.
             // So we prevent the color selection by restarting
             // current option marked as hovered
-            if (!optSelected) this.colorOption = -1;
+            if (!optSelected) setColorOption(-1);
     
             manager().popMatrix();
         }

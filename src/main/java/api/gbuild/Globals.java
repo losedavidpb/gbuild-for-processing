@@ -1,59 +1,50 @@
 package api.gbuild;
 
 /**
- * Public constants for gBuild
+ * <p>
+ * Public constants and variables for gBuild components
+ * </p>
  * 
- * @author David
+ * <p>
+ * gBuild includes lots of default values for the attributes of
+ * UI components, as well as variables that are necessary to
+ * implements events on Processing. This class constains all
+ * constants and variables that uses gBuild and the developer
+ * at Processing language evironment.
+ * </p>
+ * 
+ * <p>
+ * Some of the variables and constants of gBuild can be customized,
+ * but you shouldn't apply any modifications unless you know what
+ * are the consecuencies of your changes
+ * </p>
+ * 
+ * <p>
+ * Talking about the use of this class, all variables and constants
+ * are static and public, and it is not possible to create a new
+ * instance of a Globals class, so object attributes or methods
+ * are not allowed.
+ * </p>
+ * 
+ * @author David Parreño Barbuzano
  */
 public class Globals {
     private Globals() { }
     
     /**
-     * Path for the folder which contains all the data that
-     * gBuild uses when media will be managed
-     * 
-     * All files should be stored inside this file path
+     * Default value for text size
      */
-    public static final String DATA_PATH = "data\\";
+    public static final int TEXT_SIZE = 11;
     
     /**
-     * Path for the folder which contains all the images
-     * used when gBuild is been executed
+     * Space between each option of a menu
      */
-    public static final String IMAGE_PATH = DATA_PATH + "images\\";
-    
+    public static final int MENU_SPACE = 50;
+            
     /**
-     * Path for the folder which contains all the sounds
-     * used when gBuild is been executed
-     */
-    public static final String SOUND_PATH = DATA_PATH + "sounds\\";
-    
-    /**
-     * Path for the folder which contains all the images
-     * associated to graphical buttons
-     */
-    public static final String BUTTON_PATH = IMAGE_PATH + "buttons\\";
-    
-    /**
-     * Path for the the default image of a close button
-     * which is been hovering by the user
-     */
-    public static final String CLOSE_ACTIVE_BUTTON = BUTTON_PATH + "close_active_button.jpg";
-    
-    /**
-     * Path for the the default image of a close button
-     * which is not been hovering by the user
-     */
-    public static final String CLOSE_NO_ACTIVE_BUTTON = BUTTON_PATH + "close_no_active_button.jpg";
-    
-    /**
-     * Default size for a GText value
-     */
-    public static int TEXT_SIZE = 11;
-    
-    /**
-     * Indicates if a new dialog is currently visible
+     * Specifies if a new dialog was created and it's
+     * visible for user. This variables offers a way
+     * to manage modal option for dialogs
      */
     public static boolean newDialog = false;
-    
 }

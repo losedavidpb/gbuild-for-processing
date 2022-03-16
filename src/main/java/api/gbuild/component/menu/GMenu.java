@@ -1,33 +1,28 @@
 package api.gbuild.component.menu;
 
-import api.gbuild.component.GOption;
 import api.gbuild.GComponent;
-import api.gbuild.component.GContainer;
+import api.gbuild.Globals;
+import api.gbuild.component.GPanel;
+import api.gbuild.component.button.GButtonOption;
 import processing.core.PApplet;
 
 /**
- * Definition of a menu with clickable options
+ * <p>
+ * Menu formed by a set of options
+ * </p>
  * 
- * Since menus can be defined in different directions,
- * it is necessary to define subtypes of menus that
- * extends this model.
+ * <p>
+ * This is the implementation of a menu that contains
+ * lots of options that are clickable and are associated
+ * to a key value which actives an event.
+ * </p>
  * 
  * @author David Parreño Barbuzano
  */
-public abstract class GMenu extends GContainer {
-    protected int spaceValue = 50;
+public abstract class GMenu extends GPanel {
+    protected int spaceValue = Globals.MENU_SPACE;
+    private int colorOption;
     
-    /**
-     * Create a new instance of a menu
-     * 
-     * @param manager Processing manager
-     * @param x x component for location
-     * @param y y component for location
-     */
-    public GMenu(PApplet manager, float x, float y) {
-        super(manager, x, y, 0, 0);
-    }
-
     /**
      * Create a new instance of a menu
      * 
@@ -35,24 +30,65 @@ public abstract class GMenu extends GContainer {
      * @param parent component parent
      * @param x x component for location
      * @param y y component for location
+     * @see GPanel#GPanel(processing.core.PApplet, api.gbuild.GComponent, float, float) 
      */
     public GMenu(PApplet manager, GComponent parent, float x, float y) {
-        super(manager, parent, x, y, 0, 0);
+        super(manager, parent, x, y);
+        this.colorOption = -1;
+    }
+    
+    /**
+     * Create a new instance of a menu
+     * 
+     * @param manager Processing manager
+     * @param x x component for location
+     * @param y y component for location
+     * @see GPanel#GPanel(processing.core.PApplet, float, float) 
+     */
+    public GMenu(PApplet manager, float x, float y) {
+        this(manager, null, x, y);
     }
   
     @Override
     public void add(GComponent component) {
-        if (component instanceof GOption)
+        if (component instanceof GButtonOption)
             super.components.add(component);
     }
     
     /**
-     * Set space between options
+     * Get the space between options
      * 
-     * @param spaceValue value for space width
+     * @return spaceValue value for space between options
      */
-    void setSpace(int spaceValue) {
+    public int space() {
+        return this.spaceValue;
+    }
+    
+    /**
+     * Return the index of current option
+     * 
+     * @return index of option
+     */
+    public int colorOption() {
+        return this.colorOption;
+    }
+    
+    /**
+     * Set the space between options
+     * 
+     * @param spaceValue value for space between options
+     */
+    public void setSpace(int spaceValue) {
         this.spaceValue = spaceValue;
+    }
+    
+    /**
+     * Set the index of current option
+     * 
+     * @param colorOption index of option
+     */
+    protected void setColorOption(int colorOption) {
+        this.colorOption = colorOption;
     }
     
     /**
@@ -61,14 +97,17 @@ public abstract class GMenu extends GContainer {
      * @param name identifier for current option
      * @param isVisible visible state
      */
-    void setVisible(String name, boolean isVisible) {
+    public void setVisible(String name, boolean isVisible) {
         for (int i = 0; i < this.components.size(); i++) {
-            GOption option = (GOption)this.components.get(i);
-
+            GButtonOption option = (GButtonOption)this.components.get(i);
+                       
             if (option.value().equals(name)) {
                 option.setVisible(isVisible);
                 return;
             }
         }
     }
+    
+    @Override
+    public abstract void draw();
 }

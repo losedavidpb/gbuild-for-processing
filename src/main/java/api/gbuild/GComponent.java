@@ -4,13 +4,24 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 /**
- * Definition of a graphical component.
+ * <p>
+ * General definition of a gBuild UI component
+ * </p>
  * 
- * In gBuild, graphical components are those figures which
- * are drawn in Processing using basic primitives. Normally,
- * each component will have a location and dimension defined,
- * but it is possible to define these characteristics based
- * on parent or other components.
+ * <p>
+ * Since Processing figures are drawn at a specific location
+ * and dimension, this class considers a component as the set of
+ * 2D/3D primitives or figures located at a position, with an anchor
+ * and length, that can be visible or hided for user.
+ * </p>
+ * 
+ * <p>
+ * Location is defined as a (x, y) position which depends on the parent
+ * of the component. This means that the position would always be relative
+ * to the parent, so (x, y) location is equal to (x_p + x_c, y_p + y_c),
+ * where (x_p, y_p) is the parent's position and (x_c, y_c) is the initial
+ * position of the component.
+ * </p>
  * 
  * @author David Parreño Barbuzano
  */
@@ -21,7 +32,19 @@ public abstract class GComponent {
     private boolean isVisible;
     
     /**
-     * Create a new default component
+     * Create a new gBuild component
+     * 
+     * <p>
+     * Normally, components use basic Processing functions
+     * to draw or customize its properties. In order to have
+     * this control, it is necessary to pass the PApplet that
+     * includes some of these features.
+     * </p>
+     * 
+     * <p>
+     * As an use example, you can create a component at a
+     * Processing sketch passing "this" for the PApplet.
+     * </p>
      * 
      * @param manager Processing manager
      */
@@ -34,10 +57,17 @@ public abstract class GComponent {
     }
     
     /**
-     * Create a new default component
+     * Create a new gBuild component
+     * 
+     * <p>
+     * Components on gBuild can be related to another one which
+     * will be named as its parent. This means that some properties,
+     * such as the location, would depend on the parent.
+     * </p>
      * 
      * @param manager Processing manager
-     * @param parent parent of current component
+     * @param parent parent for current component
+     * @see GComponent#GComponent(processing.core.PApplet) 
      */
     public GComponent(PApplet manager, GComponent parent) {
         this.manager = manager;
@@ -52,21 +82,41 @@ public abstract class GComponent {
      * 
      * @return Processing applet
      */
+    
+    /**
+     * Get the PApplet for current component
+     * 
+     * <p>
+     * Normally, the PApplet associated to a component is
+     * the same for other ones, so this variable cannot be
+     * modified by the developer.
+     * </p>
+     * 
+     * @return Processing manager
+     * @see GComponent#GComponent(processing.core.PApplet) 
+     */
     public PApplet manager() {
         return this.manager;
     }
     
     /**
-     * Get the component parent for current component
+     * Get the parent for current component
      * 
      * @return component parent
+     * @see GComponent#GComponent(processing.core.PApplet, api.gbuild.GComponent) 
      */
     public GComponent parent() {
         return this.parent;
     }
     
     /**
-     * Check if component is visible
+     * Check if component is visible for user
+     * 
+     * <p>
+     * A component would be draw whether it's visible
+     * for user, for do not forget to check this state
+     * before drawing a set of components.
+     * </p>
      * 
      * @return visible state
      */
@@ -75,16 +125,20 @@ public abstract class GComponent {
     }
 
     /**
-     * Specify the location for current component
+     * Specify the location for component
      * 
+     * <p>
      * It is possible to define the location in
      * three different ways:
      * 
-     * 1) pos(x, y) when (x, y) will be set
-     * 2) pos(x) when x will be set
-     * 3) pos(null, y) when y will be set
+     *  <ol>
+     *      <li>pos(x, y) when (x, y) will be set</li>
+     *      <li>pos(x) when x will be set</li>
+     *      <li>pos(null, y) when y will be set</li>
+     *  </ol>
+     * </p>
      * 
-     * @param coords coordinates (x, y)
+     * @param coords integer coordinates (x, y)
      */
     public void pos(Integer ... coords) {
         if (coords.length >= 1 && coords.length <= 2) {
@@ -101,16 +155,20 @@ public abstract class GComponent {
     }
 
     /**
-     * Specify the location for current component
+     * Specify the location for component
      * 
+     * <p>
      * It is possible to define the location in
      * three different ways:
      * 
-     * 1) pos(x, y) when (x, y) will be set
-     * 2) pos(x) when x will be set
-     * 3) pos(null, y) when y will be set
+     *  <ol>
+     *      <li>pos(x, y) when (x, y) will be set</li>
+     *      <li>pos(x) when x will be set</li>
+     *      <li>pos(null, y) when y will be set</li>
+     *  </ol>
+     * </p>
      * 
-     * @param coords coordinates (x, y)
+     * @param coords float coordinates (x, y)
      */
     public void pos(Float ... coords) {
         if (coords.length >= 1 && coords.length <= 2) {
@@ -127,16 +185,20 @@ public abstract class GComponent {
     }
 
     /**
-     * Specify the dimension for current component.
+     * Specify the dimension for component.
      * 
+     * <p>
      * It is possible to define the dimension in
      * three different ways:
      * 
-     *  1) dim(w, h) when (w, h) will be set
-     *  2) dim(w) when w will be set
-     *  3) dim(null, h) when h will be set
+     *  <ol>
+     *      <li>dim(w, h) when (w, h) will be set</li>
+     *      <li>dim(w) when w will be set</li>
+     *      <li>dim(null, h) when h will be set</li>
+     *  </ol>
+     * </p>
      * 
-     * @param dimensions dimension (w, h)
+     * @param dimensions integer dimensions (w, h)
      */
     public void dim(Integer ... dimensions) {
         if (dimensions.length >= 1 && dimensions.length <= 2) {
@@ -153,16 +215,20 @@ public abstract class GComponent {
     }
 
     /**
-     * Specify the dimension for current component.
+     * Specify the dimension for component.
      * 
+     * <p>
      * It is possible to define the dimension in
      * three different ways:
      * 
-     *  1) dim(w, h) when (w, h) will be set
-     *  2) dim(w) when w will be set
-     *  3) dim(null, h) when h will be set
+     *  <ol>
+     *      <li>dim(w, h) when (w, h) will be set</li>
+     *      <li>dim(w) when w will be set</li>
+     *      <li>dim(null, h) when h will be set</li>
+     *  </ol>
+     * </p>
      * 
-     * @param dimensions dimension (w, h)
+     * @param dimensions float dimensions (w, h)
      */
     public void dim(Float ... dimensions) {
         if (dimensions.length >= 1 && dimensions.length <= 2) {
@@ -179,13 +245,23 @@ public abstract class GComponent {
     }
     
     /**
-     * Return the location for current component.
+     * Return the location for component.
      * 
-     * It is important to know that the vector that is
-     * returned is a copy of current attribute, so you
-     * cannot change the location using this variable
+     * <p>
+     * The location of the component is always relative
+     * to the parent's location, so define it's position
+     * taking this into account.
+     * </p>
      * 
-     * @return a new instance for current position
+     * <p>
+     * In order to avoid problem for pointer reference, the
+     * vector returned would be a new instance of the attribute,
+     * since you cannot change the location unless you use setters
+     * </p>
+     * 
+     * @return a new instance for position
+     * @see GComponent#pos(java.lang.Float...)
+     * @see GComponent#pos(java.lang.Integer...)
      */
     public PVector pos() {
         if (parent == null)
@@ -196,15 +272,35 @@ public abstract class GComponent {
             this.parent.pos().y + this.pos.y
         );
     }
+    
+    /**
+     * Return the location for component.
+     * 
+     * <p>
+     * This method is an extension of the other getter for location,
+     * since it offers to developers the possibility to get the
+     * initial value for the position without the consideration
+     * of the component's parent.
+     * </p>
+     * 
+     * @param noParent check if parent would be considered
+     * @return a new instance for position
+     * @see GComponent#pos()
+     */
+    public PVector pos(boolean noParent) {
+        return !noParent? pos() : new PVector(this.pos.x, this.pos.y);
+    }
 
     /**
-     * Return the dimension for current component.
+     * Return the dimension for component.
      * 
-     * It is important to know that the vector that is
-     * returned is a copy of current attribute, so you
-     * cannot change the dimension using this variable
+     * <p>
+     * In order to avoid problem for pointer reference, the
+     * vector returned would be a new instance of the attribute,
+     * since you cannot change the dimension unless you use setters
+     * </p>
      * 
-     * @return a new instance for current dimension 
+     * @return a new instance for dimension
      */
     public PVector dim() {
         return new PVector(
@@ -213,23 +309,34 @@ public abstract class GComponent {
     }
 
     /**
-     * Specify if current component will be visible.
+     * Specify if component will be visible.
      * 
-     * The draw method would hide the component
-     * whether is called setVisible(false)
+     * <p>
+     * This method offers the possibility to indicate if
+     * component would be visible for user when it is drawn
+     * on the screen.
+     * </p>
      * 
-     * @param isVisible variable to specify if component is visible
+     * @param isVisible visible state
      */
     public void setVisible(boolean isVisible) {
         this.isVisible = isVisible;
     }
 
     /**
-     * Draw current component
+     * Draw component on the screen
      * 
-     * The drawing would be affected by the
-     * visible state of the component, that
-     * could be customized using setVisible
+     * <p>
+     * This method would drawn the component taking into
+     * account all the customization done before.
+     * </p>
+     * 
+     * <p>
+     * It is important to notice that component would not
+     * be drawn if visible state is not true.
+     * </p>
+     * 
+     * @see GComponent#isVisible()
      */
     public abstract void draw();
 }

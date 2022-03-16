@@ -4,18 +4,30 @@ import api.gbuild.GColor;
 import api.gbuild.GComponent;
 import api.gbuild.Globals;
 import processing.core.PApplet;
-import static processing.core.PApplet.abs;
 import processing.core.PConstants;
 
 /**
- * Component defined by a text.
+ * <p>
+ * Component defined with a text
+ * </p>
  * 
- * This type of simple component draws at a
- * specific location a text.
+ * <p>
+ * Processing language evironment does not include an explicit data
+ * type for texts, but it offers lots of functions that allows to
+ * define properties for texts that will be drawn. This class was
+ * designed in order to incorporate texts as a component that can
+ * be modified with the equivalent Processing functions
+ * </p>
  * 
- * Since Processing offers different functions
- * to customize a text, these class includes
- * properties for color, size, mode, and align.
+ * <p>
+ * This release does include the possibility to define the font for
+ * texts, but this will be implemented for future revisions.
+ * </p>
+ * 
+ * <p>
+ *  For more information about text, click
+ *  <a href="https://processing.org/reference/text_.html">here</a>
+ * </p>
  * 
  * @author David Parreño Barbuzano
  */
@@ -32,6 +44,7 @@ public class GText extends GComponent {
      * @param value text value
      * @param x x component for location
      * @param y y component for location
+     * @see GComponent#GComponent(processing.core.PApplet, api.gbuild.GComponent) 
      */
     public GText(PApplet manager, GComponent parent, String value, float x, float y) {
         super(manager, parent);
@@ -50,13 +63,14 @@ public class GText extends GComponent {
      * @param value text value
      * @param x x component for location
      * @param y y component for location
+     * @see GComponent#GComponent(processing.core.PApplet) 
      */
     public GText(PApplet manager, String value, float x, float y) {
         this(manager, null, value, x, y);
     }
     
     /**
-     * Get the text value that will be drawn
+     * Get the text that will be drawn
      * 
      * @return text string
      */
@@ -65,7 +79,16 @@ public class GText extends GComponent {
     }
     
     /**
-     * Get the text size
+     * Get the size for text component
+     * 
+     * <p>
+     * Text size is measured in units of pixels
+     * </p>
+     * 
+     * <p>
+     *  Fore more information about text alignment, click
+     *  <a href="https://processing.org/reference/textSize_.html">here</a>
+     * </p>
      * 
      * @return text size
      */
@@ -74,7 +97,12 @@ public class GText extends GComponent {
     }
     
     /**
-     * Return the alignment
+     * Get the alignment for text component
+     * 
+     * <p>
+     *  For more information about text alignment, click
+     *  <a href="https://processing.org/reference/textAlign_.html">here</a>
+     * </p>
      * 
      * @return text alignment
      */
@@ -83,9 +111,15 @@ public class GText extends GComponent {
     }
     
     /**
-     * Return the text mode
+     * Get the mode for text component
+     * 
+     * <p>
+     *  For more information about text mode, click
+     *  <a href="https://processing.org/reference/textMode_.html">here</a>
+     * </p>
      * 
      * @return text mode
+     * @see GText#setMode(int)
      */
     public int mode() {
         return this.tmode;
@@ -101,18 +135,20 @@ public class GText extends GComponent {
     }
     
     /**
-     * Set the background color for container
+     * Set the background color for text
      * 
      * @param component red, green, and blue component
+     * @see GColor#setColor(java.lang.Float...)
      */
     public void setColor(Float ... component) {
         this.textColor.setColor(component);
     }
     
     /**
-     * Set the background color for container
+     * Set the background color for text
      * 
      * @param component red, green, and blue component
+     * @see GColor#setColor(java.lang.Integer...)
      */
     public void setColor(Integer ... component) {
         this.textColor.setColor(component);
@@ -120,6 +156,15 @@ public class GText extends GComponent {
     
     /**
      * Specify the size of the text
+     * 
+     * <p>
+     *  Text size is measured in units of pixels
+     * </p>
+     * 
+     * <p>
+     *  Fore more information about text alignment, click
+     *  <a href="https://processing.org/reference/textSize_.html">here</a>
+     * </p>
      * 
      * @param tsize text size
      */
@@ -129,9 +174,18 @@ public class GText extends GComponent {
     
     /**
      * Specify the alignment of the text.
-     * Available values are LEFT, RIGHT, and CENTER
      * 
-     * @param talign alignment
+     * <p>
+     * Available values are LEFT, RIGHT, and CENTER, so the modification
+     * would not be done if the passed value is not one of these values
+     * </p>
+     * 
+     * <p>
+     *  For more information about text alignment, click
+     *  <a href="https://processing.org/reference/textAlign_.html">here</a>
+     * </p>
+     * 
+     * @param talign text alignment
      */
     public void setAlign(int talign) {
         boolean cond = talign == PConstants.LEFT || talign == PConstants.RIGHT || talign == PConstants.CENTER;
@@ -141,6 +195,16 @@ public class GText extends GComponent {
     /**
      * Specify the mode of the text.
      * Available values are MODEL and SHAPE
+     * 
+     * <p>
+     * Available values are MODEL and SHAPE, so the modification
+     * would not be done if the passed value is not one of these values 
+     * </p>
+     * 
+     * <p>
+     *  For more information about text alignment, click
+     *  <a href="https://processing.org/reference/textMode_.html">here</a>
+     * </p>
      * 
      * @param tmode text mode
      */
