@@ -1,7 +1,7 @@
 package api.gbuild.component.dialog;
 
-import api.gbuild.GComponent;
 import api.gbuild.Globals;
+import api.gbuild.component.GComponent;
 import api.gbuild.component.GPanel;
 import api.gbuild.component.GText;
 import api.gbuild.component.button.GButtonClose;
@@ -73,14 +73,13 @@ public class GDialog extends GComponent {
         );
         
         closeButton.dim(20, 20);
-        closeButton.setRawColor(255, 255, 25);
-        closeButton.setHoverColor(255, 255, 255);
         
         float[] c = closeButton.rawColor();
-        closeButton.setBackground(c[0], c[1], c[2]);
+        closeButton.setBackgroundColor(c[0], c[1], c[2]);
         
         this.top.add(closeButton);
         
+        this.top.dim(this.top.dim().x + 10);
         super.pos(this.top.pos().x, this.top.pos().y);
         super.dim(this.top.dim().x, this.top.dim().y);
         
@@ -218,7 +217,7 @@ public class GDialog extends GComponent {
             this.move();
             
             this.top.draw();
-            if (this.bottom != null) this.bottom.draw();
+            this.bottom.draw();
             
             manager().popMatrix();
         } else Globals.newDialog = false;

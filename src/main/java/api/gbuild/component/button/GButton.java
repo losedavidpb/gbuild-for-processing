@@ -1,7 +1,7 @@
 package api.gbuild.component.button;
 
 import api.gbuild.GColor;
-import api.gbuild.GComponent;
+import api.gbuild.component.GComponent;
 import api.gbuild.component.GPanel;
 import processing.core.PApplet;
 
@@ -178,12 +178,31 @@ public abstract class GButton extends GComponent {
     }
     
     /**
+     * Return if button contains a background
+     * 
+     * @return background state
+     */
+    public boolean isTransparent() {
+        return this.content.isTransparent();
+    }
+    
+    /**
+     * Specify if button has a transparent background
+     * 
+     * @param transparency state of the transparency
+     * @see GButton#isTransparent() 
+     */
+    public void setTransparency(boolean transparency) {
+        this.content.setTransparency(transparency);
+    }
+    
+    /**
      * Set the background color for the button
      * 
      * @param color red, green, and blue component
      * @see GButton#backgroundColor()
      */
-    public void setBackground(Float ... color) {
+    public void setBackgroundColor(Float ... color) {
         this.content.setColor(color);
     }
     
@@ -193,7 +212,7 @@ public abstract class GButton extends GComponent {
      * @param color red, green, and blue component
      * @see GButton#backgroundColor()
      */
-    public void setBackground(Integer ... color) {
+    public void setBackgroundColor(Integer ... color) {
         this.content.setColor(color);
     }
 

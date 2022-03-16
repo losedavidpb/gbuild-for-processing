@@ -1,6 +1,6 @@
 package api.gbuild.component.menu;
 
-import api.gbuild.GComponent;
+import api.gbuild.component.GComponent;
 import api.gbuild.Globals;
 import api.gbuild.component.GPanel;
 import api.gbuild.component.button.GButtonOption;

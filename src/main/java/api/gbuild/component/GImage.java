@@ -1,6 +1,5 @@
 package api.gbuild.component;
 
-import api.gbuild.GComponent;
 import processing.core.PApplet;
 import processing.core.PImage;
 

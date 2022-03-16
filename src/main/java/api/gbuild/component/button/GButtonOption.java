@@ -1,6 +1,6 @@
 package api.gbuild.component.button;
 
-import api.gbuild.GComponent;
+import api.gbuild.component.GComponent;
 import processing.core.PApplet;
 
 /**
@@ -32,14 +32,12 @@ public class GButtonOption extends GButtonWithText {
      * 
      * @param manager Processing manager
      * @param parent component parent
-     * @param x x component for location
-     * @param y y component for location
      * @param value text value
      * @param keyValue key value
      * @see GButton#GButton(processing.core.PApplet, float, float) 
      */
-    public GButtonOption(PApplet manager, GComponent parent, float x, float y, String value, char keyValue) {
-        super(manager, parent, x, y, value);
+    public GButtonOption(PApplet manager, GComponent parent, String value, char keyValue) {
+        super(manager, parent, 0, 0, value);
         this.keyValue = keyValue;
     }
     
@@ -47,14 +45,12 @@ public class GButtonOption extends GButtonWithText {
      * Create a new instance of a button
      * 
      * @param manager Processing manager
-     * @param x x component for location
-     * @param y y component for location
      * @param value text value
      * @param keyValue key value
      * @see GButton#GButton(processing.core.PApplet, float, float) 
      */
-    public GButtonOption(PApplet manager, float x, float y, String value, char keyValue) {
-        this(manager, null, x, y, value, keyValue);
+    public GButtonOption(PApplet manager, String value, char keyValue) {
+        this(manager, null, value, keyValue);
     }
 
     /**

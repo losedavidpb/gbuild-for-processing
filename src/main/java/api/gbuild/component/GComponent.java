@@ -1,4 +1,4 @@
-package api.gbuild;
+package api.gbuild.component;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -136,7 +136,6 @@ public abstract class GComponent {
      *      <li>pos(x) when x will be set</li>
      *      <li>pos(null, y) when y will be set</li>
      *  </ol>
-     * </p>
      * 
      * @param coords integer coordinates (x, y)
      */
@@ -166,7 +165,6 @@ public abstract class GComponent {
      *      <li>pos(x) when x will be set</li>
      *      <li>pos(null, y) when y will be set</li>
      *  </ol>
-     * </p>
      * 
      * @param coords float coordinates (x, y)
      */
@@ -196,7 +194,6 @@ public abstract class GComponent {
      *      <li>dim(w) when w will be set</li>
      *      <li>dim(null, h) when h will be set</li>
      *  </ol>
-     * </p>
      * 
      * @param dimensions integer dimensions (w, h)
      */
@@ -226,7 +223,6 @@ public abstract class GComponent {
      *      <li>dim(w) when w will be set</li>
      *      <li>dim(null, h) when h will be set</li>
      *  </ol>
-     * </p>
      * 
      * @param dimensions float dimensions (w, h)
      */

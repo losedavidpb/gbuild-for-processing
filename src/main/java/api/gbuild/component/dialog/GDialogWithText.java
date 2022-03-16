@@ -32,7 +32,7 @@ public class GDialogWithText extends GDialog {
         int diffPosY = 20;
         
         for (String line : message.split("\n")) {
-            GText text = new GText(manager, super.bottom(), line, 0, diffPosY);
+            GText text = new GText(manager, super.bottom(), line, 10, diffPosY);
             text.setColor(0, 0, 0);
             text.setSize(20);
             super.bottom().add(text);

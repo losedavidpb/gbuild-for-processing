@@ -1,44 +1,53 @@
-## How to install gBuild
+# gBuild - Graphical library builder for Processing (v.2.0.0 [unreleased])
+by David Parreño Barbuzano
 
-### Install with the Contribution Manager
+gBuild is a Processing library that provides useful tools to construct UI components
+such as dialogs, menus, and so on. To do this, this library includes basic classes
+on which you can customize and build nice graphical components.
 
-Add contributed Libraries by selecting the menu item _Sketch_ → _Import Library..._ → _Add Library..._ 
-This will open the Contribution Manager, where you can browse for gBuild, or any other Library you want to install.
+## Requirements
 
-Not all available Libraries have been converted to show up in this menu. If a Library isn't there, 
-it will need to be installed manually by following the instructions below.
+- __Platform:__ Windows 10 or 11
+- __Environment:__ preferable Processing 4, but it could be compatible for older versions
 
-### Manual Install
+## Examples
 
-Contributed Libraries may be downloaded separately and manually placed within the `libraries` folder of your Processing 
-sketchbook. To find (and change) the Processing sketchbook location on your computer, open the Preferences window from 
-the Processing application (PDE) and look for the "Sketchbook location" item at the top.
+You can find some examples of use of this library at the following links:
 
-By default the following locations are used for your sketchbook folder: 
-  * For Mac users, the sketchbook folder is located inside `~/Documents/Processing` 
-  * For Windows users, the sketchbook folder is located inside `My Documents/Processing`
+- For panels: https://github.com/losedavidpb/gbuild-for-processing/examples/blob/main/panel
+- For dialogs: https://github.com/losedavidpb/gbuild-for-processing/blob/main/examples/dialog
+- For menus: https://github.com/losedavidpb/gbuild-for-processing/blob/main/examples/menu
 
-Download gBuild from https://github.com/losedavidpb/gbuild-for-processing
-
-Unzip and copy the contributed Library's folder into the `libraries` folder in the Processing sketchbook. You will need to create
-this `libraries` folder if it does not exist.
-
-The folder structure for Library gBuild should be as follows:
+The following code is a simple example of gBuild:
 
 ```
-Processing
-  libraries
-    gBuild
-      examples
-      library
-        gBuild.jar
-      reference
-      src
+import api.gbuild.component.*;
+
+GPanel panel;
+
+void setup() {
+  size(800, 800, P2D);
+
+  panel = new GPanel(this, width / 2, height / 2);
+
+  for (int i = 0; i < 100; i++) {
+    if (random(-10, 10) >= 0) {
+      panel.add(new GText(this, panel, "Hello", random(0, width), random(0, height)));
+    } else {
+      panel.add(new GText(this, panel, "data/example.png", random(10, 50), random(10, 50)));
+    }
+  }
+}
+
+void draw() {
+  background(0);
+  panel.draw();
+}
 ```
-             
-Some folders like `examples` or `src` might be missing. After Library gBuild has been successfully installed, restart the Processing application.
 
-### Troubleshooting
+## Installation
 
-If you're having trouble, have a look at the [Processing Wiki](https://github.com/processing/processing/wiki/How-to-Install-a-Contributed-Library)
-for more information, or contact the author [David Parreño Barbuzano](losedavidpb@gmail.com).
+### Troubleshooting and Contribution
+
+If you're having trouble, or want to contribute to this project, please contact me
+with my email losedavidpb@gmail.com.

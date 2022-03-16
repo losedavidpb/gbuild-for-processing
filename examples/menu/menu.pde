@@ -1,8 +1,13 @@
+//
+// Example of horizonal and vertical menu
+//
+// All Copyright Reserved (C)
+//
+
 import api.gbuild.component.menu.*;
+import api.gbuild.component.button.*;
 
-GOption[] options;
 GMenu barmenu, verticalmenu;
-
 float angle = 0;
 
 void setup() {
@@ -16,18 +21,27 @@ void setup() {
   barmenu.setColor(0);
   barmenu.dim(width, 50);
   
-  options = new GOption[]{
-    new GOption(this, "Option 1", '1'),
-    new GOption(this, "Option 2", '2'),
-    new GOption(this, "Option 3", '3')
-  };
-  
-  for (GOption option : options) {
-    option.setColor(255, 255, 255);
-    option.setAlign(LEFT);
-    option.setMode(MODEL);
+  for (int i = 0; i < 4; i++) {
+    String name = "Option " + i;
+    char keyValue = (char)i;
+    GButtonOption option = new GButtonOption(this, name, keyValue);
+
+    option.setTransparency(true);
+    option.setHoverColor(90, 155, 217);
+    option.setRawColor(255, 255, 255);
     option.setSize(20);
     barmenu.add(option);
+  }
+
+  for (int i = 0; i < 4; i++) {
+    String name = "Option " + i;
+    char keyValue = (char)i;
+    GButtonOption option = new GButtonOption(this, name, keyValue);
+
+    option.setTransparency(true);
+    option.setHoverColor(90, 155, 217);
+    option.setRawColor(255, 255, 255);
+    option.setSize(20);
     verticalmenu.add(option);
   }
 }

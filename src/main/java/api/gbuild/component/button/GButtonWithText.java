@@ -1,6 +1,6 @@
 package api.gbuild.component.button;
 
-import api.gbuild.GComponent;
+import api.gbuild.component.GComponent;
 import api.gbuild.component.GText;
 import processing.core.PApplet;
 import processing.core.PConstants;

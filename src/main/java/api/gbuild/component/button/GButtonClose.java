@@ -1,6 +1,6 @@
 package api.gbuild.component.button;
 
-import api.gbuild.GComponent;
+import api.gbuild.component.GComponent;
 import processing.core.PApplet;
 
 /**
@@ -28,7 +28,9 @@ public class GButtonClose extends GButton {
      */
     public GButtonClose(PApplet manager, GComponent parent, float x, float y) {
         super(manager, parent, x, y);
+        super.setHoverColor(226, 19, 19);
         super.content.setColor(255, 255, 25);
+        super.content.setTransparency(true);
         super.content.dim(50, 50);
         this.content.clear();
     }
@@ -54,23 +56,36 @@ public class GButtonClose extends GButton {
     @Override
     public void draw() {
         if (isVisible()) {
-            float[] c = super.rawColor.color();
-            content.setColor(c[0], c[1], c[2]);
+            content.setTransparency(true);
+            float[] c = super.hoverColor.color();
             
             if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
                 if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
-                    c = super.hoverColor.color();
+                    content.setTransparency(false);
                     content.setColor(c[0], c[1], c[2]);
                 }
             }
             
             this.content.draw();
+            int offset = 3;
             
             manager().pushMatrix();
             manager().translate(content.pos().x, content.pos().y);
-            manager().stroke(0, 0, 0);
-            manager().line(0, 0, this.content.dim().x, this.content.dim().y);
-            manager().line(0, this.content.dim().y, 0, this.content.dim().y);
+            
+            manager().strokeWeight(5);
+            manager().stroke(255, 255, 255);
+            manager().line(offset, offset, this.content.dim().x - offset, this.content.dim().y - offset);
+            manager().line(offset, this.content.dim().y - offset, this.content.dim().x - offset, offset);
+            
+            if (!content.isTransparent()) {
+                manager().strokeWeight(3);
+                manager().stroke(manager().color(c[0], c[1], c[2]));
+                manager().line(0, 0, this.content.dim().x, 0);
+                manager().line(this.content.dim().x, 0, this.content.dim().x, this.content.dim().y);
+                manager().line(this.content.dim().x, this.content.dim().y, 0, this.content.dim().y);
+                manager().line(0, this.content.dim().y, 0, 0);
+            }
+            
             manager().popMatrix();
         }
     }

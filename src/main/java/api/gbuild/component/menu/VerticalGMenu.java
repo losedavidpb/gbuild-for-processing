@@ -1,6 +1,6 @@
 package api.gbuild.component.menu;
 
-import api.gbuild.GComponent;
+import api.gbuild.component.GComponent;
 import api.gbuild.component.GPanel;
 import api.gbuild.component.button.GButtonOption;
 import processing.core.PApplet;
@@ -52,8 +52,14 @@ public class VerticalGMenu extends GMenu {
     public void add(GComponent component) {
         if (component instanceof GButtonOption) {
             GButtonOption option = (GButtonOption)component;
-            option.pos(this.pos().x, (float)this.diffPosY);
-            diffPosY = (int) (option.pos().y + option.dim().y + super.spaceValue); 
+            
+            if (option.parent() == null) {
+                option.pos(this.pos().x + 35, (float)this.diffPosY);
+                diffPosY = (int) (option.pos().y + option.dim().y + super.spaceValue); 
+            } else {
+                option.pos(35, this.diffPosY);
+                diffPosY = (int) (option.dim().y + super.spaceValue); 
+            }
             
             super.add(component);
         }
@@ -70,8 +76,9 @@ public class VerticalGMenu extends GMenu {
                 PConstants.RECT, this.pos().x, this.pos().y,
                 this.dim().x, this.dim().y
             );
-        
-            rect.setFill(color());
+            
+            float[] c = color();
+            rect.setFill(manager().color(c[0], c[1], c[2]));
             manager().shape(rect);
     
             for (int i = 0; i < this.components.size(); i++) {

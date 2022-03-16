@@ -1,7 +1,6 @@
 package api.gbuild.component;
 
 import api.gbuild.GColor;
-import api.gbuild.GComponent;
 import java.util.ArrayList;
 import java.util.List;
 import processing.core.PApplet;
@@ -101,9 +100,8 @@ public class GPanel extends GComponent {
      * @return integer value for color
      * @see GColor#color()
      */
-    public int color() {
-        float[] c = color.color();
-        return manager().color(c[0], c[1], c[2]);
+    public float[] color() {
+        return color.color();
     }
     
     /**
@@ -140,6 +138,7 @@ public class GPanel extends GComponent {
      */
     public void setTransparency(boolean transparency) {
         if (transparency) this.color = null;
+        else if (this.color == null) this.color = new GColor(255, 255, 255);
     }
     
     /**
@@ -155,8 +154,10 @@ public class GPanel extends GComponent {
      * @see GPanel#setColor(java.lang.Integer...) 
      */
     public void setColor(Float ... component) {
-        if (isTransparent()) this.color = new GColor(255, 255, 255);
-        this.color.setColor(component);
+        if (!isTransparent()) {
+            this.color = new GColor(255, 255, 255);
+            this.color.setColor(component);
+        }
     }
     
     /**
@@ -172,8 +173,10 @@ public class GPanel extends GComponent {
      * @see GPanel#setColor(java.lang.Float...) 
      */
     public void setColor(Integer ... component) {
-        if (isTransparent()) this.color = new GColor(255, 255, 255);
-        this.color.setColor(component);
+        if (!isTransparent()) {
+            this.color = new GColor(255, 255, 255);
+            this.color.setColor(component);
+        }
     }
     
     /**
@@ -233,7 +236,7 @@ public class GPanel extends GComponent {
         float dimx = abs(pos().x - limitsX.y);
         float dimy = abs(pos().y - limitsY.y);
         this.pos(limitsX.x, limitsY.x);
-        this.dim(dimx + limitsX.z, dimy);
+        this.dim(dimx, dimy);
     }
     
     @Override
@@ -242,12 +245,15 @@ public class GPanel extends GComponent {
             manager().pushMatrix();
             
             if (!this.isTransparent()) {
+                manager().noStroke();
+                
                 PShape rect = manager().createShape(
                     PConstants.RECT, this.pos().x, this.pos().y,
                     this.dim().x, this.dim().y
                 );
-
-                rect.setFill(this.color());
+                
+                float[] c = this.color();
+                rect.setFill(manager().color(c[0], c[1], c[2]));
                 manager().shape(rect);
             }
 

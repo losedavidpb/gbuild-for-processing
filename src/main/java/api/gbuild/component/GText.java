@@ -1,10 +1,10 @@
 package api.gbuild.component;
 
 import api.gbuild.GColor;
-import api.gbuild.GComponent;
 import api.gbuild.Globals;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PVector;
 
 /**
  * <p>
@@ -52,7 +52,7 @@ public class GText extends GComponent {
         this.textColor = new GColor(255, 255, 255);
         this.value = value;
         this.tsize = Globals.TEXT_SIZE;
-        this.tmode = PConstants.SHAPE;
+        this.tmode = PConstants.MODEL;
         this.talign = PConstants.LEFT;
     }
     
@@ -211,6 +211,16 @@ public class GText extends GComponent {
     public void setMode(int tmode) {
         boolean cond = tmode == PConstants.MODEL || tmode == PConstants.SHAPE;
         if (cond == true) this.tmode = tmode;
+    }
+    
+    @Override
+    public PVector dim() {
+        manager().pushMatrix();
+        manager().textSize(tsize);
+        float x = manager().textWidth(value());
+        float y = manager().textAscent() + manager().textDescent();
+        manager().popMatrix();
+        return new PVector(x, y);
     }
   
     @Override
