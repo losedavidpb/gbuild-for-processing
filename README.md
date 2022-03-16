@@ -7,6 +7,7 @@ by David Parreño Barbuzano
 * [Requirements](#requirements)
 * [Examples](#examples)
 * [Instalation](#instalation)
+* [Sketchbook path](#sketchbook-path)
 * [Documentation](#documentation)
 * [Troubleshooting and Contribution](#troubleshooting-and-contribution)
 
@@ -58,7 +59,15 @@ void draw() {
 
 ## Installation
 
-Follow these instruction in order to prepare this library for Processing:
+### Manual installation
+
+1. Download one of the releases of this library
+2. Unzip the file that you have download
+3. Move the folder to libraries folder which is at your sketchbook path
+3. Restart Processing language environment
+4. Enjoy!
+
+### Installation with Linux commands
 
 ```
 git clone https://github.com/losedavidpb/gbuild-for-processing
@@ -68,11 +77,21 @@ mkdir <<PROCESSING_PATH>>/libraries
 mkdir <<PROCESSING_PATH>>/libraries/gBuild
 mkdir <<PROCESSING_PATH>>/libraries/gBuild/library
 cp library.properties <<PROCESSING_PATH>>/libraries/gBuild
-cp bin/gBuild.jar <<PROCESSING_PATH>/libraries/gBuild/library
+cp bin/gBuild-<<VERSION>>.jar <<PROCESSING_PATH>/libraries/gBuild/library
 
 mkdir <<PROCESSING_PATH>>/libraries/gBuild/examples  # optional
 cp -r examples/ <<PROCESSING_PATH>>/libraries/gBuild/examples # optional
 ```
+
+## Sketchbook path
+
+To know what is your Processing sketchbook location, open the Preferences window
+from the Processing application (PDE) and look for the "Sketchbook location" item at the top.
+
+By default the following locations are used for your sketchbook folder:
+
+- For Mac users, the sketchbook folder is located inside ~/Documents/Processing
+- For Windows users, the sketchbook folder is located inside My Documents/Processing
 
 ## Documentation
 
