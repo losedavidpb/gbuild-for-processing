@@ -59,29 +59,11 @@ void draw() {
 
 ## Installation
 
-### Manual installation
-
 1. Download one of the releases of this library
 2. Unzip the file that you have download
 3. Move the folder to libraries folder which is at your sketchbook path
 3. Restart Processing language environment
 4. Enjoy!
-
-### Installation with Linux commands
-
-```
-git clone https://github.com/losedavidpb/gbuild-for-processing
-cd gbuild-for-processing
-
-mkdir <<PROCESSING_PATH>>/libraries
-mkdir <<PROCESSING_PATH>>/libraries/gBuild
-mkdir <<PROCESSING_PATH>>/libraries/gBuild/library
-cp library.properties <<PROCESSING_PATH>>/libraries/gBuild
-cp bin/gBuild-<<VERSION>>.jar <<PROCESSING_PATH>/libraries/gBuild/library
-
-mkdir <<PROCESSING_PATH>>/libraries/gBuild/examples  # optional
-cp -r examples/ <<PROCESSING_PATH>>/libraries/gBuild/examples # optional
-```
 
 ## Sketchbook path
 
