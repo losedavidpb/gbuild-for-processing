@@ -54,10 +54,10 @@ public class HorizontalGMenu extends GMenu {
             
             if (option.parent() == null) {
                 option.pos((float)diffPosX, this.pos().y + 20);
-                diffPosX = (int) (option.pos().x + option.dim().x + super.spaceValue); 
+                diffPosX += (int) (option.pos().x + option.dim().x + super.spaceValue); 
             } else {
                 option.pos(diffPosX, 20);
-                diffPosX = (int) (option.dim().x + super.spaceValue); 
+                diffPosX += (int) (option.dim().x + super.spaceValue); 
             }
             
             super.add(component);
@@ -70,15 +70,17 @@ public class HorizontalGMenu extends GMenu {
             super.manager().pushMatrix();
       
             boolean optSelected = false;
-      
-            PShape rect = manager().createShape(
-                PConstants.RECT, this.pos().x, this.pos().y,
-                this.dim().x, this.dim().y
-            );
             
-            float[] c = color();
-            rect.setFill(manager().color(c[0], c[1], c[2]));
-            manager().shape(rect);
+            if (!this.isTransparent()) {
+                PShape rect = manager().createShape(
+                    PConstants.RECT, this.pos().x, this.pos().y,
+                    this.dim().x, this.dim().y
+                );
+            
+                float[] c = color();
+                rect.setFill(manager().color(c[0], c[1], c[2]));
+                manager().shape(rect);
+            }
     
             for (int i = 0; i < this.components.size(); i++) {
                 GButtonOption option = (GButtonOption) this.components.get(i);

@@ -4,8 +4,10 @@ import api.gbuild.Globals;
 import api.gbuild.component.GComponent;
 import api.gbuild.component.GPanel;
 import api.gbuild.component.GText;
+import api.gbuild.component.button.GButton;
 import api.gbuild.component.button.GButtonClose;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 /**
@@ -63,6 +65,7 @@ public class GDialog extends GComponent {
             10, manager.textAscent() + manager.textDescent() + 20
         );
         
+        textValue.setMode(PConstants.SHAPE);
         textValue.setColor(255, 255, 255);
         textValue.setSize(30);
         this.top.add(textValue);
@@ -85,8 +88,28 @@ public class GDialog extends GComponent {
         
         this.bottom = new GPanel(manager, this.top, 0, this.top.dim().y);
         this.bottom.dim(this.top.dim().x, this.top.dim().y);
+        this.bottom.setColor(255, 255, 255);
+        this.bottom().noStroke();
     }
     
+    @Override
+    public void pos(Integer ... coords) {
+        this.top.pos(coords);
+        this.bottom.pos(0, (int)this.top.dim().y);
+        
+        super.pos(this.top.pos().x, this.top.pos().y);
+        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
+    }
+    
+    @Override
+    public void pos(Float ... coords) {
+        this.top.pos(coords);
+        this.bottom.pos(0, (int)this.top.dim().y);
+        
+        super.pos(this.top.pos().x, this.top.pos().y);
+        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
+    }
+
     /**
      * Get the content of the dialog which can be customized
      * 
@@ -109,6 +132,15 @@ public class GDialog extends GComponent {
      */
     public GPanel bottom() {
         return this.bottom;
+    }
+    
+    /**
+     * Return if close button is been hovering
+     * 
+     * @return state selected
+     */
+    public boolean closeButtonIsSelected() {
+        return ((GButton)this.top.get(1)).isSelected();
     }
     
     /**
@@ -208,7 +240,8 @@ public class GDialog extends GComponent {
     @Override
     public void draw() {
         this.bottom.pos(0, (int)this.top.dim().y);
-        this.bottom.dim(this.top.dim().x, this.top.dim().y);
+        this.top.dim(this.bottom.dim().x);
+        ((GButtonClose)this.top.get(1)).pos(this.bottom.dim().x - 30);
         
         if (this.isVisible()) {
             Globals.newDialog = true;

@@ -1,5 +1,6 @@
 package api.gbuild.component;
 
+import api.gbuild.component.dialog.GDialog;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -262,10 +263,17 @@ public abstract class GComponent {
     public PVector pos() {
         if (parent == null)
             return new PVector(this.pos.x, this.pos.y);
-
+        
+        if (parent() instanceof GPanel || parent() instanceof GDialog) {
+            return new PVector(
+                this.parent.pos().x + this.pos.x,
+                this.parent.pos().y + this.pos.y
+            );
+        }
+        
         return new PVector(
-            this.parent.pos().x + this.pos.x,
-            this.parent.pos().y + this.pos.y
+            this.parent.pos().x + this.parent().dim().x + this.pos.x,
+            this.parent.pos().y + this.parent().dim().y + this.pos.y
         );
     }
     

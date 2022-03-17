@@ -41,7 +41,8 @@ import static processing.core.PApplet.min;
  */
 public class GPanel extends GComponent {
     protected final List<GComponent> components;
-    private GColor color;
+    private GColor color, strokeColor;
+    private boolean isNoStroke;
     
     /**
      * Create a new instance of a panel
@@ -54,8 +55,10 @@ public class GPanel extends GComponent {
      */
     public GPanel(PApplet manager, GComponent parent, float x, float y) {
         super(manager, parent);
+        this.isNoStroke = true;
         this.components = new ArrayList<>();
         this.color = new GColor(255, 255, 255);
+        this.color = new GColor(0, 0, 0);
         super.pos(x, y);
         super.dim(50, 50);
     }
@@ -102,6 +105,15 @@ public class GPanel extends GComponent {
      */
     public float[] color() {
         return color.color();
+    }
+    
+    /**
+     * Get the stroke color for the panel
+     * 
+     * @return raw color
+     */
+    public float[] strokeColor() {
+        return this.strokeColor.color();
     }
     
     /**
@@ -180,6 +192,53 @@ public class GPanel extends GComponent {
     }
     
     /**
+     * Set the stroke color for panel
+     * 
+     * <p>
+     * It is important to know that the modification would
+     * not be done whether panel is transparent.
+     * </p>
+     * 
+     * @param component red, green, and blue component
+     * @see GPanel#isTransparent() 
+     * @see GPanel#setColor(java.lang.Integer...) 
+     */
+    public void setStrokeColor(Float ... component) {
+        if (!isTransparent()) {
+            this.strokeColor = new GColor(255, 255, 255);
+            this.strokeColor.setColor(component);
+            this.isNoStroke = false;
+        }
+    }
+    
+    /**
+     * Set the stroke color for panel
+     * 
+     * <p>
+     * It is important to know that the modification would
+     * not be done whether panel is transparent.
+     * </p>
+     * 
+     * @param component red, green, and blue component
+     * @see GPanel#isTransparent()
+     * @see GPanel#setColor(java.lang.Float...) 
+     */
+    public void setStrokeColor(Integer ... component) {
+        if (!isTransparent()) {
+            this.strokeColor = new GColor(255, 255, 255);
+            this.strokeColor.setColor(component);
+            this.isNoStroke = false;
+        }
+    }
+    
+    /**
+     * Set the stroke border of the panel as transparent
+     */
+    public void noStroke() {
+        this.isNoStroke = true;
+    }
+    
+    /**
      * Remove all the components of the panel
      */
     public void clear() {
@@ -235,7 +294,7 @@ public class GPanel extends GComponent {
         PVector limitsX = getLimitsX(), limitsY = getLimitsY();
         float dimx = abs(pos().x - limitsX.y);
         float dimy = abs(pos().y - limitsY.y);
-        this.pos(limitsX.x, limitsY.x);
+        this.pos(this.pos().x + limitsX.x, this.pos().y + limitsY.x);
         this.dim(dimx, dimy);
     }
     
@@ -245,7 +304,10 @@ public class GPanel extends GComponent {
             manager().pushMatrix();
             
             if (!this.isTransparent()) {
-                manager().noStroke();
+                if (!isNoStroke) {
+                    float[] c = this.strokeColor();
+                    manager().stroke(c[0], c[1], c[2]);
+                } else manager().noStroke();
                 
                 PShape rect = manager().createShape(
                     PConstants.RECT, this.pos().x, this.pos().y,
@@ -273,11 +335,11 @@ public class GPanel extends GComponent {
         
         for (int i = 0; i < this.components.size(); i++) {
             GComponent component = this.components.get(i);
-            limits.x = min(limits.x, component.pos().x);
+            limits.x = min(limits.x, component.pos(true).x);
             limits.y = max(limits.y, component.pos().x + component.dim().x);
             
             if (limits.x == component.pos().x)
-                limits.z = component.pos(false).x;
+                limits.z = component.pos(true).x;
         }
         
         return limits;
@@ -288,11 +350,11 @@ public class GPanel extends GComponent {
         
         for (int i = 0; i < this.components.size(); i++) {
             GComponent component = this.components.get(i);
-            limits.x = min(limits.x, component.pos().y);
+            limits.x = min(limits.x, component.pos(true).y);
             limits.y = max(limits.y, component.pos().y + component.dim().y);
             
             if (limits.x == component.pos().y)
-                limits.z = component.pos(false).y;
+                limits.z = component.pos(true).y;
         }
         
         return limits;

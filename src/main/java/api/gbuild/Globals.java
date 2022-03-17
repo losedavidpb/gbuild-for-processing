@@ -40,6 +40,11 @@ public class Globals {
      * Space between each option of a menu
      */
     public static final int MENU_SPACE = 50;
+    
+    /**
+     * Space between text stored at a dialog with text
+     */
+    public static final int SPACE_GDIALOG_TEXT = 20;
             
     /**
      * Specifies if a new dialog was created and it's

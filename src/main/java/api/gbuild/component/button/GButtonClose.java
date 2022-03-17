@@ -58,11 +58,13 @@ public class GButtonClose extends GButton {
         if (isVisible()) {
             content.setTransparency(true);
             float[] c = super.hoverColor.color();
+            this.setSelected(false);
             
             if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
                 if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
                     content.setTransparency(false);
                     content.setColor(c[0], c[1], c[2]);
+                    this.setSelected(true);
                 }
             }
             

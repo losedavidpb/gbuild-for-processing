@@ -21,7 +21,7 @@ import processing.core.PApplet;
  */
 public abstract class GButton extends GComponent {
     protected final GPanel content;
-    protected final GColor backgroundColor, rawColor, hoverColor;
+    protected final GColor backgroundColor, rawColor, hoverColor, strokeColor;
     protected boolean isSelected;
     
     /**
@@ -38,6 +38,7 @@ public abstract class GButton extends GComponent {
         this.backgroundColor = new GColor(0, 0, 0);
         this.rawColor = new GColor(255, 255, 255);
         this.hoverColor = new GColor(0, 0, 0);
+        this.strokeColor = new GColor(0, 0, 0);
         this.isSelected = false;
         
         this.content = new GPanel(manager, parent, x, y);
@@ -161,6 +162,8 @@ public abstract class GButton extends GComponent {
     public float[] rawColor() {
         return this.rawColor.color();
     }
+    
+    
     
     /**
      * Get the hover color for the button

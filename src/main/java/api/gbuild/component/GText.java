@@ -126,6 +126,15 @@ public class GText extends GComponent {
     }
     
     /**
+     * Return the color of the text
+     * 
+     * @return color of the text
+     */
+    public float[] color() {
+        return this.textColor.color();
+    } 
+    
+    /**
      * Specify the text that will be drawn
      * 
      * @param value text string
@@ -217,10 +226,10 @@ public class GText extends GComponent {
     public PVector dim() {
         manager().pushMatrix();
         manager().textSize(tsize);
-        float x = manager().textWidth(value());
-        float y = manager().textAscent() + manager().textDescent();
+        float dimx = manager().textWidth(value());
+        float dimy = manager().textAscent() + manager().textDescent();
         manager().popMatrix();
-        return new PVector(x, y);
+        return new PVector(dimx, dimy);
     }
   
     @Override

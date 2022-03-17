@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 17/03/2022
+
+### Added
+
+- Include a stroke color option for panels
+- Provide a method that allow disable stroke color option
+- Provide a method that allow developers to customize text properties
+- Include a property to define the vertical space between each text of a dialog with text
+- Include a method to access to top component of a dialog
+- Provide a method to know if close button is been hovering
+- Include a tool to define text mode for buttons with text
+
+### Changed
+
+- Update position for panels to be relative to its position
+- Set text for dialogs to have the text mode SHAPE
+
+### Fixed
+
+- Fix menu's drawing mode when transparency is enable
+- Fix buttom's drawing mode to update selected option
+- Improve calculation of relative position for components
+- Set dimensions for dialog to be bottom's dimension the priority for width 
+- Fix text position for buttons to be at the middle
+- Fix calculation of positions for each option of menus
+- Fix position calculation for dialogs
+
+## [Released]
+
 ## [2.0.0] - 16/03/2022
 
 ### Added

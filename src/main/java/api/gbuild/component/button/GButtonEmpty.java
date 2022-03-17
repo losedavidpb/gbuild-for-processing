@@ -51,11 +51,13 @@ public class GButtonEmpty extends GButton {
         if (isVisible()) {
             float[] c = super.rawColor.color();
             content.setColor(c[0], c[1], c[2]);
+            this.setSelected(false);
             
             if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
                 if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
                     c = super.hoverColor.color();
                     content.setColor(c[0], c[1], c[2]);
+                    this.setSelected(true);
                 }
             }
             
