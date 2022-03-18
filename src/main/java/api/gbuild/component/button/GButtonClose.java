@@ -1,5 +1,6 @@
 package api.gbuild.component.button;
 
+import api.gbuild.Globals;
 import api.gbuild.component.GComponent;
 import processing.core.PApplet;
 
@@ -22,16 +23,14 @@ public class GButtonClose extends GButton {
      * 
      * @param manager Processing manager
      * @param parent parent component
-     * @param x x component for location
-     * @param y y component for location
-     * @see GButton#GButton(processing.core.PApplet, api.gbuild.GComponent, float, float) 
+     * @see GButton#GButton(processing.core.PApplet, api.gbuild.component.GComponent) 
      */
-    public GButtonClose(PApplet manager, GComponent parent, float x, float y) {
-        super(manager, parent, x, y);
+    public GButtonClose(PApplet manager, GComponent parent) {
+        super(manager, parent);
         super.setHoverColor(226, 19, 19);
-        super.content.setColor(255, 255, 25);
-        super.content.setTransparency(true);
-        super.content.dim(50, 50);
+        super.content.setStrokeTransparent(true);
+        super.setTransparent(true);
+        super.content.dim(Globals.PANEL_DIM_X, Globals.PANEL_DIM_Y);
         this.content.clear();
     }
     
@@ -39,12 +38,10 @@ public class GButtonClose extends GButton {
      * Create a new instance of a button
      * 
      * @param manager Processing manager
-     * @param x x component for location
-     * @param y y component for location
-     * @see GButton#GButton(processing.core.PApplet, float, float) 
+     * @see GButton#GButton(processing.core.PApplet) 
      */
-    public GButtonClose(PApplet manager, float x, float y) {
-        this(manager, null, x, y);
+    public GButtonClose(PApplet manager) {
+        this(manager, null);
     }
     
     @Override
@@ -56,14 +53,13 @@ public class GButtonClose extends GButton {
     @Override
     public void draw() {
         if (isVisible()) {
-            content.setTransparency(true);
-            float[] c = super.hoverColor.color();
+            this.setTransparent(true);
             this.setSelected(false);
             
             if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
                 if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
-                    content.setTransparency(false);
-                    content.setColor(c[0], c[1], c[2]);
+                    this.setTransparent(false);
+                    this.setBackgroundColor(super.hoverColor);
                     this.setSelected(true);
                 }
             }
@@ -79,9 +75,11 @@ public class GButtonClose extends GButton {
             manager().line(offset, offset, this.content.dim().x - offset, this.content.dim().y - offset);
             manager().line(offset, this.content.dim().y - offset, this.content.dim().x - offset, offset);
             
-            if (!content.isTransparent()) {
+            if (!this.isTransparent()) {
+                float[] c = super.hoverColor.color();
+                
                 manager().strokeWeight(3);
-                manager().stroke(manager().color(c[0], c[1], c[2]));
+                manager().stroke(c[0], c[1], c[2]);
                 manager().line(0, 0, this.content.dim().x, 0);
                 manager().line(this.content.dim().x, 0, this.content.dim().x, this.content.dim().y);
                 manager().line(this.content.dim().x, this.content.dim().y, 0, this.content.dim().y);

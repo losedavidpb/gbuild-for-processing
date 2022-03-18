@@ -1,5 +1,6 @@
 package api.gbuild.component.button;
 
+import api.gbuild.Globals;
 import api.gbuild.component.GComponent;
 import processing.core.PApplet;
 
@@ -23,12 +24,10 @@ public class GButtonEmpty extends GButton {
      * Create a new instance of an empty button
      * 
      * @param manager Processing manager
-     * @param x x component for location
-     * @param y y component for location
-     * @see GButton#GButton(processing.core.PApplet, float, float)
+     * @see GButton#GButton(processing.core.PApplet)
      */
-    public GButtonEmpty(PApplet manager, float x, float y) {
-        this(manager, null, x, y);
+    public GButtonEmpty(PApplet manager) {
+        this(manager, null);
     }
     
     /**
@@ -36,27 +35,23 @@ public class GButtonEmpty extends GButton {
      * 
      * @param manager Processing manager
      * @param parent parent component
-     * @param x x component for location
-     * @param y y component for location
-     * @see GButton#GButton(processing.core.PApplet, api.gbuild.GComponent, float, float) 
+     * @see GButton#GButton(processing.core.PApplet, api.gbuild.component.GComponent) 
      */
-    public GButtonEmpty(PApplet manager, GComponent parent, float x, float y) {
-        super(manager, parent, x, y);
+    public GButtonEmpty(PApplet manager, GComponent parent) {
+        super(manager, parent);
         super.content.setColor(255, 255, 25);
-        super.content.dim(50, 50);
+        super.content.dim(Globals.PANEL_DIM_X, Globals.PANEL_DIM_Y);
     }
     
     @Override
     public void draw() {
         if (isVisible()) {
-            float[] c = super.rawColor.color();
-            content.setColor(c[0], c[1], c[2]);
+            content.setColor(super.rawColor);
             this.setSelected(false);
             
             if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
                 if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
-                    c = super.hoverColor.color();
-                    content.setColor(c[0], c[1], c[2]);
+                    content.setColor(super.hoverColor);
                     this.setSelected(true);
                 }
             }

@@ -1,3 +1,4 @@
+
 package api.gbuild.component.menu;
 
 import api.gbuild.Globals;
@@ -28,12 +29,10 @@ public abstract class GMenu extends GPanel {
      * 
      * @param manager Processing manager
      * @param parent component parent
-     * @param x x component for location
-     * @param y y component for location
-     * @see GPanel#GPanel(processing.core.PApplet, api.gbuild.GComponent, float, float) 
+     * @see GPanel#GPanel(processing.core.PApplet, api.gbuild.component.GComponent) 
      */
-    public GMenu(PApplet manager, GComponent parent, float x, float y) {
-        super(manager, parent, x, y);
+    public GMenu(PApplet manager, GComponent parent) {
+        super(manager, parent);
         this.colorOption = -1;
     }
     
@@ -41,54 +40,10 @@ public abstract class GMenu extends GPanel {
      * Create a new instance of a menu
      * 
      * @param manager Processing manager
-     * @param x x component for location
-     * @param y y component for location
-     * @see GPanel#GPanel(processing.core.PApplet, float, float) 
+     * @see GPanel#GPanel(processing.core.PApplet) 
      */
-    public GMenu(PApplet manager, float x, float y) {
-        this(manager, null, x, y);
-    }
-  
-    @Override
-    public void add(GComponent component) {
-        if (component instanceof GButtonOption)
-            super.components.add(component);
-    }
-    
-    /**
-     * Get the space between options
-     * 
-     * @return spaceValue value for space between options
-     */
-    public int space() {
-        return this.spaceValue;
-    }
-    
-    /**
-     * Return the index of current option
-     * 
-     * @return index of option
-     */
-    public int colorOption() {
-        return this.colorOption;
-    }
-    
-    /**
-     * Set the space between options
-     * 
-     * @param spaceValue value for space between options
-     */
-    public void setSpace(int spaceValue) {
-        this.spaceValue = spaceValue;
-    }
-    
-    /**
-     * Set the index of current option
-     * 
-     * @param colorOption index of option
-     */
-    protected void setColorOption(int colorOption) {
-        this.colorOption = colorOption;
+    public GMenu(PApplet manager) {
+        this(manager, null);
     }
     
     /**
@@ -107,7 +62,89 @@ public abstract class GMenu extends GPanel {
             }
         }
     }
+  
+    @Override
+    public void add(GComponent component) {
+        if (component instanceof GButtonOption)
+            super.components.add(component);
+    }
+    
+    @Override
+    public Object getProperty(String name) {
+        Object propertyValue = super.getProperty(name);
+        
+        if (propertyValue == null) {
+            switch ((String)name) {
+                case "colorOption": return this.colorOption();
+                case "space": return this.space();
+                default: return null;
+            }
+        }
+        
+        return propertyValue;
+    }
+    
+    @Override
+    public void setProperty(Object name, Object value) {
+        super.setProperty(name, value);
+        
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "colorOption":
+                    if (value instanceof Integer)
+                        this.setColorOption((Integer)value);
+                break;
+
+                case "space":
+                    if (value instanceof Integer)
+                        this.setSpace((Integer)value);
+                break;
+            }
+        }
+    }
     
     @Override
     public abstract void draw();
+    
+    // Deprecated
+    
+    /**
+     * Get the space between options
+     * 
+     * @return spaceValue value for space between options
+     * @deprecated
+     */
+    public int space() {
+        return this.spaceValue;
+    }
+    
+    /**
+     * Return the index of current option
+     * 
+     * @return index of option
+     * @deprecated
+     */
+    public int colorOption() {
+        return this.colorOption;
+    }
+    
+    /**
+     * Set the space between options
+     * 
+     * @param spaceValue value for space between options
+     * @deprecated
+     */
+    public void setSpace(int spaceValue) {
+        this.spaceValue = spaceValue;
+    }
+    
+    /**
+     * Set the index of current option
+     * 
+     * @param colorOption index of option
+     * @deprecated
+     */
+    protected void setColorOption(int colorOption) {
+        this.colorOption = colorOption;
+    }
 }

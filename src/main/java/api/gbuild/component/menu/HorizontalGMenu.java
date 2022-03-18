@@ -3,8 +3,6 @@ package api.gbuild.component.menu;
 import api.gbuild.component.GComponent;
 import api.gbuild.component.button.GButtonOption;
 import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PShape;
 
 /**
  * <p>
@@ -26,12 +24,10 @@ public class HorizontalGMenu extends GMenu {
      * 
      * @param manager Processing manager
      * @param parent component parent
-     * @param x x component for location
-     * @param y y component for location
-     * @see GMenu#GMenu(processing.core.PApplet, api.gbuild.GComponent, float, float) 
+     * @see GMenu#GMenu(processing.core.PApplet, api.gbuild.component.GComponent) 
      */
-    public HorizontalGMenu(PApplet manager, GComponent parent, float x, float y) {
-        super(manager, parent, x, y);
+    public HorizontalGMenu(PApplet manager, GComponent parent) {
+        super(manager, parent);
         diffPosX = super.spaceValue;
     }
     
@@ -39,12 +35,16 @@ public class HorizontalGMenu extends GMenu {
      * Create a new instance of a horizontal menu
      * 
      * @param manager Processing manager
-     * @param x x component for location
-     * @param y y component for location
-     * @see GMenu#GMenu(processing.core.PApplet, float, float) 
+     * @see GMenu#GMenu(processing.core.PApplet) 
      */
-    public HorizontalGMenu(PApplet manager, float x, float y) {
-        this(manager, null, x, y);
+    public HorizontalGMenu(PApplet manager) {
+        this(manager, null);
+    }
+    
+    @Override
+    public void setSpace(int spaceValue) {
+        super.setSpace(spaceValue);
+        diffPosX = (int) this.pos().x;
     }
     
     @Override
@@ -72,18 +72,28 @@ public class HorizontalGMenu extends GMenu {
             boolean optSelected = false;
             
             if (!this.isTransparent()) {
-                PShape rect = manager().createShape(
-                    PConstants.RECT, this.pos().x, this.pos().y,
-                    this.dim().x, this.dim().y
-                );
-            
-                float[] c = color();
-                rect.setFill(manager().color(c[0], c[1], c[2]));
-                manager().shape(rect);
+                super.color.applyFillColor(manager());
+                manager().rect(this.pos().x, this.pos().y, this.dim().x, this.dim().y);
             }
-    
+            
+            int offsetX = (int)this.pos().x;
+            
             for (int i = 0; i < this.components.size(); i++) {
                 GButtonOption option = (GButtonOption) this.components.get(i);
+                
+                if (option.parent() == null) {
+                    option.pos((float)diffPosX, this.pos().y + 20);
+                } else {
+                    option.pos(offsetX, 20);
+                }
+                
+                if (option.isVisible()) {
+                    offsetX += (int) (option.dim().x + super.spaceValue);
+                    
+                    if (option.parent() == null)
+                        offsetX += (int) option.pos().x;
+                }
+                
                 option.draw();
                 
                 if (option.isSelected()) {

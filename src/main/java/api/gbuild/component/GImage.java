@@ -29,43 +29,56 @@ import processing.core.PImage;
  * @author David Parreño Barbuzano
  */
 public class GImage extends GComponent {
-    private PImage image;
+    private PImage image = null;
 
     /** 
      * Create a new instance of an image.
      * 
      * @param manager Processing manager
      * @param parent component parent
-     * @param path path for an image
-     * @param x x component for location
-     * @param y y component for location
-     * @param w w component for dimension
-     * @param h h component for dimension
-     * @see GComponent#GComponent(processing.core.PApplet, api.gbuild.GComponent) 
+     * @see GComponent#GComponent(processing.core.PApplet, api.gbuild.component.GComponent) 
      */
-    public GImage(PApplet manager, GComponent parent, String path, float x, float y, float w, float h) {
+    public GImage(PApplet manager, GComponent parent) {
         super(manager, parent);
-        super.pos(x, y);
-        super.dim(w, h);
-        
-        if (path != null)
-            this.image = manager.loadImage(path);
     }
     
     /** 
      * Create a new instance of an image
      * 
      * @param manager Processing manager
-     * @param path path for image
-     * @param x x component for location
-     * @param y y component for location
-     * @param w w component for dimension
-     * @param h h component for dimension
      * @see GComponent#GComponent(processing.core.PApplet) 
      */
-    public GImage(PApplet manager, String path, float x, float y, float w, float h) {
-        this(manager, null, path, x, y, w, h);
+    public GImage(PApplet manager) {
+        this(manager, null);
     }
+  
+    @Override
+    public void draw() {
+        if ((Boolean)this.getProperty("isVisible")) {
+            if (this.image != null) {
+                manager().image(this.image,
+                    super.pos().x, super.pos().y,
+                    super.dim().x, super.dim().y
+                );
+            }
+        }
+    }
+    
+    @Override
+    public void setProperty(Object name, Object value) {
+        super.setProperty(name, value);
+        
+        if (name instanceof String) {
+            switch((String)name) {
+                case "image":
+                    if (value instanceof String)
+                        this.setImage((String)value);
+                break;
+            }
+        }
+    }
+    
+    // Deprecated
     
     /**
      * Specify a new image located at a different path
@@ -78,22 +91,11 @@ public class GImage extends GComponent {
      * 
      * @param path local or external path
      * @return if image was loaded
+     * @deprecated will be deleted for future revisions
      */
     public boolean setImage(String path) {
         boolean cond = path != null;
         if (cond) this.image = manager().loadImage(path);
         return cond;
-    }
-  
-    @Override
-    public void draw() {
-        if (isVisible()) {
-            if (this.image != null) {
-                manager().image(this.image,
-                    this.pos().x, this.pos().y,
-                    this.dim().x, this.dim().y
-                );
-            }
-        }
     }
 }

@@ -1,5 +1,8 @@
 package api.gbuild;
 
+import processing.core.PApplet;
+import processing.core.PShape;
+
 /**
  * <p>
  * Data type which stores a RGB color
@@ -29,6 +32,26 @@ package api.gbuild;
  */
 public final class GColor {
     private float[] colorValue;
+    private boolean isTransparent;
+    
+    /**
+     * Create a new instance of a RGB color
+     * 
+     * <p>
+     * Since RGB colors have three component (red, green, blue),
+     * this class can define a color passing one, two, or three
+     * of these components, so, when a value is not defined, will
+     * be equal to zero or null.
+     * </p>
+     * 
+     * @param color red, green, and blue integer component
+     * @see GColor#setColor(java.lang.Integer...)
+     * @see GColor#setColor(java.lang.Float...)
+     */
+    public GColor(GColor color) {
+        this.setColor(color);
+        this.isTransparent = false;
+    }
     
     /**
      * Create a new instance of a RGB color
@@ -45,6 +68,7 @@ public final class GColor {
      */
     public GColor(Float ... component) {
         this.setColor(component);
+        this.isTransparent = false;
     }
     
     /**
@@ -62,6 +86,112 @@ public final class GColor {
      */
     public GColor(Integer ... component) {
         this.setColor(component);
+        this.isTransparent = false;
+    }
+    
+    /**
+     * Check if current color is transparent
+     * 
+     * @return transparency value
+     */
+    public boolean isTransparent() {
+        return this.isTransparent;
+    }
+    
+    /**
+     * Apply to current sketch the fill color
+     * 
+     * <p>
+     * Since the color value might not be important
+     * to know, it is preferable to have a method
+     * that applies the RGB color into sketch
+     * without the knowledge of its value
+     * </p>
+     * 
+     * @param manager Processing manager
+     */
+    public void applyFillColor(PApplet manager) {
+        if (manager != null) {
+            if (!isTransparent) {
+                float[] c = this.colorValue;
+                manager.fill(c[0], c[1], c[2]);
+                return;
+            }
+            
+            manager.noFill();
+        }
+    }
+    
+    /**
+     * Apply to current shape the fill color
+     * 
+     * <p>
+     * Since the color value might not be important
+     * to know, it is preferable to have a method
+     * that applies the RGB color into sketch
+     * without the knowledge of its value
+     * </p>
+     * 
+     * @param figure shape to fill
+     */
+    public void applyFillColor(PShape figure) {
+        if (figure != null) {
+            if (!isTransparent) {
+                float[] c = this.colorValue;
+                figure.fill(c[0], c[1], c[2]);
+                return;
+            }
+            
+            figure.noFill();
+        }
+    }
+    
+    /**
+     * Apply to current sketch the stroke color
+     * 
+     * <p>
+     * Since the color value might not be important
+     * to know, it is preferable to have a method
+     * that applies the RGB color into sketch
+     * without the knowledge of its value
+     * </p>
+     * 
+     * @param manager Processing manager
+     */
+    public void applyStrokeColor(PApplet manager) {
+        if (manager != null) {
+            if (!isTransparent) {
+                float[] c = this.colorValue;
+                manager.stroke(c[0], c[1], c[2]);
+                return;
+            }
+        
+            manager.noStroke();
+        }
+    }
+    
+    /**
+     * Apply to current shape the stroke color
+     * 
+     * <p>
+     * Since the color value might not be important
+     * to know, it is preferable to have a method
+     * that applies the RGB color into sketch
+     * without the knowledge of its value
+     * </p>
+     * 
+     * @param figure shape to stroke
+     */
+    public void applyStrokeColor(PShape figure) {
+        if (figure != null) {
+            if (!isTransparent) {
+                float[] c = this.colorValue;
+                figure.stroke(c[0], c[1], c[2]);
+                return;
+            }
+            
+            figure.noStroke();
+        }
     }
     
     /**
@@ -76,7 +206,38 @@ public final class GColor {
      * @return RGB components
      */
     public float[] color() {
-        return this.colorValue;
+        return this.clone().colorValue;
+    }
+    
+    /**
+     * Set transparency for current color
+     * 
+     * <p>
+     * If transparency is true, color will not
+     * be applied to current sketch, at the Processing
+     * method wich disable that property would be executed
+     * </p>
+     * 
+     * @param isTransparent transparent state
+     */
+    public void setTransparent(boolean isTransparent) {
+        this.isTransparent = isTransparent;
+    }
+    
+    /**
+     * Set a value for each RGB component
+     * 
+     * @param color color value
+     * @see GColor#setColor(java.lang.Float...) 
+     * @see GColor#setColor(java.lang.Integer...) 
+     */
+    public void setColor(GColor color) {
+        float[] c = new float[3];
+        c[0] = color.color()[0];
+        c[1] = color.color()[1];
+        c[2] = color.color()[2];
+        
+        setColor(c[0], c[1], c[2]);
     }
     
     /**
@@ -143,5 +304,14 @@ public final class GColor {
                     colorValue[i] = component[i];
             }
         }
+    }
+    
+    @Override
+    public GColor clone() {
+        GColor color = new GColor(0, 0, 0);
+        color.colorValue[0] = this.colorValue[0];
+        color.colorValue[1] = this.colorValue[1];
+        color.colorValue[2] = this.colorValue[2];
+        return color;
     }
 }

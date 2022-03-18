@@ -32,31 +32,57 @@ public class GButtonOption extends GButtonWithText {
      * 
      * @param manager Processing manager
      * @param parent component parent
-     * @param value text value
-     * @param keyValue key value
-     * @see GButton#GButton(processing.core.PApplet, float, float) 
+     * @see GButton#GButton(processing.core.PApplet) 
      */
-    public GButtonOption(PApplet manager, GComponent parent, String value, char keyValue) {
-        super(manager, parent, 0, 0, value);
-        this.keyValue = keyValue;
+    public GButtonOption(PApplet manager, GComponent parent) {
+        super(manager, parent);
     }
     
     /**
      * Create a new instance of a button
      * 
      * @param manager Processing manager
-     * @param value text value
-     * @param keyValue key value
-     * @see GButton#GButton(processing.core.PApplet, float, float) 
+     * @see GButton#GButton(processing.core.PApplet) 
      */
-    public GButtonOption(PApplet manager, String value, char keyValue) {
-        this(manager, null, value, keyValue);
+    public GButtonOption(PApplet manager) {
+        this(manager, null);
     }
-
+    
+    @Override
+    public Object getProperty(String name) {
+        Object propertyValue = super.getProperty(name);
+        
+        if (propertyValue == null) {
+            switch ((String)name) {
+                case "keyValue": return this.keyValue();
+                default: return null;
+            }
+        }
+        
+        return propertyValue;
+    }
+    
+    @Override
+    public void setProperty(Object name, Object value) {
+        super.setProperty(name, value);
+        
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "keyValue":
+                    if (value instanceof Character)
+                        this.setKeyValue((Character)value);
+                break;
+            }
+        }
+    }
+    
+    // Deprecated
+    
     /**
      * Get the key value associated to the option
      * 
      * @return key value
+     * @deprecated
      */
     public char keyValue() {
         return this.keyValue;
@@ -66,6 +92,7 @@ public class GButtonOption extends GButtonWithText {
      * Set the key value associated to the option
      * 
      * @param keyValue key value
+     * @deprecated
      */
     public void setKeyValue(char keyValue) {
         this.keyValue = keyValue;

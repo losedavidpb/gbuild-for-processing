@@ -1,4 +1,4 @@
-# gBuild - UI builder for Processing (v.2.0.0)
+# gBuild - UI builder for Processing (v.3.2.0-alpha)
 by David Parreño Barbuzano
 
 ## Index
@@ -40,13 +40,27 @@ GPanel panel;
 void setup() {
   size(800, 800, P2D);
 
-  panel = new GPanel(this, width / 2, height / 2);
+  panel = new GPanel(this);
+  panel.setProperty("x", width / 2, "y", height / 2);
 
   for (int i = 0; i < 100; i++) {
     if (random(-10, 10) >= 0) {
-      panel.add(new GText(this, panel, "Hello", random(0, width), random(0, height)));
+      GText text = new GText(this, panel);
+      text.setProperty(
+        "value", "Hello", "x", random(0, width),
+        "y", random(0, height)
+      );
+
+      panel.add(text);
     } else {
-      panel.add(new GText(this, panel, "data/example.png", random(10, 50), random(10, 50)));
+      GImage image = new GImage(this, panel);
+      image.setProperty(
+        "image", "data/example.png",
+        "x", random(10, 50),
+        "y", random(10, 50)
+      );
+
+      panel.add(image);
     }
   }
 }

@@ -34,45 +34,118 @@ import processing.core.PVector;
 public class GText extends GComponent {
     private int tsize, talign, tmode;
     private String value;
-    private final GColor textColor;
+    private GColor textColor;
 
     /**
      * Create a new instance of a text
      * 
      * @param manager Processing manager
      * @param parent component parent
-     * @param value text value
-     * @param x x component for location
-     * @param y y component for location
      * @see GComponent#GComponent(processing.core.PApplet, api.gbuild.GComponent) 
      */
-    public GText(PApplet manager, GComponent parent, String value, float x, float y) {
+    public GText(PApplet manager, GComponent parent) {
         super(manager, parent);
-        super.pos(x, y);
-        this.textColor = new GColor(255, 255, 255);
-        this.value = value;
+        this.value = "Default";
+        this.textColor = Globals.TEXT_COLOR;
         this.tsize = Globals.TEXT_SIZE;
-        this.tmode = PConstants.MODEL;
-        this.talign = PConstants.LEFT;
+        this.tmode = Globals.TEXT_MODE;
+        this.talign = Globals.TEXT_ALIGN;
     }
     
     /**
      * Create a new instance of a text
      * 
      * @param manager Processing manager
-     * @param value text value
-     * @param x x component for location
-     * @param y y component for location
      * @see GComponent#GComponent(processing.core.PApplet) 
      */
-    public GText(PApplet manager, String value, float x, float y) {
-        this(manager, null, value, x, y);
+    public GText(PApplet manager) {
+        this(manager, null);
+    }
+  
+    @Override
+    public void draw() {
+        if (this.isVisible()) {
+            manager().pushMatrix();
+            manager().translate(this.pos().x, this.pos().y);
+            manager().textAlign(this.talign);
+            manager().textMode(this.tmode);
+            manager().textSize(this.tsize);
+            textColor.applyFillColor(manager());
+            manager().text(this.value, 0, 0);
+            manager().popMatrix();
+        }
+    }
+    
+    @Override
+    public Object getProperty(String name) {
+        Object propertyValue = super.getProperty(name);
+        
+        if (propertyValue == null) {
+            switch ((String)name) {
+                case "mode": return this.mode();
+                case "align": return this.align();
+                case "size": return this.size();
+                case "value": return this.value();
+                case "color": return this.textColor;
+                default: return null;
+            }
+        }
+        
+        return propertyValue;
+    }
+    
+    @Override
+    public void setProperty(Object name, Object value) {
+        super.setProperty(name, value);
+        
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "mode":
+                    if (value instanceof Integer)
+                        this.setMode((Integer)value);
+                break;
+
+                case "align":
+                    if (value instanceof Integer)
+                        this.setAlign((Integer)value);
+                break;
+
+                case "size":
+                    if (value instanceof Integer)
+                        this.setSize((Integer)value);
+                break;
+
+                case "value":
+                    if (value instanceof String)
+                        this.setText((String)value);
+                break;
+                
+                case "color":
+                    if (value instanceof GColor)
+                        this.setColor((GColor)value);
+                break;
+            }
+        }
+    }
+    
+    // Deprecated
+    
+    @Deprecated
+    @Override
+    public PVector dim() {
+        manager().pushMatrix();
+        manager().textSize(tsize);
+        float dimx = manager().textWidth(value());
+        float dimy = manager().textAscent() + manager().textDescent();
+        manager().popMatrix();
+        return new PVector(dimx, dimy);
     }
     
     /**
      * Get the text that will be drawn
      * 
      * @return text string
+     * @deprecated
      */
     public String value() {
         return this.value;
@@ -91,6 +164,7 @@ public class GText extends GComponent {
      * </p>
      * 
      * @return text size
+     * @deprecated
      */
     public int size() {
         return this.tsize;
@@ -105,6 +179,7 @@ public class GText extends GComponent {
      * </p>
      * 
      * @return text alignment
+     * @deprecated
      */
     public int align() {
         return this.talign;
@@ -120,27 +195,33 @@ public class GText extends GComponent {
      * 
      * @return text mode
      * @see GText#setMode(int)
+     * @deprecated
      */
     public int mode() {
         return this.tmode;
     }
     
     /**
-     * Return the color of the text
+     * Get the RGB components for text component
      * 
-     * @return color of the text
+     * @return RGB components
+     * @deprecated
      */
     public float[] color() {
-        return this.textColor.color();
-    } 
+        return this.textColor.clone().color();
+    }
     
     /**
-     * Specify the text that will be drawn
+     * Set the background color for text
      * 
-     * @param value text string
+     * @param color red, green, and blue component
+     * @see GColor#setColor(java.lang.Float...)
+     * @see GColor#setColor(java.lang.Integer...)
+     * @deprecated
      */
-    public void setText(String value) {
-        this.value = value;
+    public void setColor(GColor color) {
+        this.textColor = new GColor(0, 0, 0);
+        this.textColor.setColor(color);
     }
     
     /**
@@ -148,8 +229,10 @@ public class GText extends GComponent {
      * 
      * @param component red, green, and blue component
      * @see GColor#setColor(java.lang.Float...)
+     * @deprecated
      */
     public void setColor(Float ... component) {
+        this.textColor = new GColor(0, 0, 0);
         this.textColor.setColor(component);
     }
     
@@ -158,9 +241,21 @@ public class GText extends GComponent {
      * 
      * @param component red, green, and blue component
      * @see GColor#setColor(java.lang.Integer...)
+     * @deprecated
      */
     public void setColor(Integer ... component) {
+        this.textColor = new GColor(0, 0, 0);
         this.textColor.setColor(component);
+    }
+    
+    /**
+     * Specify the text that will be drawn
+     * 
+     * @param value text string
+     * @deprecated
+     */
+    public void setText(String value) {
+        this.value = value;
     }
     
     /**
@@ -176,6 +271,7 @@ public class GText extends GComponent {
      * </p>
      * 
      * @param tsize text size
+     * @deprecated
      */
     public void setSize(int tsize) {
         this.tsize = tsize;
@@ -195,6 +291,7 @@ public class GText extends GComponent {
      * </p>
      * 
      * @param talign text alignment
+     * @deprecated
      */
     public void setAlign(int talign) {
         boolean cond = talign == PConstants.LEFT || talign == PConstants.RIGHT || talign == PConstants.CENTER;
@@ -216,35 +313,10 @@ public class GText extends GComponent {
      * </p>
      * 
      * @param tmode text mode
+     * @deprecated
      */
     public void setMode(int tmode) {
         boolean cond = tmode == PConstants.MODEL || tmode == PConstants.SHAPE;
         if (cond == true) this.tmode = tmode;
-    }
-    
-    @Override
-    public PVector dim() {
-        manager().pushMatrix();
-        manager().textSize(tsize);
-        float dimx = manager().textWidth(value());
-        float dimy = manager().textAscent() + manager().textDescent();
-        manager().popMatrix();
-        return new PVector(dimx, dimy);
-    }
-  
-    @Override
-    public void draw() {
-        if (this.isVisible()) {
-            float[] c = textColor.color();
-            
-            manager().pushMatrix();
-            manager().translate(this.pos().x, this.pos().y);
-            manager().textAlign(this.talign);
-            manager().textMode(this.tmode);
-            manager().textSize(this.tsize);
-            manager().fill(manager().color(c[0], c[1], c[2]));
-            manager().text(this.value, 0, 0);
-            manager().popMatrix();
-        }
     }
 }

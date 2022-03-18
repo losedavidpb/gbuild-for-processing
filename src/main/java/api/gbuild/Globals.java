@@ -1,5 +1,7 @@
 package api.gbuild;
 
+import processing.core.PConstants;
+
 /**
  * <p>
  * Public constants and variables for gBuild components
@@ -35,6 +37,61 @@ public class Globals {
      * Default value for text size
      */
     public static final int TEXT_SIZE = 11;
+    
+    /**
+     * Default vlaue for text color
+     */
+    public static final GColor TEXT_COLOR = new GColor(0, 0, 0);
+    
+    /**
+     * Default value for text mode
+     */
+    public static final int TEXT_MODE = PConstants.MODEL;
+    
+    /**
+     * Default value for text align
+     */
+    public static final int TEXT_ALIGN = PConstants.LEFT;
+    
+    /**
+     * Defaulkt value for panel color
+     */
+    public static final GColor PANEL_COLOR = new GColor(255, 255, 255);
+    
+    /**
+     * Default value for panel stroke color
+     */
+    public static final GColor PANEL_STROKE = new GColor(255, 255, 255);
+    
+    /**
+     * Default with for a panel
+     */
+    public static final int PANEL_DIM_X = 50;
+    
+    /**
+     * Default height for a panel
+     */
+    public static final int PANEL_DIM_Y = 50;
+    
+    /**
+     * Defalt color for background button
+     */
+    public static final GColor BUTTON_BACKGROUND = new GColor(255, 255, 255);
+            
+    /**
+     * Default color for raw content of a button
+     */
+    public static final GColor BUTTON_RAW = new GColor(0, 0, 0);
+    
+    /**
+     * Default color for hover content of a button
+     */
+    public static final GColor BUTTON_HOVER = new GColor(255, 255, 255);
+    
+    /**
+     * Default color for stroke color of a button
+     */
+    public static final GColor BUTTON_STROKE = new GColor(255, 255, 255);
     
     /**
      * Space between each option of a menu

@@ -79,12 +79,6 @@ public abstract class GComponent {
     }
     
     /**
-     * Get the manager for current component.
-     * 
-     * @return Processing applet
-     */
-    
-    /**
      * Get the PApplet for current component
      * 
      * <p>
@@ -104,10 +98,184 @@ public abstract class GComponent {
      * Get the parent for current component
      * 
      * @return component parent
-     * @see GComponent#GComponent(processing.core.PApplet, api.gbuild.GComponent) 
+     * @see GComponent#GComponent(processing.core.PApplet) 
      */
     public GComponent parent() {
         return this.parent;
+    }
+
+    /**
+     * Draw component on the screen
+     * 
+     * <p>
+     * This method would drawn the component taking into
+     * account all the customization done before.
+     * </p>
+     * 
+     * <p>
+     * It is important to notice that component would not
+     * be drawn if visible state is not true.
+     * </p>
+     * 
+     * @see GComponent#isVisible()
+     */
+    public abstract void draw();
+    
+    /**
+     * Set value to passed property.
+     * 
+     * <p>
+     * If a component has more properties defined, it is
+     * necessary to override this method including them.
+     * </p>
+     * 
+     * @param params tuples (name, value) where name is
+     *               the property's name and value the
+     *               new definition for the property
+     */
+    public void setProperty(Object ... params) {
+        for (int i = 0; i < params.length - 1; i += 2)
+            this.setProperty(params[i], params[i + 1]);
+    }
+    
+    /**
+     * Get the value of passed property
+     * 
+     * @param name property's name
+     * @return property's value
+     */
+    public Object getProperty(String name) {
+        switch(name) {
+            case "isVisible": return this.isVisible();
+            case "x": return this.pos().x;
+            case "y": return this.pos().y;
+            case "w": return this.dim().x;
+            case "h": return this.dim().y;
+            default: return null;
+        }
+    }
+    
+    /**
+     * Set a new value to passed property
+     * 
+     * @param name property's name
+     * @param value property's value
+     */
+    public void setProperty(Object name, Object value) {
+        if (name instanceof String) {
+            switch((String)name) {
+                case "x":
+                    if (value instanceof Float)
+                        this.pos((Float)value);
+                    else if (value instanceof Integer)
+                        this.pos((Integer)value);
+                break;
+
+                case "y":
+                    if (value instanceof Float)
+                        this.pos(null, (Float)value);
+                    else if (value instanceof Integer)
+                        this.pos(null, (Integer)value);
+                break;
+
+                case "w":
+                    if (value instanceof Float)
+                        this.dim((Float)value);
+                    else if (value instanceof Integer)
+                        this.dim((Integer)value);
+                break;
+
+                case "h":
+                    if (value instanceof Float)
+                        this.dim(null, (Float)value);
+                    else if (value instanceof Integer)
+                        this.dim(null, (Integer)value);
+                break;
+                
+                case "isVisible":
+                    if (value instanceof Boolean)
+                        this.isVisible = (Boolean)value;
+                break;
+            }
+        }
+    }
+    
+    // ----------------------------------------------------
+    // Deprecated
+    // ----------------------------------------------------
+    
+    /**
+     * Return the location for component.
+     * 
+     * <p>
+     * The location of the component is always relative
+     * to the parent's location, so define it's position
+     * taking this into account.
+     * </p>
+     * 
+     * <p>
+     * In order to avoid problem for pointer reference, the
+     * vector returned would be a new instance of the attribute,
+     * since you cannot change the location unless you use setters
+     * </p>
+     * 
+     * @return a new instance for position
+     * @see GComponent#pos(java.lang.Float...)
+     * @see GComponent#pos(java.lang.Integer...)
+     * @deprecated
+     */
+    public PVector pos() {
+        if (parent == null)
+            return new PVector(this.pos.x, this.pos.y);
+
+        if (parent instanceof GPanel || parent instanceof GDialog) {
+            return new PVector(
+                this.parent.pos().x + this.pos.x,
+                this.parent.pos().y + this.pos.y
+            );
+        }
+        
+        return new PVector(
+            this.parent.pos().x + this.parent.dim().x + this.pos.x,
+            this.parent.pos().y + this.parent.dim().y + this.pos.y
+        );
+    }
+    
+    /**
+     * Return the location for component.
+     * 
+     * <p>
+     * This method is an extension of the other getter for location,
+     * since it offers to developers the possibility to get the
+     * initial value for the position without the consideration
+     * of the component's parent.
+     * </p>
+     * 
+     * @param noParent check if parent would be considered
+     * @return a new instance for position
+     * @see GComponent#pos()
+     * @deprecated
+     */
+    public PVector pos(boolean noParent) {
+        return !noParent? pos() : new PVector(this.pos.x, this.pos.y);
+    }
+
+    /**
+     * Return the dimension for component.
+     * 
+     * <p>
+     * In order to avoid problem for pointer reference, the
+     * vector returned would be a new instance of the attribute,
+     * since you cannot change the dimension unless you use setters
+     * </p>
+     * 
+     * @return a new instance for dimension
+     * @deprecated 
+     */
+    public PVector dim() {
+        return new PVector(
+            this.dim.x, this.dim.y
+        );
     }
     
     /**
@@ -120,9 +288,26 @@ public abstract class GComponent {
      * </p>
      * 
      * @return visible state
+     * @deprecated 
      */
     public boolean isVisible() {
         return this.isVisible;
+    }
+    
+    /**
+     * Specify if component will be visible.
+     * 
+     * <p>
+     * This method offers the possibility to indicate if
+     * component would be visible for user when it is drawn
+     * on the screen.
+     * </p>
+     * 
+     * @param isVisible visible state
+     * @deprecated 
+     */
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
     }
 
     /**
@@ -139,11 +324,15 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param coords integer coordinates (x, y)
+     * @deprecated
      */
     public void pos(Integer ... coords) {
         if (coords.length >= 1 && coords.length <= 2) {
             // Check if x value will only be set
-            if (coords.length == 1) this.pos.x = coords[0];
+            if (coords.length == 1) {
+                if (coords[0] != null)
+                    this.pos.x = coords[0];
+            }
 
             // Check if y value will only be set or
             // both components will be changed
@@ -168,11 +357,15 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param coords float coordinates (x, y)
+     * @deprecated
      */
     public void pos(Float ... coords) {
         if (coords.length >= 1 && coords.length <= 2) {
             // Check if x value will only be set
-            if (coords.length == 1) this.pos.x = coords[0];
+            if (coords.length == 1) {
+                if (coords[0] != null)
+                    this.pos.x = coords[0];
+            }
 
             // Check if y value will only be set or
             // both components will be changed
@@ -197,11 +390,15 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param dimensions integer dimensions (w, h)
+     * @deprecated
      */
     public void dim(Integer ... dimensions) {
         if (dimensions.length >= 1 && dimensions.length <= 2) {
             // Check if w value will only be set
-            if (dimensions.length == 1) this.dim.x = dimensions[0];
+            if (dimensions.length == 1) {
+                if (dimensions[0] != null)
+                    this.dim.x = dimensions[0];
+            }
 
             // Check if h value will only be set or
             // both components will be changed
@@ -226,11 +423,15 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param dimensions float dimensions (w, h)
+     * @deprecated
      */
     public void dim(Float ... dimensions) {
         if (dimensions.length >= 1 && dimensions.length <= 2) {
             // Check if w value will only be set
-            if (dimensions.length == 1) this.dim.x = dimensions[0];
+            if (dimensions.length == 1) {
+                if (dimensions[0] != null)
+                    this.dim.x = dimensions[0];
+            }
 
             // Check if h value will only be set or
             // both components will be changed
@@ -240,107 +441,4 @@ public abstract class GComponent {
             }
         }
     }
-    
-    /**
-     * Return the location for component.
-     * 
-     * <p>
-     * The location of the component is always relative
-     * to the parent's location, so define it's position
-     * taking this into account.
-     * </p>
-     * 
-     * <p>
-     * In order to avoid problem for pointer reference, the
-     * vector returned would be a new instance of the attribute,
-     * since you cannot change the location unless you use setters
-     * </p>
-     * 
-     * @return a new instance for position
-     * @see GComponent#pos(java.lang.Float...)
-     * @see GComponent#pos(java.lang.Integer...)
-     */
-    public PVector pos() {
-        if (parent == null)
-            return new PVector(this.pos.x, this.pos.y);
-        
-        if (parent() instanceof GPanel || parent() instanceof GDialog) {
-            return new PVector(
-                this.parent.pos().x + this.pos.x,
-                this.parent.pos().y + this.pos.y
-            );
-        }
-        
-        return new PVector(
-            this.parent.pos().x + this.parent().dim().x + this.pos.x,
-            this.parent.pos().y + this.parent().dim().y + this.pos.y
-        );
-    }
-    
-    /**
-     * Return the location for component.
-     * 
-     * <p>
-     * This method is an extension of the other getter for location,
-     * since it offers to developers the possibility to get the
-     * initial value for the position without the consideration
-     * of the component's parent.
-     * </p>
-     * 
-     * @param noParent check if parent would be considered
-     * @return a new instance for position
-     * @see GComponent#pos()
-     */
-    public PVector pos(boolean noParent) {
-        return !noParent? pos() : new PVector(this.pos.x, this.pos.y);
-    }
-
-    /**
-     * Return the dimension for component.
-     * 
-     * <p>
-     * In order to avoid problem for pointer reference, the
-     * vector returned would be a new instance of the attribute,
-     * since you cannot change the dimension unless you use setters
-     * </p>
-     * 
-     * @return a new instance for dimension
-     */
-    public PVector dim() {
-        return new PVector(
-            this.dim.x, this.dim.y
-        );
-    }
-
-    /**
-     * Specify if component will be visible.
-     * 
-     * <p>
-     * This method offers the possibility to indicate if
-     * component would be visible for user when it is drawn
-     * on the screen.
-     * </p>
-     * 
-     * @param isVisible visible state
-     */
-    public void setVisible(boolean isVisible) {
-        this.isVisible = isVisible;
-    }
-
-    /**
-     * Draw component on the screen
-     * 
-     * <p>
-     * This method would drawn the component taking into
-     * account all the customization done before.
-     * </p>
-     * 
-     * <p>
-     * It is important to notice that component would not
-     * be drawn if visible state is not true.
-     * </p>
-     * 
-     * @see GComponent#isVisible()
-     */
-    public abstract void draw();
 }

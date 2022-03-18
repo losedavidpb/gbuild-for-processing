@@ -1,5 +1,6 @@
 package api.gbuild.component.dialog;
 
+import api.gbuild.GColor;
 import api.gbuild.Globals;
 import api.gbuild.component.GComponent;
 import api.gbuild.component.GPanel;
@@ -40,145 +41,30 @@ import processing.core.PVector;
 public class GDialog extends GComponent {
     private PVector firstMousePoint, lastMousePoint;
     private boolean isClosed, isMovable, isMoving;
-    private final String title;
+    private String title;
     private final GPanel top, bottom;
     
     /**
      * Create a new instance of a dialog
      * 
      * @param manager Processing manager
-     * @param title title value
      * @see GComponent#GComponent(processing.core.PApplet) 
      */
-    public GDialog(PApplet manager, String title) {
+    public GDialog(PApplet manager) {
         super(manager);
         super.setVisible(false);
-        this.title = title;
         this.isClosed = false;
         this.isMovable = true;
+        this.isMoving = false;
         
-        this.top = new GPanel(manager, manager.width / 2, 50);
-        this.top.setColor(90, 155, 217);
+        this.top = new GPanel(manager);
         
-        GText textValue = new GText(
-            manager, this.top, this.title,
-            10, manager.textAscent() + manager.textDescent() + 20
-        );
-        
-        textValue.setMode(PConstants.SHAPE);
-        textValue.setColor(255, 255, 255);
-        textValue.setSize(30);
-        this.top.add(textValue);
-        
-        GButtonClose closeButton = new GButtonClose(
-            manager, this.top, 10 + textValue.dim().x + 10,
-            textValue.dim().y - 20
-        );
-        
-        closeButton.dim(20, 20);
-        
-        float[] c = closeButton.rawColor();
-        closeButton.setBackgroundColor(c[0], c[1], c[2]);
-        
-        this.top.add(closeButton);
-        
-        this.top.dim(this.top.dim().x + 10);
-        super.pos(this.top.pos().x, this.top.pos().y);
-        super.dim(this.top.dim().x, this.top.dim().y);
-        
-        this.bottom = new GPanel(manager, this.top, 0, this.top.dim().y);
-        this.bottom.dim(this.top.dim().x, this.top.dim().y);
+        this.bottom = new GPanel(manager, this.top);
         this.bottom.setColor(255, 255, 255);
-        this.bottom().noStroke();
-    }
-    
-    @Override
-    public void pos(Integer ... coords) {
-        this.top.pos(coords);
-        this.bottom.pos(0, (int)this.top.dim().y);
-        
-        super.pos(this.top.pos().x, this.top.pos().y);
-        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
-    }
-    
-    @Override
-    public void pos(Float ... coords) {
-        this.top.pos(coords);
-        this.bottom.pos(0, (int)this.top.dim().y);
-        
-        super.pos(this.top.pos().x, this.top.pos().y);
-        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
+        this.bottom.setTransparent(false);
+        this.bottom.setStrokeTransparent(true);
     }
 
-    /**
-     * Get the content of the dialog which can be customized
-     * 
-     * <p>
-     * This method allows developers to customize the content
-     * of the dialog, so it is possible to incorporate other
-     * components such as text, image, button, etc.
-     * </p>
-     * 
-     * <p>
-     * It is important to notice that all components that will
-     * be added would have it's parent as the bottom panel, so
-     * location should be defined as a relative position. This
-     * restriction is enable when draw method of a dialog apply
-     * this modifications, but it is possible to customize the
-     * dialog differently whether draw method does not do that.
-     * </p>
-     * 
-     * @return bottom content
-     */
-    public GPanel bottom() {
-        return this.bottom;
-    }
-    
-    /**
-     * Return if close button is been hovering
-     * 
-     * @return state selected
-     */
-    public boolean closeButtonIsSelected() {
-        return ((GButton)this.top.get(1)).isSelected();
-    }
-    
-    /**
-     * Get if panel is closed
-     * 
-     * @return closed state
-     */
-    public boolean isClosed() {
-        return this.isClosed;
-    }
-    
-    /**
-     * Get if panel can be moved
-     * 
-     * @return movable state
-     */
-    public boolean isMovable() {
-        return this.isMovable;
-    }
-    
-    /**
-     * Specify if dialog is closed
-     * 
-     * @param isClosed closed state
-     */
-    public void setClosed(boolean isClosed) {
-        this.isClosed = isClosed;
-    }
-    
-    /**
-     * Specify if dialog can be moved
-     * 
-     * @param isMovable movable state
-     */
-    public void setMovable(boolean isMovable) {
-        this.isMovable = isMovable;
-    }
-    
     /**
      * Move the dialog when user is dragging the mouse
      * pointer on it whether can be moved
@@ -228,6 +114,175 @@ public class GDialog extends GComponent {
     }
     
     @Override
+    public void draw() {
+        this.bottom.pos(0, (int)this.top.dim().y);
+        
+        if (this.bottom.dim().x > this.top.dim().x)
+            this.top.dim(this.bottom.dim().x);
+        else
+            this.bottom.dim(this.top.dim().x);
+        
+        ((GButtonClose)this.top.get(1)).pos(this.bottom.dim().x - 30);
+        
+        if (this.isVisible()) {
+            Globals.newDialog = true;
+            
+            manager().pushMatrix();
+            this.move();
+            this.top.draw();
+            this.bottom.draw();
+            
+            manager().popMatrix();
+        } else Globals.newDialog = false;
+    }
+    
+    @Override
+    public Object getProperty(String name) {
+        Object propertyValue = super.getProperty(name);
+        
+        if (propertyValue == null) {
+            switch ((String)name) {
+                case "closeButtonIsSelected": return this.closeButtonIsSelected();
+                case "isMovable": return this.isMovable;
+                case "isClosed": return this.isClosed();
+                case "bottom": return this.bottom();
+                case "title": return this.title;
+                default: return null;
+            }
+        }
+        
+        return propertyValue;
+    }
+    
+    @Override
+    public void setProperty(Object name, Object value) {
+        super.setProperty(name, value);
+        
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "isClosed":
+                    if (value instanceof Boolean)
+                        this.setClosed((Boolean)value);
+                break;
+
+                case "isMovable":
+                    if (value instanceof Boolean)
+                        this.setMovable((Boolean)value);
+                break;
+                
+                case "title":
+                    if (value instanceof String)
+                        this.setTitle((String)value);
+                break;
+            }
+        }
+    }
+    
+    // Deprecated
+    
+    @Deprecated        
+    @Override
+    public void pos(Integer ... coords) {
+        this.top.pos(coords);
+        this.bottom.pos(0, (int)this.top.dim().y);
+        
+        super.pos(this.top.pos().x, this.top.pos().y);
+        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
+    }
+    
+    @Deprecated
+    @Override
+    public void pos(Float ... coords) {
+        this.top.pos(coords);
+        this.bottom.pos(0, (int)this.top.dim().y);
+        
+        super.pos(this.top.pos().x, this.top.pos().y);
+        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
+    }
+    
+    /**
+     * Create dialog based on title
+     * 
+     * <p>
+     * Each time the title is changed, dimensions
+     * for top and bottom are would be changed.
+     * </p>
+     * 
+     * @param title title for dialog
+     * @deprecated
+     */
+    public final void setTitle(String title) {
+        this.title = title;
+        
+        this.top.clear();
+        this.top.pos(manager().width / 2, 50);
+        this.top.setStrokeTransparent(true);
+        this.top.setTransparent(false);
+        this.top.setColor(90, 155, 217);
+        
+        GText textValue = new GText(manager(), this.top);
+        
+        textValue.setText(this.title);
+        textValue.pos(10, (int)manager().textAscent() + (int)manager().textDescent() + 20);
+        textValue.setMode(PConstants.SHAPE);
+        textValue.setColor(255, 255, 255);
+        textValue.setSize(30);
+        
+        this.top.add(textValue);
+        
+        GButtonClose closeButton = new GButtonClose(manager(), this.top);
+        closeButton.pos(10 + textValue.dim().x + 10, textValue.dim().y - 20);
+        closeButton.dim(20, 20);
+        
+        closeButton.setBackgroundColor((GColor)closeButton.getProperty("rawColor"));
+        
+        this.top.add(closeButton);
+        
+        this.top.dim(this.top.dim().x + 10);
+        super.pos(this.top.pos().x, this.top.pos().y);
+        super.dim(this.top.dim().x, this.top.dim().y);
+        
+        this.bottom.pos(0, (int)this.top.dim().y);
+        this.bottom.dim(this.top.dim().x, this.top.dim().y);
+    }
+    
+    /**
+     * Return if close button is been hovering
+     * 
+     * @return state selected
+     * @deprecated
+     */
+    public boolean closeButtonIsSelected() {
+        return ((GButton)this.top.get(1)).isSelected();
+    }
+    
+    /**
+     * Get the content of the dialog which can be customized
+     * 
+     * <p>
+     * This method allows developers to customize the content
+     * of the dialog, so it is possible to incorporate other
+     * components such as text, image, button, etc.
+     * </p>
+     * 
+     * <p>
+     * It is important to notice that all components that will
+     * be added would have it's parent as the bottom panel, so
+     * location should be defined as a relative position. This
+     * restriction is enable when draw method of a dialog apply
+     * this modifications, but it is possible to customize the
+     * dialog differently whether draw method does not do that.
+     * </p>
+     * 
+     * @return bottom content
+     * @deprecated
+     */
+    public GPanel bottom() {
+        return this.bottom;
+    }
+    
+    @Deprecated
+    @Override
     public void setVisible(boolean isVisible) {
         super.setVisible(isVisible);
     
@@ -237,22 +292,44 @@ public class GDialog extends GComponent {
         }
     }
     
-    @Override
-    public void draw() {
-        this.bottom.pos(0, (int)this.top.dim().y);
-        this.top.dim(this.bottom.dim().x);
-        ((GButtonClose)this.top.get(1)).pos(this.bottom.dim().x - 30);
-        
-        if (this.isVisible()) {
-            Globals.newDialog = true;
-            
-            manager().pushMatrix();
-            this.move();
-            
-            this.top.draw();
-            this.bottom.draw();
-            
-            manager().popMatrix();
-        } else Globals.newDialog = false;
+    
+    /**
+     * Get if panel is closed
+     * 
+     * @return closed state
+     * @deprecated
+     */
+    public boolean isClosed() {
+        return this.isClosed;
+    }
+    
+    /**
+     * Get if panel can be moved
+     * 
+     * @return movable state
+     * @deprecated
+     */
+    public boolean isMovable() {
+        return this.isMovable;
+    }
+    
+    /**
+     * Specify if dialog is closed
+     * 
+     * @param isClosed closed state
+     * @deprecated
+     */
+    public void setClosed(boolean isClosed) {
+        this.isClosed = isClosed;
+    }
+    
+    /**
+     * Specify if dialog can be moved
+     * 
+     * @param isMovable movable state
+     * @deprecated
+     */
+    public void setMovable(boolean isMovable) {
+        this.isMovable = isMovable;
     }
 }

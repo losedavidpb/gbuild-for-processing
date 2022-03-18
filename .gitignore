@@ -46,3 +46,4 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 buildlib.sh
+/nbproject/

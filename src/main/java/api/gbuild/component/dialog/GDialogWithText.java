@@ -21,24 +21,72 @@ import processing.core.PConstants;
  */
 public class GDialogWithText extends GDialog {
     private int spaceValue = Globals.SPACE_GDIALOG_TEXT;
-    private boolean textModified;
     
     /**
      * Create a new instance of a dialog with text
      * 
      * @param manager Processing manager
-     * @param title title dialog
-     * @param message message dialog
-     * @see GDialog#GDialog(processing.core.PApplet, java.lang.String) 
+     * @see GDialog#GDialog(processing.core.PApplet) 
      */
-    public GDialogWithText(PApplet manager, String title, String message) {
-        super(manager, title);
+    public GDialogWithText(PApplet manager) {
+        super(manager);
+    }
+    
+    @Override
+    public Object getProperty(String name) {
+        Object propertyValue = super.getProperty(name);
         
-        this.textModified = false;
+        if (propertyValue == null) {
+            switch ((String)name) {
+                case "space": return this.space();
+                default: return null;
+            }
+        }
+        
+        return propertyValue;
+    }
+    
+    @Override
+    public void setProperty(Object name, Object value) {
+        super.setProperty(name, value);
+        
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "message":
+                    if (value instanceof String)
+                        this.setMessage((String)value);
+                break;
+
+                case "setSpace":
+                    if (value instanceof Integer)
+                        this.setSpace((Integer)value);
+                break;
+            }
+        }
+    }
+    
+    // Deprecated
+    
+    /**
+     * Set message to bottom area
+     * 
+     * <p>
+     * Dimensions for dialog would be changed
+     * considering the message as a priority
+     * </p>
+     * 
+     * @param message message content
+     * @deprecated
+     */
+    public void setMessage(String message) {
         int diffPosY = 20;
+        super.bottom().clear();
         
         for (String line : message.split("\n")) {
-            GText text = new GText(manager, super.bottom(), line, 10, diffPosY);
+            GText text = new GText(manager(), super.bottom());
+            
+            text.setText(line);
+            text.pos(10, diffPosY);
             text.setColor(0, 0, 0);
             text.setSize(20);
             text.setMode(PConstants.SHAPE);
@@ -48,31 +96,10 @@ public class GDialogWithText extends GDialog {
     }
     
     /**
-     * Return an example of one of the lines of the text
-     *
-     * <p>
-     * This method was designed in order to allow the
-     * possibility to modify the text properties of
-     * the dialog by just adjusting one of them.
-     * </p>
-     * 
-     * <p>
-     * The changes set at this text would be also be
-     * applied for the rest of component when draw
-     * function is called
-     * </p>
-     * 
-     * @return instance of one of the texts
-     */
-    public GText customizeContent() {
-        this.textModified = true;
-        return bottom().numComponents() > 1? (GText)bottom().get(0) : null;
-    }
-    
-    /**
      * Return the space between each line of the text
      * 
      * @return space value
+     * @deprecated
      */
     public int space() {
         return this.spaceValue;
@@ -82,32 +109,9 @@ public class GDialogWithText extends GDialog {
      * Set the space between each line of the text
      * 
      * @param spaceValue space value
+     * @deprecated
      */
     public void setSpace(int spaceValue) {
         this.spaceValue = spaceValue;
-    }
-    
-    @Override
-    public void draw() {
-        if (this.textModified) {
-            this.textModified = false;
-            
-            if (this.bottom().numComponents() > 0) {
-                GText parentText = (GText)this.bottom().get(0);
-            
-                for (int i = 1; i < this.bottom().numComponents(); i++) {
-                    GText textValue = (GText)this.bottom().get(i);
-                    textValue.setVisible(parentText.isVisible());
-                    textValue.setAlign(parentText.align());
-                    textValue.setMode(parentText.mode());
-                    textValue.setSize(parentText.size());
-                    
-                    float[] c = textValue.color();
-                    textValue.setColor(c[0], c[1], c[2]);
-                }
-            }
-        }
-        
-        super.draw();
     }
 }

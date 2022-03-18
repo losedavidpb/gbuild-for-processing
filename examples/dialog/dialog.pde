@@ -6,17 +6,18 @@
 
 import api.gbuild.component.*;
 import api.gbuild.component.dialog.*;
+import api.gbuild.*;
 
 GDialog dialog;
 
 void setup() {
   size(800, 800, P2D);
   
-  dialog = new GDialogWithText(this, "Title for Dialog", "This is an example");
-  ((GText)dialog.bottom().get(0)).setColor(0, 0, 0);
-  dialog.bottom().setColor(255, 255, 255);
-  dialog.setVisible(true);
-  dialog.setMovable(true);
+  dialog = new GDialogWithText(this);
+  
+  dialog.setProperty("title", "Title for Dialog");
+  dialog.setProperty("message", "This is an example");
+  dialog.setProperty("isVisible", true);
 }
 
 void draw() {
