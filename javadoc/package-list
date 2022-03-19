@@ -1,5 +1,4 @@
-api.gbuild
-api.gbuild.component
-api.gbuild.component.button
-api.gbuild.component.dialog
-api.gbuild.component.menu
+gbuild
+gbuild.button
+gbuild.dialog
+gbuild.menu

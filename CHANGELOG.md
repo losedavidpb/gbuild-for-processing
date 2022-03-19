@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2022-03-19
+
+### Added
+
+- Add new property for components to get location without the parent
+- Include message error when a property was not found
+- Include tint color option for images
+- Include access  to all image properties
+- Font property for text components
+
+### Changed
+
+- Rename setProperty method to setProp
+- Rename getProperty method to getProp
+- Method setProperty would return a boolean to check if property was changed
+- Move all menus implementations to gbuild.menu package
+- Move all dialogs implementations to gbuild.dialog package
+- Move all buttons implementations to gbuild.button package
+- Move the rest of component to gbuild package
+- Text mode and alignment would return a boolean to check if property was not changed
+- Mode for buttons would return a boolean to check if property was not changed
+- Space for menus would return a boolean to check if property was not changed
+
 ## [3.2.0-alpha] - 2022-03-18
 
 ### Added
