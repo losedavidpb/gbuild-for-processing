@@ -41,12 +41,12 @@ void setup() {
   size(800, 800, P2D);
 
   panel = new GPanel(this);
-  panel.setProperty("x", width / 2, "y", height / 2);
+  panel.setProp("x", width / 2, "y", height / 2);
 
   for (int i = 0; i < 100; i++) {
     if (random(-10, 10) >= 0) {
       GText text = new GText(this, panel);
-      text.setProperty(
+      text.setProp(
         "value", "Hello", "x", random(0, width),
         "y", random(0, height)
       );
@@ -54,7 +54,7 @@ void setup() {
       panel.add(text);
     } else {
       GImage image = new GImage(this, panel);
-      image.setProperty(
+      image.setProp(
         "image", "data/example.png",
         "x", random(10, 50),
         "y", random(10, 50)
