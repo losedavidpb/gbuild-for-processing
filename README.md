@@ -1,4 +1,4 @@
-# gBuild - UI builder for Processing (v.3.2.0-alpha)
+# gBuild - UI builder for Processing
 by David Parreño Barbuzano
 
 ## Index
