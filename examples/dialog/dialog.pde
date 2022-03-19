@@ -15,9 +15,9 @@ void setup() {
   
   dialog = new GDialogWithText(this);
   
-  dialog.setProperty("title", "Title for Dialog");
-  dialog.setProperty("message", "This is an example");
-  dialog.setProperty("isVisible", true);
+  dialog.setProp("title", "Title for Dialog");
+  dialog.setProp("message", "This is an example");
+  dialog.setProp("isVisible", true);
 }
 
 void draw() {
