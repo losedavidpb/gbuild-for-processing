@@ -4,9 +4,8 @@
 // All Copyright Reserved (C)
 //
 
-import api.gbuild.component.*;
-import api.gbuild.component.dialog.*;
-import api.gbuild.*;
+import gbuild.*;
+import gbuild.dialog.*;
 
 GDialog dialog;
 
@@ -15,9 +14,9 @@ void setup() {
   
   dialog = new GDialogWithText(this);
   
-  dialog.setProp("title", "Title for Dialog");
-  dialog.setProp("message", "This is an example");
-  dialog.setProp("isVisible", true);
+  dialog.prop("title", "Title for Dialog");
+  dialog.prop("message", "This is an example");
+  dialog.prop("isVisible", true);
 }
 
 void draw() {

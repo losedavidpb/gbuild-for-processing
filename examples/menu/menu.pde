@@ -4,9 +4,9 @@
 // All Copyright Reserved (C)
 //
 
-import api.gbuild.component.menu.*;
-import api.gbuild.component.button.*;
-import api.gbuild.*;
+import gbuild.menu.*;
+import gbuild.button.*;
+import gbuild.*;
 
 GMenu barmenu, verticalmenu;
 float angle = 0;
@@ -16,23 +16,23 @@ void setup() {
   noSmooth();
   
   barmenu = new HorizontalGMenu(this);
-  barmenu.setProp("x", 0, "y", 0);
-  barmenu.setProp("color", new GColor(0, 0, 0));
-  barmenu.setProp("w", width, "h", 50);
+  barmenu.prop("x", 0, "y", 0);
+  barmenu.prop("color", new GColor(0, 0, 0));
+  barmenu.prop("w", width, "h", 50);
 
   verticalmenu = new VerticalGMenu(this);
-  verticalmenu.setProp("x", width - 150, "y", 0, "color", new GColor(0, 0, 0));
-  verticalmenu.setProp("w", 150, "h", height);
+  verticalmenu.prop("x", width - 150, "y", 0, "color", new GColor(0, 0, 0));
+  verticalmenu.prop("w", 150, "h", height);
 
   for (int i = 0; i < 4; i++) {
     String name = "Option " + i;
     char keyValue = (char)i;
 
     GButton option = new GButtonOption(this);
-    option.setProp("value", name, "keyValue", keyValue);
-    option.setProp("isTransparent", true, "size", 20);
-    option.setProp("rawColor", new GColor(255, 255, 255));
-    option.setProp("hoverColor", new GColor(90, 155, 217));
+    option.prop("value", name, "keyValue", keyValue);
+    option.prop("isTransparent", true, "size", 20);
+    option.prop("rawColor", new GColor(255, 255, 255));
+    option.prop("hoverColor", new GColor(90, 155, 217));
     barmenu.add(option);
   }
 
@@ -41,10 +41,10 @@ void setup() {
     char keyValue = (char)i;
 
     GButton option = new GButtonOption(this);
-    option.setProp("value", name, "keyValue", keyValue);
-    option.setProp("isTransparent", true, "size", 20);
-    option.setProp("rawColor", new GColor(255, 255, 255));
-    option.setProp("hoverColor", new GColor(90, 155, 217));
+    option.prop("value", name, "keyValue", keyValue);
+    option.prop("isTransparent", true, "size", 20);
+    option.prop("rawColor", new GColor(255, 255, 255));
+    option.prop("hoverColor", new GColor(90, 155, 217));
     verticalmenu.add(option);
   }
 }
