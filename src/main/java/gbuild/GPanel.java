@@ -166,8 +166,8 @@ public class GPanel extends GComponent {
     }
     
     @Override
-    public Object getProp(String name) {
-        Object propertyValue = super.getProp(name);
+    public Object prop(String name) {
+        Object propertyValue = super.prop(name);
         
         if (propertyValue == null) {
             switch ((String)name) {
@@ -175,10 +175,7 @@ public class GPanel extends GComponent {
                 case "color": return this.color.clone();
                 case "strokeColor": return this.strokeColor.clone();
                 case "isStrokeTransparent": return this.isStrokeTransparent();
-                default:
-                    System.out.printf("error: property %s was not found", name);
-                    System.exit(-1);
-                    return null;
+                default: return null;
             }
         }
         
@@ -186,8 +183,8 @@ public class GPanel extends GComponent {
     }
     
     @Override
-    public boolean setProp(Object name, Object value) {
-        boolean cond = super.setProp(name, value);
+    public boolean prop(Object name, Object value) {
+        boolean cond = super.prop(name, value);
         
         if (cond == false) {
             if (name instanceof String) {

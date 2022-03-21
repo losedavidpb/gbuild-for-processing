@@ -10,15 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add new property for components to get location without the parent
-- Include message error when a property was not found
 - Include tint color option for images
-- Include access  to all image properties
+- Include access to all image properties
 - Font property for text components
 
 ### Changed
 
-- Rename setProperty method to setProp
-- Rename getProperty method to getProp
+- Rename setProperty method to prop
+- Rename getProperty method to prop
 - Method setProperty would return a boolean to check if property was changed
 - Move all menus implementations to gbuild.menu package
 - Move all dialogs implementations to gbuild.dialog package
@@ -28,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mode for buttons would return a boolean to check if property was not changed
 - Space for menus would return a boolean to check if property was not changed
 
-## [3.2.0-alpha] - 2022-03-18
+## [3.2.0] - 2022-03-18
 
 ### Added
 

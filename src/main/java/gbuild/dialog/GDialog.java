@@ -137,8 +137,8 @@ public class GDialog extends GComponent {
     }
     
     @Override
-    public Object getProp(String name) {
-        Object propertyValue = super.getProp(name);
+    public Object prop(String name) {
+        Object propertyValue = super.prop(name);
         
         if (propertyValue == null) {
             switch ((String)name) {
@@ -147,10 +147,7 @@ public class GDialog extends GComponent {
                 case "isClosed": return this.isClosed();
                 case "bottom": return this.bottom();
                 case "title": return this.title;
-                default:
-                    System.out.printf("error: property %s was not found", name);
-                    System.exit(-1);
-                    return null;
+                default: return null;
             }
         }
         
@@ -158,8 +155,8 @@ public class GDialog extends GComponent {
     }
     
     @Override
-    public boolean setProp(Object name, Object value) {
-        boolean cond = super.setProp(name, value);
+    public boolean prop(Object name, Object value) {
+        boolean cond = super.prop(name, value);
         
         if (cond == false) {
             if (name instanceof String) {
@@ -247,7 +244,7 @@ public class GDialog extends GComponent {
         closeButton.pos(10 + textValue.dim().x + 10, textValue.dim().y - 20);
         closeButton.dim(20, 20);
         
-        closeButton.setBackgroundColor((GColor)closeButton.getProp("rawColor"));
+        closeButton.setBackgroundColor((GColor)closeButton.prop("rawColor"));
         
         this.top.add(closeButton);
         

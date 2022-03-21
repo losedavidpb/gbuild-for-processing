@@ -67,18 +67,15 @@ public class GImage extends GComponent {
     }
     
     @Override
-    public Object getProp(String name) {
-        Object value = super.getProp(name);
+    public Object prop(String name) {
+        Object value = super.prop(name);
         
         if (value == null) {
             switch(name) {
                 case "tintMode": return this.isTintMode();
                 case "tintColor": return this.tintColor();
                 case "image": return this.image;
-                default:
-                    System.out.printf("error: property %s was not found", name);
-                    System.exit(-1);
-                    return null;
+                default: return null;
             }
         }
         
@@ -86,8 +83,8 @@ public class GImage extends GComponent {
     }
     
     @Override
-    public boolean setProp(Object name, Object value) {
-        boolean cond = super.setProp(name, value);
+    public boolean prop(Object name, Object value) {
+        boolean cond = super.prop(name, value);
         
         if (cond == false) {
             if (name instanceof String) {

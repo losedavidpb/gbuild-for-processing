@@ -133,9 +133,9 @@ public abstract class GComponent {
      *               the property's name and value the
      *               new definition for the property
      */
-    public void setProp(Object ... params) {
+    public void prop(Object ... params) {
         for (int i = 0; i < params.length - 1; i += 2)
-            this.setProp(params[i], params[i + 1]);
+            this.prop(params[i], params[i + 1]);
     }
     
     /**
@@ -144,7 +144,7 @@ public abstract class GComponent {
      * @param name property's name
      * @return property's value
      */
-    public Object getProp(String name) {
+    public Object prop(String name) {
         switch(name) {
             case "isVisible": return this.isVisible();
             case "xp": return this.pos().x;
@@ -153,10 +153,7 @@ public abstract class GComponent {
             case "y": return this.pos(true).y;
             case "w": return this.dim().x;
             case "h": return this.dim().y;
-            default:
-                System.out.printf("error: property %s was not found", name);
-                System.exit(-1);
-                return null;
+            default: return null;
         }
     }
     
@@ -167,7 +164,7 @@ public abstract class GComponent {
      * @param value property's value
      * @return specifies if property was changed
      */
-    public boolean setProp(Object name, Object value) {
+    public boolean prop(Object name, Object value) {
         if (name instanceof String) {
             switch((String)name) {
                 case "x":

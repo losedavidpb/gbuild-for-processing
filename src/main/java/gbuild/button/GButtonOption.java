@@ -49,16 +49,13 @@ public class GButtonOption extends GButtonWithText {
     }
     
     @Override
-    public Object getProp(String name) {
-        Object propertyValue = super.getProp(name);
+    public Object prop(String name) {
+        Object propertyValue = super.prop(name);
         
         if (propertyValue == null) {
             switch ((String)name) {
                 case "keyValue": return this.keyValue();
-                default:
-                    System.out.printf("error: property %s was not found", name);
-                    System.exit(-1);
-                    return null;
+                default: return null;
             }
         }
         
@@ -66,8 +63,8 @@ public class GButtonOption extends GButtonWithText {
     }
     
     @Override
-    public boolean setProp(Object name, Object value) {
-        boolean cond = super.setProp(name, value);
+    public boolean prop(Object name, Object value) {
+        boolean cond = super.prop(name, value);
         
         if (cond == false) {
             if (name instanceof String) {
