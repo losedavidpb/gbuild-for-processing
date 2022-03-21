@@ -10,14 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add new property for components to get location without the parent
+- Include message error when a property was not found
 - Include tint color option for images
-- Include access to all image properties
+- Include access  to all image properties
 - Font property for text components
 
 ### Changed
 
-- Rename setProperty method to prop
-- Rename getProperty method to prop
+- Rename setProperty method to setProp
+- Rename getProperty method to getProp
 - Method setProperty would return a boolean to check if property was changed
 - Move all menus implementations to gbuild.menu package
 - Move all dialogs implementations to gbuild.dialog package
@@ -27,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mode for buttons would return a boolean to check if property was not changed
 - Space for menus would return a boolean to check if property was not changed
 
-## [3.2.0] - 2022-03-18
+## [3.2.0-alpha] - 2022-03-18
 
 ### Added
 
@@ -284,4 +285,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.0.0]: https://github.com/losedavidpb/gbuild-for-processing/commit/8719e2ce8172c01f53b5ddcebeca77b1944344f6
 [3.0.1]: https://github.com/losedavidpb/gbuild-for-processing/commit/03583f82e635134e4b290f7eae7f7fb7e8bec0e6
 [3.1.0]: https://github.com/losedavidpb/gbuild-for-processing/commit/45585ab656d7005e225154598a1b817f74562dab
-[3.2.0-alpha]: 
+[3.2.0]: https://github.com/losedavidpb/gbuild-for-processing/commit/f8c7ea3a6d202273f7de00e3ee5c7d4950e4b295
+[4.0.0]: 
