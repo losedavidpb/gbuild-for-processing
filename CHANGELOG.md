@@ -17,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Rename setProperty method to setProp
-- Rename getProperty method to getProp
+- Rename setProperty method to prop
+- Rename getProperty method to prop
 - Method setProperty would return a boolean to check if property was changed
 - Move all menus implementations to gbuild.menu package
 - Move all dialogs implementations to gbuild.dialog package
