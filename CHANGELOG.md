@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mode for buttons would return a boolean to check if property was not changed
 - Space for menus would return a boolean to check if property was not changed
 
-## [3.2.0-alpha] - 2022-03-18
+## [3.2.0] - 2022-03-18
 
 ### Added
 
