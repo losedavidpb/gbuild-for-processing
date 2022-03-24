@@ -3,7 +3,6 @@ package gbuild.button;
 import gbuild.GColor;
 import gbuild.GComponent;
 import gbuild.GPanel;
-import gbuild.Globals;
 import processing.core.PApplet;
 
 /**
@@ -27,6 +26,26 @@ public abstract class GButton extends GComponent {
     protected boolean isSelected;
     
     /**
+     * Defalt color for background button
+     */
+    public static final GColor BUTTON_BACKGROUND = new GColor(255, 255, 255);
+            
+    /**
+     * Default color for raw content of a button
+     */
+    public static final GColor BUTTON_RAW = new GColor(0, 0, 0);
+    
+    /**
+     * Default color for hover content of a button
+     */
+    public static final GColor BUTTON_HOVER = new GColor(255, 255, 255);
+    
+    /**
+     * Default color for stroke color of a button
+     */
+    public static final GColor BUTTON_STROKE = new GColor(255, 255, 255);
+    
+    /**
      * Create a new instance of a button
      * 
      * @param manager Processing manager
@@ -35,10 +54,10 @@ public abstract class GButton extends GComponent {
      */
     public GButton(PApplet manager, GComponent parent) {
         super(manager, parent);
-        this.backgroundColor = Globals.BUTTON_BACKGROUND.clone();
-        this.rawColor = Globals.BUTTON_RAW.clone();
-        this.hoverColor = Globals.BUTTON_HOVER.clone();
-        this.strokeColor = Globals.BUTTON_STROKE.clone();
+        this.backgroundColor = BUTTON_BACKGROUND.clone();
+        this.rawColor = BUTTON_RAW.clone();
+        this.hoverColor = BUTTON_HOVER.clone();
+        this.strokeColor = BUTTON_STROKE.clone();
         this.isSelected = false;
         
         this.content = new GPanel(manager, parent);
@@ -57,85 +76,76 @@ public abstract class GButton extends GComponent {
     
     @Override
     public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "size": return this.dim().x;
-                case "isSelected": return this.isSelected();
-                case "isTransparent": return this.isTransparent();
-                case "isStrokeTransparent": return this.isStrokeTransparent();
-                case "backgroundColor": return this.backgroundColor.clone();
-                case "strokeColor": return this.strokeColor.clone();
-                case "rawColor": return this.rawColor.clone();
-                case "hoverColor": return this.hoverColor.clone();
-                default: return null;
-            }
+        switch ((String)name) {
+            case "size": return this.dim().x;
+            case "isSelected": return this.isSelected();
+            case "isTransparent": return this.isTransparent();
+            case "isStrokeTransparent": return this.isStrokeTransparent();
+            case "backgroundColor": return this.backgroundColor.clone();
+            case "strokeColor": return this.strokeColor.clone();
+            case "rawColor": return this.rawColor.clone();
+            case "hoverColor": return this.hoverColor.clone();
         }
         
-        return propertyValue;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "size":
-                        if (value instanceof Integer) {
-                            this.setSize((Integer)value);
-                            return true;
-                        }
-                    break;
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "size":
+                    if (value instanceof Integer) {
+                        this.setSize((Integer)value);
+                        return true;
+                    }
+                break;
 
-                    case "isSelected":
-                        if (value instanceof Boolean) {
-                            this.setSelected((Boolean)value);
-                            return true;
-                        }
-                    break;
+                case "isSelected":
+                    if (value instanceof Boolean) {
+                        this.setSelected((Boolean)value);
+                        return true;
+                    }
+                break;
 
-                    case "isTransparent":
-                        if (value instanceof Boolean) {
-                            this.setTransparent((Boolean)value);
-                            return true;
-                        }
-                    break;
-                
-                    case "isStrokeTransparent":
-                        if (value instanceof Boolean) {
-                            this.setStrokeTransparent((Boolean)value);
-                            return true;
-                        }
-                    break;
+                case "isTransparent":
+                    if (value instanceof Boolean) {
+                        this.setTransparent((Boolean)value);
+                        return true;
+                    }
+                break;
 
-                    case "backgroundColor":
-                        if (value instanceof GColor) {
-                            this.setBackgroundColor((GColor)value);
-                            return true;
-                        }
-                    break;
-                
-                    case "rawColor":
-                        if (value instanceof GColor) {
-                            this.setRawColor((GColor)value);
-                            return true;
-                        }
-                    break;
-                
-                    case "hoverColor":
-                        if (value instanceof GColor) {
-                            this.setHoverColor((GColor)value);
-                            return true;
-                        }
-                    break;
-                }
+                case "isStrokeTransparent":
+                    if (value instanceof Boolean) {
+                        this.setStrokeTransparent((Boolean)value);
+                        return true;
+                    }
+                break;
+
+                case "backgroundColor":
+                    if (value instanceof GColor) {
+                        this.setBackgroundColor((GColor)value);
+                        return true;
+                    }
+                break;
+
+                case "rawColor":
+                    if (value instanceof GColor) {
+                        this.setRawColor((GColor)value);
+                        return true;
+                    }
+                break;
+
+                case "hoverColor":
+                    if (value instanceof GColor) {
+                        this.setHoverColor((GColor)value);
+                        return true;
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     // Deprecated

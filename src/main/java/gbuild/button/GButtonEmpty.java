@@ -1,7 +1,8 @@
 package gbuild.button;
 
 import gbuild.GComponent;
-import gbuild.Globals;
+import static gbuild.GPanel.PANEL_DIM_X;
+import static gbuild.GPanel.PANEL_DIM_Y;
 import processing.core.PApplet;
 
 /**
@@ -40,7 +41,7 @@ public class GButtonEmpty extends GButton {
     public GButtonEmpty(PApplet manager, GComponent parent) {
         super(manager, parent);
         super.content.setColor(255, 255, 25);
-        super.content.dim(Globals.PANEL_DIM_X, Globals.PANEL_DIM_Y);
+        super.content.dim(PANEL_DIM_X, PANEL_DIM_Y);
     }
     
     @Override

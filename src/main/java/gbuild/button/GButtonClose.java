@@ -1,7 +1,8 @@
 package gbuild.button;
 
 import gbuild.GComponent;
-import gbuild.Globals;
+import static gbuild.GPanel.PANEL_DIM_X;
+import static gbuild.GPanel.PANEL_DIM_Y;
 import processing.core.PApplet;
 
 /**
@@ -30,7 +31,7 @@ public class GButtonClose extends GButton {
         super.setHoverColor(226, 19, 19);
         super.content.setStrokeTransparent(true);
         super.setTransparent(true);
-        super.content.dim(Globals.PANEL_DIM_X, Globals.PANEL_DIM_Y);
+        super.content.dim(PANEL_DIM_X, PANEL_DIM_Y);
         this.content.clear();
     }
     
@@ -68,6 +69,7 @@ public class GButtonClose extends GButton {
             int offset = 3;
             
             manager().pushMatrix();
+            manager().pushStyle();
             manager().translate(content.pos().x, content.pos().y);
             
             manager().strokeWeight(5);
@@ -86,6 +88,7 @@ public class GButtonClose extends GButton {
                 manager().line(0, this.content.dim().y, 0, 0);
             }
             
+            manager().popStyle();
             manager().popMatrix();
         }
     }

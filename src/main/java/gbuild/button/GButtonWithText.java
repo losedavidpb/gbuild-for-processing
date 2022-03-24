@@ -46,52 +46,43 @@ public class GButtonWithText extends GButton {
     
     @Override
     public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "size": return this.dim().x;
-                case "value": return this.value();
-                case "mode": return this.mode();
-                case "text": return this.text();
-                default: return null;
-            }
+        switch ((String)name) {
+            case "size": return this.dim().x;
+            case "value": return this.value();
+            case "mode": return this.mode();
+            case "text": return this.text();
         }
         
-        return propertyValue;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "size":
-                        if (value instanceof Integer) {
-                            this.setSize((Integer)value);
-                            return true;
-                        }
-                    break;
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "size":
+                    if (value instanceof Integer) {
+                        this.setSize((Integer)value);
+                        return true;
+                    }
+                break;
 
-                    case "value":
-                        if (value instanceof String) {
-                            this.setValue((String)value);
-                            return true;
-                        }
-                    break;
+                case "value":
+                    if (value instanceof String) {
+                        this.setValue((String)value);
+                        return true;
+                    }
+                break;
 
-                    case "mode":
-                        if (value instanceof Integer) {
-                            return this.setMode((Integer)value);
-                        }
-                    break;
-                }
+                case "mode":
+                    if (value instanceof Integer) {
+                        return this.setMode((Integer)value);
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     @Override

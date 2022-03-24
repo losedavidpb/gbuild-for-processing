@@ -41,6 +41,26 @@ public class GPanel extends GComponent {
     protected GColor color, strokeColor;
     
     /**
+     * Defaulkt value for panel color
+     */
+    public static final GColor PANEL_COLOR = new GColor(255, 255, 255);
+    
+    /**
+     * Default value for panel stroke color
+     */
+    public static final GColor PANEL_STROKE = new GColor(255, 255, 255);
+    
+    /**
+     * Default with for a panel
+     */
+    public static final int PANEL_DIM_X = 50;
+    
+    /**
+     * Default height for a panel
+     */
+    public static final int PANEL_DIM_Y = 50;
+    
+    /**
      * Create a new instance of a panel
      * 
      * @param manager Processing manager
@@ -50,9 +70,9 @@ public class GPanel extends GComponent {
     public GPanel(PApplet manager, GComponent parent) {
         super(manager, parent);
         this.components = new ArrayList<>();
-        this.color = Globals.PANEL_COLOR.clone();
-        this.strokeColor = Globals.PANEL_STROKE.clone();
-        super.dim(Globals.PANEL_DIM_X, Globals.PANEL_DIM_Y);
+        this.color = PANEL_COLOR.clone();
+        this.strokeColor = PANEL_STROKE.clone();
+        super.dim(PANEL_DIM_X, PANEL_DIM_Y);
     }
   
     /**
@@ -155,10 +175,13 @@ public class GPanel extends GComponent {
     public void draw() {
         if (super.isVisible()) {
             manager().pushMatrix();
+            manager().pushStyle();
+            
             this.strokeColor.applyStrokeColor(manager());
             this.color.applyFillColor(manager());
             manager().rect(this.pos().x, this.pos().y, this.dim().x, this.dim().y);
             manager().popMatrix();
+            manager().popStyle();
             
             for (int i = 0; i < this.components.size(); i++)
                 this.components.get(i).draw();
@@ -167,60 +190,51 @@ public class GPanel extends GComponent {
     
     @Override
     public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "isTransparent": return this.isTransparent();
-                case "color": return this.color.clone();
-                case "strokeColor": return this.strokeColor.clone();
-                case "isStrokeTransparent": return this.isStrokeTransparent();
-                default: return null;
-            }
+        switch ((String)name) {
+            case "isTransparent": return this.isTransparent();
+            case "color": return this.color.clone();
+            case "strokeColor": return this.strokeColor.clone();
+            case "isStrokeTransparent": return this.isStrokeTransparent();
         }
         
-        return propertyValue;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "isTransparent":
-                        if (value instanceof Boolean) {
-                            this.setTransparent((Boolean)value);
-                            return true;
-                        }
-                    break;
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "isTransparent":
+                    if (value instanceof Boolean) {
+                        this.setTransparent((Boolean)value);
+                        return true;
+                    }
+                break;
 
-                    case "color":
-                        if (value instanceof GColor) {
-                            this.setColor((GColor)value);
-                            return true;
-                        }
-                    break;
+                case "color":
+                    if (value instanceof GColor) {
+                        this.setColor((GColor)value);
+                        return true;
+                    }
+                break;
 
-                    case "strokeColor":
-                        if (value instanceof GColor) {
-                            this.setStrokeColor((GColor)value);
-                            return true;
-                        }
-                    break;
+                case "strokeColor":
+                    if (value instanceof GColor) {
+                        this.setStrokeColor((GColor)value);
+                        return true;
+                    }
+                break;
 
-                    case "isStrokeTransparent":
-                        if (value instanceof Boolean) {
-                            this.setStrokeTransparent((Boolean)value);
-                            return true;
-                        }
-                    break;
-                }
+                case "isStrokeTransparent":
+                    if (value instanceof Boolean) {
+                        this.setStrokeTransparent((Boolean)value);
+                        return true;
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     // Deprecated

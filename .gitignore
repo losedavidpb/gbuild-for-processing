@@ -18,6 +18,8 @@ out
 # BlueJ files
 *.ctxt
 
+bin
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -45,5 +47,4 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
-buildlib.sh
 /nbproject/

@@ -4,7 +4,6 @@ import gbuild.GColor;
 import gbuild.GComponent;
 import gbuild.GPanel;
 import gbuild.GText;
-import gbuild.Globals;
 import gbuild.button.GButton;
 import gbuild.button.GButtonClose;
 import processing.core.PApplet;
@@ -43,6 +42,18 @@ public class GDialog extends GComponent {
     private boolean isClosed, isMovable, isMoving;
     private String title;
     private final GPanel top, bottom;
+    
+    /**
+     * Space between text stored at a dialog with text
+     */
+    public static final int SPACE_GDIALOG_TEXT = 20;
+            
+    /**
+     * Specifies if a new dialog was created and it's
+     * visible for user. This variables offers a way
+     * to manage modal option for dialogs
+     */
+    public static boolean newDialog = false;
     
     /**
      * Create a new instance of a dialog
@@ -125,7 +136,7 @@ public class GDialog extends GComponent {
         ((GButtonClose)this.top.get(1)).pos(this.bottom.dim().x - 30);
         
         if (this.isVisible()) {
-            Globals.newDialog = true;
+            newDialog = true;
             
             manager().pushMatrix();
             this.move();
@@ -133,7 +144,7 @@ public class GDialog extends GComponent {
             this.bottom.draw();
             
             manager().popMatrix();
-        } else Globals.newDialog = false;
+        } else newDialog = false;
     }
     
     @Override
@@ -147,7 +158,6 @@ public class GDialog extends GComponent {
                 case "isClosed": return this.isClosed();
                 case "bottom": return this.bottom();
                 case "title": return this.title;
-                default: return null;
             }
         }
         
@@ -156,36 +166,32 @@ public class GDialog extends GComponent {
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "isClosed":
-                        if (value instanceof Boolean) {
-                            this.setClosed((Boolean)value);
-                            return true;
-                        }
-                    break;
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "isClosed":
+                    if (value instanceof Boolean) {
+                        this.setClosed((Boolean)value);
+                        return true;
+                    }
+                break;
 
-                    case "isMovable":
-                        if (value instanceof Boolean) {
-                            this.setMovable((Boolean)value);
-                            return true;
-                        }
-                    break;
-                
-                    case "title":
-                        if (value instanceof String) {
-                            this.setTitle((String)value);
-                            return true;
-                        }
-                    break;
-                }
+                case "isMovable":
+                    if (value instanceof Boolean) {
+                        this.setMovable((Boolean)value);
+                        return true;
+                    }
+                break;
+
+                case "title":
+                    if (value instanceof String) {
+                        this.setTitle((String)value);
+                        return true;
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     // Deprecated
@@ -301,7 +307,6 @@ public class GDialog extends GComponent {
             this.isMoving = false;
         }
     }
-    
     
     /**
      * Get if panel is closed

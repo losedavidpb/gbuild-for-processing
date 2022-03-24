@@ -68,7 +68,8 @@ public class HorizontalGMenu extends GMenu {
     public void draw() {
         if (this.isVisible()) {
             super.manager().pushMatrix();
-      
+            manager().pushStyle();
+            
             boolean optSelected = false;
             
             if (!this.isTransparent()) {
@@ -106,7 +107,8 @@ public class HorizontalGMenu extends GMenu {
             // So we prevent the color selection by restarting
             // current option marked as hovered
             if (!optSelected) setColorOption(-1);
-    
+            
+            manager().popStyle();
             manager().popMatrix();
         }
     }

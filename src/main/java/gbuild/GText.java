@@ -35,7 +35,27 @@ public class GText extends GComponent {
     private GColor textColor;
     private PFont fontValue;
     private String value;
-
+    
+    /**
+     * Default value for text size
+     */
+    public static final int TEXT_SIZE = 11;
+    
+    /**
+     * Default vlaue for text color
+     */
+    public static final GColor TEXT_COLOR = new GColor(0, 0, 0);
+    
+    /**
+     * Default value for text mode
+     */
+    public static final int TEXT_MODE = PConstants.MODEL;
+    
+    /**
+     * Default value for text align
+     */
+    public static final int TEXT_ALIGN = PConstants.LEFT;
+    
     /**
      * Create a new instance of a text
      * 
@@ -46,10 +66,10 @@ public class GText extends GComponent {
     public GText(PApplet manager, GComponent parent) {
         super(manager, parent);
         this.value = "Default";
-        this.textColor = Globals.TEXT_COLOR;
-        this.tsize = Globals.TEXT_SIZE;
-        this.tmode = Globals.TEXT_MODE;
-        this.talign = Globals.TEXT_ALIGN;
+        this.textColor = TEXT_COLOR;
+        this.tsize = TEXT_SIZE;
+        this.tmode = TEXT_MODE;
+        this.talign = TEXT_ALIGN;
     }
     
     /**
@@ -66,39 +86,34 @@ public class GText extends GComponent {
     public void draw() {
         if (this.isVisible()) {
             manager().pushMatrix();
+            manager().pushStyle();
             manager().translate(this.pos().x, this.pos().y);
             manager().textAlign(this.talign);
             manager().textMode(this.tmode);
             manager().textSize(this.tsize);
             textColor.applyFillColor(manager());
             manager().text(this.value, 0, 0);
+            manager().popStyle();
             manager().popMatrix();
         }
     }
     
     @Override
     public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "mode": return this.mode();
-                case "align": return this.align();
-                case "size": return this.size();
-                case "value": return this.value();
-                case "color": return this.textColor.clone();
-                case "font": return this.fontValue;
-                default: return null;
-            }
+        switch ((String)name) {
+            case "mode": return this.mode();
+            case "align": return this.align();
+            case "size": return this.size();
+            case "value": return this.value();
+            case "color": return this.textColor.clone();
+            case "font": return this.fontValue;
         }
         
-        return propertyValue;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
         if (name instanceof String) {
             switch ((String)name) {
                 case "mode":
@@ -140,13 +155,10 @@ public class GText extends GComponent {
                         return true;
                     }
                 break;
-                
             }
-            
-            return false;
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     // Deprecated
@@ -356,6 +368,7 @@ public class GText extends GComponent {
      * Set font value for text component
      * 
      * @param font font value
+     * @deprecated
      */
     public void setFont(PFont font) {
         this.fontValue = font;

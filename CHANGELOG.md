@@ -5,12 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2022-03-22
+
+### Added
+
+- Include error messages for prop methods
+- Apply tint color for color components
+
+### Fixed
+
+- Fix customization style avoiding prevoious setting
+- Fix drawing method inserting tint mode
+
 ## [4.0.0] - 2022-03-19
 
 ### Added
 
 - Add new property for components to get location without the parent
-- Include message error when a property was not found
 - Include tint color option for images
 - Include access  to all image properties
 - Font property for text components

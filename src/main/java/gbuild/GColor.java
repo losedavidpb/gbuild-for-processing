@@ -195,6 +195,30 @@ public final class GColor {
     }
     
     /**
+     * Apply to current sketch the stroke color
+     * 
+     * <p>
+     * Since the color value might not be important
+     * to know, it is preferable to have a method
+     * that applies the RGB color into sketch
+     * without the knowledge of its value
+     * </p>
+     * 
+     * @param manager Processing manager
+     */
+    public void applyTintColor(PApplet manager) {
+        if (manager != null) {
+            if (!isTransparent) {
+                float[] c = this.colorValue;
+                manager.tint(c[0], c[1], c[2]);
+                return;
+            }
+            
+            manager.noTint();
+        }
+    }
+    
+    /**
      * Return the float values for each RGB component
      * 
      * <p>

@@ -2,7 +2,6 @@ package gbuild.menu;
 
 import gbuild.GComponent;
 import gbuild.GPanel;
-import gbuild.Globals;
 import gbuild.button.GButtonOption;
 import processing.core.PApplet;
 
@@ -20,8 +19,13 @@ import processing.core.PApplet;
  * @author David Parreño Barbuzano
  */
 public abstract class GMenu extends GPanel {
-    protected int spaceValue = Globals.MENU_SPACE;
+    protected int spaceValue = MENU_SPACE;
     private int colorOption;
+    
+    /**
+     * Space between each option of a menu
+     */
+    public static final int MENU_SPACE = 50;
     
     /**
      * Create a new instance of a menu
@@ -70,43 +74,34 @@ public abstract class GMenu extends GPanel {
     
     @Override
     public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "colorOption": return this.colorOption();
-                case "space": return this.space();
-                default: return null;
-            }
+        switch ((String)name) {
+            case "colorOption": return this.colorOption();
+            case "space": return this.space();
         }
         
-        return propertyValue;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "colorOption":
-                        if (value instanceof Integer) {
-                            return this.setColorOption((Integer)value);
-                        }
-                    break;
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "colorOption":
+                    if (value instanceof Integer) {
+                        return this.setColorOption((Integer)value);
+                    }
+                break;
 
-                    case "space":
-                        if (value instanceof Integer) {
-                            this.setSpace((Integer)value);
-                            return true;
-                        }
-                    break;
-                }
+                case "space":
+                    if (value instanceof Integer) {
+                        this.setSpace((Integer)value);
+                        return true;
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     @Override

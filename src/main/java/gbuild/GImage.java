@@ -57,62 +57,58 @@ public class GImage extends GComponent {
     @Override
     public void draw() {
         if (this.isVisible()) {
+            manager().pushStyle();
+            this.tintColor.applyTintColor(manager());
+            
             if (this.image != null) {
                 manager().image(this.image,
                     super.pos().x, super.pos().y,
                     super.dim().x, super.dim().y
                 );
             }
+            
+            manager().popStyle();
         }
     }
     
     @Override
     public Object prop(String name) {
-        Object value = super.prop(name);
-        
-        if (value == null) {
-            switch(name) {
-                case "tintMode": return this.isTintMode();
-                case "tintColor": return this.tintColor();
-                case "image": return this.image;
-                default: return null;
-            }
+        switch(name) {
+            case "tintMode": return this.isTintMode();
+            case "tintColor": return this.tintColor();
+            case "image": return this.image;
         }
         
-        return value;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch((String)name) {
-                    case "image":
-                        if (value instanceof String) {
-                            return this.setImage((String)value);
-                        }
-                    break;
-                    
-                    case "tintMode":
-                        if (value instanceof Boolean) {
-                            this.setTintMode((Boolean)value);
-                            return true;
-                        }
-                    break;
-                    
-                    case "tintColor":
-                        if (value instanceof GColor) {
-                            this.setTint((GColor)value);
-                            return this.isTintMode();
-                        }
-                    break;
-                }
+        if (name instanceof String) {
+            switch((String)name) {
+                case "image":
+                    if (value instanceof String) {
+                        return this.setImage((String)value);
+                    }
+                break;
+
+                case "tintMode":
+                    if (value instanceof Boolean) {
+                        this.setTintMode((Boolean)value);
+                        return true;
+                    }
+                break;
+
+                case "tintColor":
+                    if (value instanceof GColor) {
+                        this.setTint((GColor)value);
+                        return this.isTintMode();
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     // Deprecated

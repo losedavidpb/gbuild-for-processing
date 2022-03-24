@@ -1,7 +1,6 @@
 package gbuild.dialog;
 
 import gbuild.GText;
-import gbuild.Globals;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
@@ -20,7 +19,7 @@ import processing.core.PConstants;
  * @author David Parreño Barbuzano
  */
 public class GDialogWithText extends GDialog {
-    private int spaceValue = Globals.SPACE_GDIALOG_TEXT;
+    private int spaceValue = SPACE_GDIALOG_TEXT;
     
     /**
      * Create a new instance of a dialog with text
@@ -34,43 +33,34 @@ public class GDialogWithText extends GDialog {
     
     @Override
     public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "space": return this.space();
-                default: return null;
-            }
+        switch ((String)name) {
+            case "space": return this.space();
         }
         
-        return propertyValue;
+        return super.prop(name);
     }
     
     @Override
     public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "message":
-                        if (value instanceof String) {
-                            this.setMessage((String)value);
-                            return true;
-                        }
-                    break;
-                    
-                    case "setSpace":
-                        if (value instanceof Integer) {
-                            this.setSpace((Integer)value);
-                            return true;
-                        }
-                    break;
-                }
+        if (name instanceof String) {
+            switch ((String)name) {
+                case "message":
+                    if (value instanceof String) {
+                        this.setMessage((String)value);
+                        return true;
+                    }
+                break;
+
+                case "setSpace":
+                    if (value instanceof Integer) {
+                        this.setSpace((Integer)value);
+                        return true;
+                    }
+                break;
             }
         }
         
-        return cond;
+        return super.prop(name, value);
     }
     
     // Deprecated
