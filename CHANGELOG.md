@@ -298,3 +298,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [3.1.0]: https://github.com/losedavidpb/gbuild-for-processing/commit/45585ab656d7005e225154598a1b817f74562dab
 [3.2.0]: https://github.com/losedavidpb/gbuild-for-processing/commit/f8c7ea3a6d202273f7de00e3ee5c7d4950e4b295
 [4.0.0]: https://github.com/losedavidpb/gbuild-for-processing/commit/f1a5c2b9ff6e6629e4b300431d32b08044c2d7c6
+[4.0.1]: https://github.com/losedavidpb/gbuild-for-processing/commit/5ccf64b29abd124260be4e42c2995d8e54ee3b73
