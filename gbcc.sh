@@ -5,57 +5,58 @@
 # sketches before executing this script, as well as being at
 # the path of the repository.
 #
-# This script is designed considering that you are
-# executing it at the repository path and Processing library
-# folder is at ../library relative path.
-# Check this conditions before executing
+# Before executing this script, customize the configuration
+# declared at the beggining of this file to prepare the
+# library for your current machine installation
 #
+# WARNING!!
+#   This script is designed to be executed considering that
+#   current path is this repository, so check this condition
+#   to avoid internal errors.
 
 clear
 echo "gBuild compiler (Linux version)"
 echo "==================================="
 
+GBUILD_PROCESSING_LIB="../libraries/"
+GBUILD_MAVEN="/mnt/c/Users/Usuario/.m2/"
+
 # Java compilation
 echo -n ">> Compilation Process ... "
-
+mkdir bin 2>/dev/null
 javac -d bin -verbose -Xlint:-deprecation \
-    -classpath /mnt/c/Users/david/.m2/repository/org/processing/core/3.3.7/core-3.3.7.jar src/main/java/gbuild/*.java \
+    -classpath "${GBUILD_MAVEN}repository/org/processing/core/3.3.7/core-3.3.7.jar" src/main/java/gbuild/*.java \
     -sourcepath src/main/java 2>/dev/null
-
 echo "OK"
 
 # Jar file
 echo -n ">> Compression Process ... "
-jar -cf bin/gBuild.jar /bin/*
+jar -cf bin/gBuild.jar bin/* 2>/dev/null
 echo "OK"
 
 # Javadoc installation
 echo -n ">> Javadoc Process ... "
-
 mkdir ./reference 2>/dev/null
 rm -rf ./reference/* 2>/dev/null
 javadoc -d ./reference -sourcepath ./src/main/java -subpackages gbuild.button gbuild.dialog gbuild.menu gbuild \
-    -classpath /mnt/c/Users/david/.m2/repository/org/processing/core/3.3.7/core-3.3.7.jar \
-    -docencoding 'UTF-8' -doctitle 'gBuild 4.0.1 API' -quiet 2>/dev/null
-
+    -classpath ${GBUILD_MAVEN}repository/org/processing/core/3.3.7/core-3.3.7.jar \
+    -docencoding 'UTF-8' -doctitle 'gBuild 4.0.2 API' -quiet 2>/dev/null
 echo "OK"
 
 # Processing library
 echo -n ">> gBuild library ... "
+mkdir ${GBUILD_PROCESSING_LIB}gBuild 2>/dev/null
+rm -rf ${GBUILD_PROCESSING_LIB}gBuild/* 2>/dev/null
 
-mkdir ../libraries/gBuild 2>/dev/null
-rm -rf ../libraries/gBuild/* 2>/dev/null
+mkdir ${GBUILD_PROCESSING_LIB}gBuild/library 2>/dev/null
+mkdir ${GBUILD_PROCESSING_LIB}gBuild/examples 2>/dev/null
+mkdir ${GBUILD_PROCESSING_LIB}gBuild/reference 2>/dev/null
+mkdir ${GBUILD_PROCESSING_LIB}gBuild/src/ 2>/dev/null
 
-mkdir ../libraries/gBuild/library 2>/dev/null
-mkdir ../libraries/gBuild/examples 2>/dev/null
-mkdir ../libraries/gBuild/reference 2>/dev/null
-mkdir ../libraries/gBuild/src/ 2>/dev/null
-
-cp -r javadoc/* ../libraries/gBuild/reference 2>/dev/null
-cp -r examples/* ../libraries/gBuild/examples 2>/dev/null
-cp -r bin/gBuild.jar ../libraries/gBuild/library 2>/dev/null
-cp -r src/main/java/* ../libraries/gBuild/src 2>/dev/null
-
+cp -r reference/* ${GBUILD_PROCESSING_LIB}gBuild/reference 2>/dev/null
+cp -r examples/* ${GBUILD_PROCESSING_LIB}gBuild/examples 2>/dev/null
+cp -r bin/gBuild.jar ${GBUILD_PROCESSING_LIB}gBuild/library 2>/dev/null
+cp -r src/main/java/* ${GBUILD_PROCESSING_LIB}gBuild/src 2>/dev/null
 echo "OK"
 
 # Clean phase
