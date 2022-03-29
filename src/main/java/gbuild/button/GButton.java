@@ -3,18 +3,27 @@ package gbuild.button;
 import gbuild.GColor;
 import gbuild.GComponent;
 import gbuild.GPanel;
+import gbuild.event.ClickAtGEvent;
+import gbuild.event.HoverGEvent;
 import processing.core.PApplet;
 
 /**
  * <p>
- * Component defined as a clickable button
+ * Component for buttons
  * </p>
  * 
  * <p>
- * This class is the definition of a button that can
- * be selected and incorporates an effect on which
- * the color of a component of the button would
- * change wether user is hovering it.
+ * Processing language environment includes utilities to
+ * manage mouse or key events. Taking this into account,
+ * this class was designed to be a clickable component
+ * that would execute an action if user has clicked it.
+ * </p>
+ * 
+ * <p>
+ * It is important to know that gBuild provides features
+ * to implement the actions that will be executed if user
+ * has clicked the button, but developers must define such
+ * actions at the Processing sketch.
  * </p>
  * 
  * @author David Parreño Barbuzano
@@ -23,7 +32,7 @@ public abstract class GButton extends GComponent {
     protected final GPanel content;
     protected GColor backgroundColor, rawColor;
     protected GColor hoverColor, strokeColor;
-    protected boolean isSelected;
+    private boolean isSelected, isHover;
     
     /**
      * Defalt color for background button
@@ -61,7 +70,9 @@ public abstract class GButton extends GComponent {
         this.isSelected = false;
         
         this.content = new GPanel(manager, parent);
-        super.dim(this.content.dim().x, this.content.dim().y);
+        super.dim((int)this.content.dim().x, (int)this.content.dim().y);
+        super.addEvent(new HoverGEvent(this));
+        super.addEvent(new ClickAtGEvent(this));
     }
     
     /**
@@ -74,101 +85,111 @@ public abstract class GButton extends GComponent {
         this(manager, null);
     }
     
-    @Override
-    public Object prop(String name) {
-        switch ((String)name) {
-            case "size": return this.dim().x;
-            case "isSelected": return this.isSelected();
-            case "isTransparent": return this.isTransparent();
-            case "isStrokeTransparent": return this.isStrokeTransparent();
-            case "backgroundColor": return this.backgroundColor.clone();
-            case "strokeColor": return this.strokeColor.clone();
-            case "rawColor": return this.rawColor.clone();
-            case "hoverColor": return this.hoverColor.clone();
-        }
-        
-        return super.prop(name);
+    /**
+     * Check if button is selected and update
+     * its style for hovering effect
+     */
+    public abstract void updateButton();
+
+    /**
+     * Return if button is selected
+     * 
+     * <p>
+     * This property was defined in order to offer to developers
+     * a way to manage events associated to the button.
+     * </p>
+     * 
+     * <p>
+     * The following code is an example of use on which
+     * you can incorporate an event for a button
+     * </p>
+     * 
+     * <pre>
+     * import gbuild.button.*;
+     * 
+     * GButton button;
+     * 
+     * void setup() {
+     *  size(800, 800, P2D);
+     *  button = new GButtonWithText(this, width / 2, height / 2);
+     * }
+     * 
+     * void draw() {
+     *  button.draw();
+     * 
+     *  if (button.isSelected()) {
+     *      println("user has selected the button");
+     *  }
+     * }
+     * </pre>
+     * 
+     * @return selected state
+     */
+    public boolean isSelected() {
+        return this.isSelected;
     }
     
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "size":
-                    if (value instanceof Integer) {
-                        this.setSize((Integer)value);
-                        return true;
-                    }
-                break;
+    /**
+     * Return if button is hover
+     * 
+     * <p>
+     * This property was defined in order to offer to developers
+     * a way to manage events associated to the button.
+     * </p>
+     * 
+     * <p>
+     * The following code is an example of use on which
+     * you can incorporate an event for a button
+     * </p>
+     * 
+     * <pre>
+     * import gbuild.button.*;
+     * 
+     * GButton button;
+     * 
+     * void setup() {
+     *  size(800, 800, P2D);
+     *  button = new GButtonWithText(this, width / 2, height / 2);
+     * }
+     * 
+     * void draw() {
+     *  button.draw();
+     * 
+     *  if (button.isHover()) {
+     *      println("user has hover the button");
+     *  }
+     * }
+     * </pre>
+     * 
+     * @return hover state
+     */
+    public boolean isHover() {
+        return this.isHover;
+    }
 
-                case "isSelected":
-                    if (value instanceof Boolean) {
-                        this.setSelected((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "isTransparent":
-                    if (value instanceof Boolean) {
-                        this.setTransparent((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "isStrokeTransparent":
-                    if (value instanceof Boolean) {
-                        this.setStrokeTransparent((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "backgroundColor":
-                    if (value instanceof GColor) {
-                        this.setBackgroundColor((GColor)value);
-                        return true;
-                    }
-                break;
-
-                case "rawColor":
-                    if (value instanceof GColor) {
-                        this.setRawColor((GColor)value);
-                        return true;
-                    }
-                break;
-
-                case "hoverColor":
-                    if (value instanceof GColor) {
-                        this.setHoverColor((GColor)value);
-                        return true;
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
+    /**
+     * Specify if button is selected
+     * 
+     * @param isSelected selected state
+     */
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
     
-    // Deprecated
-    
-    @Deprecated
-    @Override
-    public void pos(Float ... coords) {
-        super.pos(coords);
-        this.content.pos(coords);
+    /**
+     * Specify if button is hover
+     * 
+     * @param isHover hover state
+     */
+    protected void setHover(boolean isHover) {
+        this.isHover = isHover;
     }
-    
+
     @Deprecated
     @Override
     public void pos(Integer ... coords) {
         super.pos(coords);
         this.content.pos(coords);
-    }
-    
-    @Deprecated
-    @Override
-    public void dim(Float ... dim) {
-        super.dim(dim);
-        this.content.dim(dim);
     }
     
     @Deprecated
@@ -187,236 +208,151 @@ public abstract class GButton extends GComponent {
      * </p>
      * 
      * @param size button size
-     * @deprecated
      */
     public void setSize(int size) {
         this.dim(size, size);
     }
     
     /**
-     * Return if button is selected
+     * Detect if button has an opaque background
      * 
-     * <p>
-     * This property was defined in order to offer to developers
-     * a way to manage events associated to the button.
-     * </p>
-     * 
-     * <p>
-     * The following code is an example of use on which
-     * you can incorporate an event for a button
-     * </p>
-     * 
-     * <pre>
-     * import api.gbuild.component.button.*;
-     * 
-     * GButton button;
-     * 
-     * void setup() {
-     *  size(800, 800, P2D);
-     *  button = new GButtonWithText(this, width / 2, height / 2);
-     * }
-     * 
-     * void draw() {
-     *  button.draw();
-     * }
-     * 
-     * void mouseCliked() {
-     *  if (button.isSelected()) {
-     *      println("User has selected the button");
-     *  }
-     * }
-     * 
-     * 
-     * </pre>
-     * 
-     * @return selected state
-     * @deprecated
+     * @return opaque state
      */
-    public boolean isSelected() {
-        return this.isSelected;
+    public boolean isOpaque() {
+        return this.content.isOpaque();
     }
     
     /**
-     * Detect if button has a transparent background
+     * Detect if button has a stroke opaque background
      * 
-     * @return transparency state
-     * @deprecated
+     * @return opaque state
      */
-    public boolean isTransparent() {
-        return this.content.isTransparent();
-    }
-    
-    /**
-     * Detect if button has a transparent stroke background
-     * 
-     * @return transparent state
-     * @deprecated
-     */
-    public boolean isStrokeTransparent() {
-        return this.content.isStrokeTransparent();
+    public boolean isStrokeOpaque() {
+        return this.content.isStrokeOpaque();
     }
     
     /**
      * Specify if button has a transparent background
      * 
-     * @param transparency state of the transparency
-     * @see GButton#isTransparent()
-     * @deprecated
+     * @param opaque opaque state
      */
-    public void setTransparent(boolean transparency) {
-        this.content.setTransparent(transparency);
+    public void setOpaque(boolean opaque) {
+        this.content.setOpaque(opaque);
+        this.backgroundColor.setOpaque(opaque);
     }
     
     /**
      * Specify if button has a transparent stroke background
      * 
-     * @param transparency state of the transparency
-     * @see GButton#isTransparent()
-     * @deprecated
+     * @param opaque opaque state
      */
-    public void setStrokeTransparent(boolean transparency) {
-        this.content.setStrokeTransparent(transparency);
+    public void setStrokeOpaque(boolean opaque) {
+        this.content.setStrokeOpaque(opaque);
+        this.strokeColor.setOpaque(opaque);
+    }
+    
+    /**
+     * Get the background color for the button
+     * 
+     * @return background color
+     */
+    public GColor setBackgroundColor() {
+        return this.backgroundColor.clone();
     }
     
     /**
      * Set the background color for the button
      * 
-     * @param color red, green, and blue component
-     * @deprecated
+     * @param color components
      */
     public void setBackgroundColor(GColor color) {
-        this.backgroundColor = color.clone();
-        this.content.setColor(color);
-    }
-    
-    /**
-     * Set the background color for the button
-     * 
-     * @param color red, green, and blue component
-     * @deprecated
-     */
-    public void setBackgroundColor(Float ... color) {
-        this.backgroundColor = new GColor(color);
-        this.content.setColor(color);
+        float[] c = color.color();
+        this.backgroundColor.setColor(c[0], c[1], c[2]);
+        this.content.setColor(this.backgroundColor);
     }
     
     /**
      * Set the background color for container
      * 
-     * @param color red, green, and blue component
-     * @deprecated
+     * @param color components
      */
     public void setBackgroundColor(Integer ... color) {
         this.backgroundColor = new GColor(color);
-        this.content.setColor(color);
+        this.content.setColor(this.backgroundColor);
     }
     
     /**
      * Set the stroke color for the button
      * 
-     * @param color red, green, and blue component
-     * @deprecated
+     * @param color components
      */
     public void setStrokeColor(GColor color) {
-        this.strokeColor = color.clone();
-        this.content.setStrokeColor(color);
+        float[] c = color.color();
+        this.strokeColor.setColor(c[0], c[1], c[2]);
+        this.content.setStrokeColor(this.strokeColor);
     }
-    
-    /**
-     * Set the stroke color for the button
-     * 
-     * @param color red, green, and blue component
-     * @deprecated
-     */
-    public void setStrokeColor(Float ... color) {
-        this.strokeColor = new GColor(color);
-        this.content.setStrokeColor(color);
-    }
-    
+
     /**
      * Set the stroke color for container
      * 
-     * @param color red, green, and blue component
-     * @deprecated
+     * @param color components
      */
     public void setStrokeColor(Integer ... color) {
         this.strokeColor = new GColor(color);
-        this.content.setStrokeColor(color);
+        this.content.setStrokeColor(this.strokeColor);
+    }
+    
+    /**
+     * Get the raw color for the button
+     * 
+     * @return raw color
+     */
+    public GColor rawColor() {
+        return this.rawColor.clone();
     }
 
     /**
      * Set the raw color for the button
      * 
-     * @param component red, green, and blue component
-     * @deprecated
+     * @param component components
      */
     public void setRawColor(GColor component) {
-        this.rawColor = component.clone();
         this.rawColor.setColor(component);
     }
     
     /**
      * Set the raw color for the button
      * 
-     * @param component red, green, and blue component
-     * @deprecated
-     */
-    public void setRawColor(Float ... component) {
-        this.rawColor = new GColor(component);
-        this.rawColor.setColor(component);
-    }
-    
-    /**
-     * Set the raw color for the button
-     * 
-     * @param component red, green, and blue component
-     * @deprecated
+     * @param component components
      */
     public void setRawColor(Integer ... component) {
-        this.rawColor = new GColor(component);
         this.rawColor.setColor(component);
     }
     
     /**
+     * Get the hover color for the button
+     * 
+     * @return hover color
+     */
+    public GColor hoverColor() {
+        return this.hoverColor.clone();
+    }
+    
+    /**
      * Set the hover color for the button
      * 
-     * @param component red, green, and blue component
-     * @deprecated
+     * @param component components
      */
     public void setHoverColor(GColor component) {
-        this.hoverColor = component.clone();
         this.hoverColor.setColor(component);
     }
     
     /**
      * Set the hover color for the button
      * 
-     * @param component red, green, and blue component
-     * @deprecated
-     */
-    public void setHoverColor(Float ... component) {
-        this.hoverColor = new GColor(component);
-        this.hoverColor.setColor(component);
-    }
-    
-    /**
-     * Set the hover color for the button
-     * 
-     * @param component red, green, and blue component
-     * @deprecated
+     * @param component components
      */
     public void setHoverColor(Integer ... component) {
-        this.hoverColor = new GColor(component);
         this.hoverColor.setColor(component);
-    }
-    
-    /**
-     * Specify if button is selected
-     * 
-     * @param isSelected selected state
-     * @deprecated
-     */
-    public void setSelected(boolean isSelected) {
-        this.isSelected = isSelected;
     }
 }

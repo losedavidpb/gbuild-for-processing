@@ -11,14 +11,15 @@ GPanel panel;
 
 void setup() {
     size(800, 800);
-    noStroke();
 
     panel = new GPanel(this);
-    panel.prop("x", 0, "y", 0, "isTransparent", true);
+    panel.pos(0, 0);
+    panel.setOpaque(false);
     
     for (int i = 0; i < numText; i++) {
         GText text = new GText(this);
-        text.prop("value", "Hello!", "x", random(0, width), "y", random(0, height));
+        text.pos(random(0, width), random(0, height));
+        text.setText("Hello!");
         panel.add(text);
     }
 }
@@ -29,9 +30,9 @@ void draw() {
     
     for (int i = 0; i < numText; i++) {
       GText text = (GText)panel.get(i);
-      text.prop("x", (Float)text.prop("x") + random(-10, 10));
-      text.prop("y", (Float)text.prop("y") + random(-10, 10));
-      text.prop("size", (int)random(5, 40));
-      text.prop("color", new GColor(random(0, 255), random(0, 255), random(0, 255)));
+      text.pos(text.pos().x + random(-10, 10));
+      text.pos(null, text.pos().y + random(-10, 10));
+      text.setSize((int)random(5, 40));
+      text.setColor(new GColor(random(0, 255), random(0, 255), random(0, 255)));
     }
 }

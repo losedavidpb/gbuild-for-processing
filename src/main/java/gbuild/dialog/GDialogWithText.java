@@ -30,41 +30,7 @@ public class GDialogWithText extends GDialog {
     public GDialogWithText(PApplet manager) {
         super(manager);
     }
-    
-    @Override
-    public Object prop(String name) {
-        switch ((String)name) {
-            case "space": return this.space();
-        }
-        
-        return super.prop(name);
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "message":
-                    if (value instanceof String) {
-                        this.setMessage((String)value);
-                        return true;
-                    }
-                break;
-
-                case "setSpace":
-                    if (value instanceof Integer) {
-                        this.setSpace((Integer)value);
-                        return true;
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
-    }
-    
-    // Deprecated
-    
+  
     /**
      * Set message to bottom area
      * 
@@ -74,7 +40,6 @@ public class GDialogWithText extends GDialog {
      * </p>
      * 
      * @param message message content
-     * @deprecated
      */
     public void setMessage(String message) {
         int diffPosY = 20;
@@ -97,7 +62,6 @@ public class GDialogWithText extends GDialog {
      * Return the space between each line of the text
      * 
      * @return space value
-     * @deprecated
      */
     public int space() {
         return this.spaceValue;
@@ -107,7 +71,6 @@ public class GDialogWithText extends GDialog {
      * Set the space between each line of the text
      * 
      * @param spaceValue space value
-     * @deprecated
      */
     public void setSpace(int spaceValue) {
         this.spaceValue = spaceValue;

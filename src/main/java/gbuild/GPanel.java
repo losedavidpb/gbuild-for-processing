@@ -11,27 +11,26 @@ import static processing.core.PApplet.min;
 
 /**
  * <p>
- * Component that is a set of components
+ * Component for panels
  * </p>
  * 
  * <p>
- * Processing language environment does not include an implementation
- * of a container that store primitives or figures, so it can be difficult
- * to define a set of components that are associated between them. This
- * class offers this possibility and its design is inspired in JPanel
- * class implemented at Java Swing library.
+ * Processing language environment does not have an explicit
+ * implementation of a list of components that are associated
+ * with a container. To solve this, gBuild provides this class
+ * that acts as a panel that contains UI components.
  * </p>
  * 
  * <p>
- * GPanel was designed in order to be the basic element to construct
- * complex components composed by others. On this library, they are
- * defined some examples such as menus or dialogs, but developers
- * are able to create new components with this class.
+ * This component is based on the JPanel class defined at Java
+ * Swing library, so the great majority of the utilities that
+ * has are the same methods that include this external source.
  * </p>
  * 
  * <p>
- * If you are interested in this library and wants to contribute,
- * please do not hesitate to contact me at losedavidpb@gmail.com
+ * GPanel was designed as the main component used to construct
+ * complex UI components that are formed by simple ones, but
+ * can be used just as a container of components.
  * </p>
  * 
  * @author David Parreño Barbuzano
@@ -107,8 +106,12 @@ public class GPanel extends GComponent {
      * @return component at passed index
      */
     public GComponent get(int i) {
-        boolean cond = i >= 0 && i < this.components.size();
-        return cond? this.components.get(i) : null;
+        if (i < 0 || i > this.components.size()) {
+            PApplet.println("error GPanel.get: index out of bounds");
+            System.exit(1);
+        }
+        
+        return this.components.get(i);
     }
     
     /**
@@ -147,10 +150,13 @@ public class GPanel extends GComponent {
      * @see GPanel#updateComponents() 
      */
     public void add(GComponent component) {
-        if (!this.components.contains(component)) {
-            this.components.add(component);
-            this.updateComponents();
+        if (components.contains(component)) {
+            PApplet.println("error GPanel.add: component has already been added");
+            System.exit(1);
         }
+        
+        this.components.add(component);
+        this.updateComponents();
     }
     
     /**
@@ -165,240 +171,103 @@ public class GPanel extends GComponent {
      */
     public void updateComponents() {
         PVector limitsX = getLimitsX(), limitsY = getLimitsY();
-        float dimx = abs(pos().x - limitsX.y);
-        float dimy = abs(pos().y - limitsY.y);
-        this.pos(this.pos().x + limitsX.x, this.pos().y + limitsY.x);
+        int dimx = (int)abs(pos().x - limitsX.y);
+        int dimy = (int)abs(pos().y - limitsY.y);
+        this.pos((int)this.pos().x + (int)limitsX.x, (int)this.pos().y + (int)limitsY.x);
         this.dim(dimx, dimy);
     }
+
+    /**
+     * Return if panel is transparent
+     * 
+     * @return transparent value
+     */
+    public boolean isOpaque() {
+        return this.color.isOpaque();
+    }
     
+    /**
+     * Return if stroke panel is opaque
+     * 
+     * @return opaque value
+     */
+    public boolean isStrokeOpaque() {
+        return this.strokeColor.isOpaque();
+    }
+
+    /**
+     * Specify if panel has a transparent background
+     * 
+     * @param isOpaque opaque state
+     * @see GPanel#isOpaque()
+     */
+    public void setOpaque(boolean isOpaque) {
+        this.color.setOpaque(isOpaque);
+    }
+    
+    /**
+     * Set opaque state for stroke color
+     * 
+     * @param isOpaque opaque value
+     */
+    public void setStrokeOpaque(boolean isOpaque) {
+        this.strokeColor.setOpaque(isOpaque);
+    }
+
+    /**
+     * Set the background color for panel
+     * 
+     * @param color components
+     */
+    public void setColor(GColor color) {
+        this.color.setColor(color);
+    }
+    
+    
+    /**
+     * Set the background color for panel
+     * 
+     * @param component components
+     */
+    public void setColor(Integer ... component) {
+        this.color.setColor(component);
+    }
+
+    /**
+     * Set the stroke color for panel
+     * 
+     * @param color components
+     */
+    public void setStrokeColor(GColor color) {
+        this.strokeColor.setColor(color);
+    }
+    
+    /**
+     * Set the stroke color for panel
+     * 
+     * @param component components
+     */
+    public void setStrokeColor(Integer ... component) {
+        this.strokeColor.setColor(color);
+    }
+
     @Override
     public void draw() {
         if (super.isVisible()) {
+            this.listenEvents();
+            
             manager().pushMatrix();
             manager().pushStyle();
             
             this.strokeColor.applyStrokeColor(manager());
             this.color.applyFillColor(manager());
             manager().rect(this.pos().x, this.pos().y, this.dim().x, this.dim().y);
+            
             manager().popMatrix();
             manager().popStyle();
             
             for (int i = 0; i < this.components.size(); i++)
                 this.components.get(i).draw();
-        }
-    }
-    
-    @Override
-    public Object prop(String name) {
-        switch ((String)name) {
-            case "isTransparent": return this.isTransparent();
-            case "color": return this.color.clone();
-            case "strokeColor": return this.strokeColor.clone();
-            case "isStrokeTransparent": return this.isStrokeTransparent();
-        }
-        
-        return super.prop(name);
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "isTransparent":
-                    if (value instanceof Boolean) {
-                        this.setTransparent((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "color":
-                    if (value instanceof GColor) {
-                        this.setColor((GColor)value);
-                        return true;
-                    }
-                break;
-
-                case "strokeColor":
-                    if (value instanceof GColor) {
-                        this.setStrokeColor((GColor)value);
-                        return true;
-                    }
-                break;
-
-                case "isStrokeTransparent":
-                    if (value instanceof Boolean) {
-                        this.setStrokeTransparent((Boolean)value);
-                        return true;
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
-    }
-    
-    // Deprecated
-    
-    /**
-     * Return if panel is transparent
-     * 
-     * @return transparent value
-     * @deprecated
-     */
-    public boolean isTransparent() {
-        return this.color.isTransparent();
-    }
-    
-    /**
-     * Return if stroke panel is transparent
-     * 
-     * @return transparent value
-     * @deprecated
-     */
-    public boolean isStrokeTransparent() {
-        return this.strokeColor.isTransparent();
-    }
-    
-    /**
-     * Specify if panel has a transparent background
-     * 
-     * @param transparency state of the transparency
-     * @see GPanel#isTransparent()
-     * @deprecated
-     */
-    public void setTransparent(boolean transparency) {
-        this.color.setTransparent(transparency);
-    }
-    
-    /**
-     * Set transparency for stroke color
-     * 
-     * @param transparency transparent value
-     * @deprecated
-     */
-    public void setStrokeTransparent(boolean transparency) {
-        this.strokeColor.setTransparent(transparency);
-    }
-    
-    /**
-     * Set the background color for panel
-     * 
-     * <p>
-     * It is important to know that the modification would
-     * not be done whether panel is transparent.
-     * </p>
-     * 
-     * @param color red, green, and blue component
-     * @see GPanel#isTransparent() 
-     * @see GPanel#setColor(java.lang.Integer...) 
-     * @see GPanel#setColor(java.lang.Float...)
-     * @deprecated
-     */
-    public void setColor(GColor color) {
-        if (!this.color.isTransparent()) {
-            this.color = new GColor(0, 0, 0);
-            this.color.setColor(color);
-        }
-    }
-    
-    /**
-     * Set the background color for panel
-     * 
-     * <p>
-     * It is important to know that the modification would
-     * not be done whether panel is transparent.
-     * </p>
-     * 
-     * @param component red, green, and blue component
-     * @see GPanel#isTransparent() 
-     * @see GPanel#setColor(java.lang.Integer...)
-     * @deprecated
-     */
-    public void setColor(Float ... component) {
-        if (!this.color.isTransparent()) {
-            this.color = new GColor(0, 0, 0);
-            this.color.setColor(component);
-        }
-    }
-    
-    /**
-     * Set the background color for panel
-     * 
-     * <p>
-     * It is important to know that the modification would
-     * not be done whether panel is transparent.
-     * </p>
-     * 
-     * @param component red, green, and blue component
-     * @see GPanel#isTransparent()
-     * @see GPanel#setColor(java.lang.Float...)
-     * @deprecated
-     */
-    public void setColor(Integer ... component) {
-        if (!this.color.isTransparent()) {
-            this.color = new GColor(0, 0, 0);
-            this.color.setColor(component);
-        }
-    }
-    
-    /**
-     * Set the stroke color for panel
-     * 
-     * <p>
-     * It is important to know that the modification would
-     * not be done whether panel is transparent.
-     * </p>
-     * 
-     * @param color red, green, and blue component
-     * @see GPanel#isTransparent() 
-     * @see GPanel#setColor(java.lang.Integer...) 
-     * @see GPanel#setColor(java.lang.Float...)
-     * @deprecated
-     */
-    public void setStrokeColor(GColor color) {
-        if (!this.strokeColor.isTransparent()) {
-            this.strokeColor = new GColor(0, 0, 0);
-            this.strokeColor.setColor(color);
-        }
-    }
-    
-    /**
-     * Set the stroke color for panel
-     * 
-     * <p>
-     * It is important to know that the modification would
-     * not be done whether panel is transparent.
-     * </p>
-     * 
-     * @param component red, green, and blue component
-     * @see GPanel#isTransparent() 
-     * @see GPanel#setColor(java.lang.Integer...)
-     * @deprecated
-     */
-    public void setStrokeColor(Float ... component) {
-        if (!this.strokeColor.isTransparent()) {
-            this.strokeColor = new GColor(0, 0, 0);
-            this.strokeColor.setColor(component);
-        }
-    }
-    
-    /**
-     * Set the stroke color for panel
-     * 
-     * <p>
-     * It is important to know that the modification would
-     * not be done whether panel is transparent.
-     * </p>
-     * 
-     * @param component red, green, and blue component
-     * @see GPanel#isTransparent()
-     * @see GPanel#setColor(java.lang.Float...)
-     * @deprecated
-     */
-    public void setStrokeColor(Integer ... component) {
-        if (!this.strokeColor.isTransparent()) {
-            this.strokeColor = new GColor(0, 0, 0);
-            this.strokeColor.setColor(component);
         }
     }
     

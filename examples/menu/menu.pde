@@ -16,23 +16,33 @@ void setup() {
   noSmooth();
   
   barmenu = new HorizontalGMenu(this);
-  barmenu.prop("x", 0, "y", 0);
-  barmenu.prop("color", new GColor(0, 0, 0));
-  barmenu.prop("w", width, "h", 50);
-
+  barmenu.pos(0, 0);
+  barmenu.dim(width, 50);
+  barmenu.setColor(new GColor(0, 0, 0));
+  barmenu.setOpaque(true);
+  barmenu.setStrokeOpaque(false);
+  barmenu.setSpace(100);
+  
   verticalmenu = new VerticalGMenu(this);
-  verticalmenu.prop("x", width - 150, "y", 0, "color", new GColor(0, 0, 0));
-  verticalmenu.prop("w", 150, "h", height);
-
+  verticalmenu.pos(width - 120, 0);
+  verticalmenu.dim(120, height);
+  verticalmenu.setColor(new GColor(0, 0, 0));
+  verticalmenu.setOpaque(true);
+  verticalmenu.setStrokeOpaque(false);
+  verticalmenu.setSpace(70);
+  
   for (int i = 0; i < 4; i++) {
     String name = "Option " + i;
     char keyValue = (char)i;
 
-    GButton option = new GButtonOption(this);
-    option.prop("value", name, "keyValue", keyValue);
-    option.prop("isTransparent", true, "size", 20);
-    option.prop("rawColor", new GColor(255, 255, 255));
-    option.prop("hoverColor", new GColor(90, 155, 217));
+    GButtonOption option = new GButtonOption(this, barmenu);
+    option.setTextValue(name);
+    option.setKeyValue(keyValue);
+    option.setOpaque(false);
+    option.setSize(20);
+    option.setRawColor(new GColor(255, 255, 255));
+    option.setHoverColor(90, 155, 217);
+    option.setStrokeOpaque(false);
     barmenu.add(option);
   }
 
@@ -40,19 +50,21 @@ void setup() {
     String name = "Option " + i;
     char keyValue = (char)i;
 
-    GButton option = new GButtonOption(this);
-    option.prop("value", name, "keyValue", keyValue);
-    option.prop("isTransparent", true, "size", 20);
-    option.prop("rawColor", new GColor(255, 255, 255));
-    option.prop("hoverColor", new GColor(90, 155, 217));
+    GButtonOption option = new GButtonOption(this, verticalmenu);
+    option.setTextValue(name);
+    option.setKeyValue(keyValue);
+    option.setOpaque(false);
+    option.setSize(20);
+    option.setRawColor(new GColor(255, 255, 255));
+    option.setHoverColor(90, 155, 217);
+    option.setStrokeOpaque(false);
     verticalmenu.add(option);
   }
 }
 
 void draw() {
-  background(random(0, 10), random(0, 10), random(0, 10));
+  background(0);
   
-  noStroke();
   barmenu.draw();
   verticalmenu.draw();
   

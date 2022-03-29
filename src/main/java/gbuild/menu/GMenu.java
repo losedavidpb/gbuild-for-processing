@@ -50,70 +50,9 @@ public abstract class GMenu extends GPanel {
     }
     
     /**
-     * Set the visible state for one of the options
-     * 
-     * @param name identifier for current option
-     * @param isVisible visible state
-     */
-    public void setVisible(String name, boolean isVisible) {
-        for (int i = 0; i < this.components.size(); i++) {
-            GButtonOption option = (GButtonOption)this.components.get(i);
-                       
-            if (option.value().equals(name)) {
-                option.setVisible(isVisible);
-                return;
-            }
-        }
-    }
-  
-    @Override
-    public void add(GComponent component) {
-        if (component instanceof GButtonOption)
-            super.components.add(component);
-    }
-    
-    @Override
-    public Object prop(String name) {
-        switch ((String)name) {
-            case "colorOption": return this.colorOption();
-            case "space": return this.space();
-        }
-        
-        return super.prop(name);
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "colorOption":
-                    if (value instanceof Integer) {
-                        return this.setColorOption((Integer)value);
-                    }
-                break;
-
-                case "space":
-                    if (value instanceof Integer) {
-                        this.setSpace((Integer)value);
-                        return true;
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
-    }
-    
-    @Override
-    public abstract void draw();
-    
-    // Deprecated
-    
-    /**
      * Get the space between options
      * 
      * @return spaceValue value for space between options
-     * @deprecated
      */
     public int space() {
         return this.spaceValue;
@@ -123,7 +62,6 @@ public abstract class GMenu extends GPanel {
      * Return the index of current option
      * 
      * @return index of option
-     * @deprecated
      */
     public int colorOption() {
         return this.colorOption;
@@ -133,7 +71,6 @@ public abstract class GMenu extends GPanel {
      * Set the space between options
      * 
      * @param spaceValue value for space between options
-     * @deprecated
      */
     public void setSpace(int spaceValue) {
         this.spaceValue = spaceValue;
@@ -144,7 +81,6 @@ public abstract class GMenu extends GPanel {
      * 
      * @param colorOption index of option
      * @return if color option was changed
-     * @deprecated
      */
     public boolean setColorOption(int colorOption) {
         if (this.components.size() > colorOption && colorOption >= 0) {
@@ -153,5 +89,28 @@ public abstract class GMenu extends GPanel {
         }
         
         return false;
+    }
+    
+    /**
+     * Set the visible state for one of the options
+     * 
+     * @param name identifier for current option
+     * @param isVisible visible state
+     */
+    public void setVisible(String name, boolean isVisible) {
+        for (int i = 0; i < this.components.size(); i++) {
+            GButtonOption option = (GButtonOption)this.components.get(i);
+                       
+            if (option.textValue().equals(name)) {
+                option.setVisible(isVisible);
+                return;
+            }
+        }
+    }
+  
+    @Override
+    public void add(GComponent component) {
+        if (component instanceof GButtonOption)
+            super.components.add(component);
     }
 }

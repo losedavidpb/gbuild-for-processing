@@ -2,6 +2,8 @@ package gbuild.button;
 
 import gbuild.GComponent;
 import gbuild.GText;
+import gbuild.event.ClickAtGEvent;
+import gbuild.event.HoverGEvent;
 import processing.core.PApplet;
 
 /**
@@ -31,7 +33,7 @@ public class GButtonWithText extends GButton {
         textValue.pos(10, 10);
         textValue.setColor(super.rawColor);
         super.content.add(textValue);
-        super.content.dim(super.content.dim().x + 10);
+        super.content.dim((int)super.content.dim().x + 10);
     }
     
     /**
@@ -44,76 +46,10 @@ public class GButtonWithText extends GButton {
         this(manager, null);
     }
     
-    @Override
-    public Object prop(String name) {
-        switch ((String)name) {
-            case "size": return this.dim().x;
-            case "value": return this.value();
-            case "mode": return this.mode();
-            case "text": return this.text();
-        }
-        
-        return super.prop(name);
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "size":
-                    if (value instanceof Integer) {
-                        this.setSize((Integer)value);
-                        return true;
-                    }
-                break;
-
-                case "value":
-                    if (value instanceof String) {
-                        this.setValue((String)value);
-                        return true;
-                    }
-                break;
-
-                case "mode":
-                    if (value instanceof Integer) {
-                        return this.setMode((Integer)value);
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
-    }
-    
-    @Override
-    public void draw() {
-        if (isVisible()) {
-            this.setSelected(false);
-            
-            GText textValue = (GText)(this.content.get(0));
-            
-            textValue.setColor(super.rawColor);
-            content.setStrokeColor(super.rawColor);
-            
-            if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
-                if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
-                    textValue.setColor(super.hoverColor);
-                    content.setStrokeColor(super.hoverColor);
-                    this.setSelected(true);
-                }
-            }
-            
-            this.content.draw();
-        }
-    }
-    
-    // Deprecated
-    
     /**
      * Return the text of the button
      * 
      * @return text component
-     * @deprecated
      */
     public GText text() {
         return (GText)this.content.get(0);
@@ -123,21 +59,19 @@ public class GButtonWithText extends GButton {
      * Get the value of the button
      * 
      * @return text value of the button
-     * @deprecated
      */
-    public String value() {
-        return ((GText)this.content.get(0)).value();
+    public String textValue() {
+        return text().value();
     }
     
     /**
      * Set the value of the button
      * 
      * @param value value of the button
-     * @deprecated
      */
-    public void setValue(String value) {
-        ((GText)this.content.get(0)).setText(value);
-        super.content.dim(super.content.dim().x + 10);
+    public void setTextValue(String value) {
+        text().setText(value);
+        super.content.dim((int)super.content.dim().x + 10);
     }
     
     /**
@@ -150,10 +84,9 @@ public class GButtonWithText extends GButton {
      * 
      * @return text mode
      * @see GText#setMode(int)
-     * @deprecated
      */
     public int mode() {
-        return ((GText)this.content.get(0)).mode();
+        return text().mode();
     }
     
     /**
@@ -168,20 +101,44 @@ public class GButtonWithText extends GButton {
      * </p>
      * 
      * @param tmode text mode
-     * @return if mode was changed
-     * @deprecated
      */
-    public boolean setMode(int tmode) {
-        return ((GText)this.content.get(0)).setMode(tmode);
+    public void setMode(int tmode) {
+        text().setMode(tmode);
     }
     
-    @Deprecated
     @Override
     public void setSize(int size) {
         GText textValue = (GText)(this.content.get(0));
         textValue.setSize(size);
         content.updateComponents();
-        super.content.dim(super.content.dim().x + textValue.pos(true).x);
+        super.content.dim((int)super.content.dim().x + (int)textValue.pos(true).x);
     }
-   
+
+    @Override
+    public void draw() {
+        if (isVisible()) {
+            this.listenEvents();
+            this.content.draw();
+            this.updateButton();
+        }
+    }
+
+    @Override
+    public void updateButton() {
+        this.setHover(false);
+        GText textValue = text();
+        textValue.setColor(super.rawColor);
+        content.setStrokeColor(super.rawColor);
+        
+        HoverGEvent event1 = (HoverGEvent)this.getEvent(0);
+        ClickAtGEvent event2 = (ClickAtGEvent)this.getEvent(1);
+        
+        if (event1.isHover()) {
+            textValue.setColor(super.hoverColor);
+            content.setStrokeColor(super.hoverColor);
+            this.setHover(true);
+        }
+        
+        this.setSelected(event2.isClicked());
+    }
 }

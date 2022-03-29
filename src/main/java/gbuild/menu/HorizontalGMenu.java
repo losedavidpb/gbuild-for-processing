@@ -44,7 +44,7 @@ public class HorizontalGMenu extends GMenu {
     @Override
     public void setSpace(int spaceValue) {
         super.setSpace(spaceValue);
-        diffPosX = (int) this.pos().x;
+        diffPosX = (int) this.pos().x + super.spaceValue;
     }
     
     @Override
@@ -53,7 +53,7 @@ public class HorizontalGMenu extends GMenu {
             GButtonOption option = (GButtonOption)component;
             
             if (option.parent() == null) {
-                option.pos((float)diffPosX, this.pos().y + 20);
+                option.pos(diffPosX, (int)this.pos().y + 20);
                 diffPosX += (int) (option.pos().x + option.dim().x + super.spaceValue); 
             } else {
                 option.pos(diffPosX, 20);
@@ -67,23 +67,27 @@ public class HorizontalGMenu extends GMenu {
     @Override
     public void draw() {
         if (this.isVisible()) {
+            this.listenEvents();
+            
             super.manager().pushMatrix();
             manager().pushStyle();
             
             boolean optSelected = false;
             
-            if (!this.isTransparent()) {
-                super.color.applyFillColor(manager());
-                manager().rect(this.pos().x, this.pos().y, this.dim().x, this.dim().y);
-            }
+            super.strokeColor.applyStrokeColor(manager());
+            super.color.applyFillColor(manager());
+            manager().rect(this.pos().x, this.pos().y, this.dim().x, this.dim().y);
             
-            int offsetX = (int)this.pos().x;
+            manager().popStyle();
+            manager().popMatrix();
+            
+            int offsetX = (int)this.pos().x + super.spaceValue;
             
             for (int i = 0; i < this.components.size(); i++) {
                 GButtonOption option = (GButtonOption) this.components.get(i);
                 
                 if (option.parent() == null) {
-                    option.pos((float)diffPosX, this.pos().y + 20);
+                    option.pos(offsetX, (int)this.pos().y + 20);
                 } else {
                     option.pos(offsetX, 20);
                 }
@@ -107,9 +111,6 @@ public class HorizontalGMenu extends GMenu {
             // So we prevent the color selection by restarting
             // current option marked as hovered
             if (!optSelected) setColorOption(-1);
-            
-            manager().popStyle();
-            manager().popMatrix();
         }
     }
 }

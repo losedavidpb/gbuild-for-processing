@@ -1,9 +1,12 @@
 package gbuild.button;
 
 import gbuild.GComponent;
+import gbuild.event.ClickAtGEvent;
+import gbuild.event.HoverGEvent;
+import processing.core.PApplet;
+
 import static gbuild.GPanel.PANEL_DIM_X;
 import static gbuild.GPanel.PANEL_DIM_Y;
-import processing.core.PApplet;
 
 /**
  * <p>
@@ -29,8 +32,8 @@ public class GButtonClose extends GButton {
     public GButtonClose(PApplet manager, GComponent parent) {
         super(manager, parent);
         super.setHoverColor(226, 19, 19);
-        super.content.setStrokeTransparent(true);
-        super.setTransparent(true);
+        super.setStrokeOpaque(false);
+        super.setOpaque(false);
         super.content.dim(PANEL_DIM_X, PANEL_DIM_Y);
         this.content.clear();
     }
@@ -54,17 +57,9 @@ public class GButtonClose extends GButton {
     @Override
     public void draw() {
         if (isVisible()) {
-            this.setTransparent(true);
-            this.setSelected(false);
-            
-            if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
-                if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
-                    this.setTransparent(false);
-                    this.setBackgroundColor(super.hoverColor);
-                    this.setSelected(true);
-                }
-            }
-            
+            this.listenEvents();
+            this.updateButton();
+
             this.content.draw();
             int offset = 3;
             
@@ -77,7 +72,7 @@ public class GButtonClose extends GButton {
             manager().line(offset, offset, this.content.dim().x - offset, this.content.dim().y - offset);
             manager().line(offset, this.content.dim().y - offset, this.content.dim().x - offset, offset);
             
-            if (!this.isTransparent()) {
+            if (this.isHover()) {
                 float[] c = super.hoverColor.color();
                 
                 manager().strokeWeight(3);
@@ -91,5 +86,24 @@ public class GButtonClose extends GButton {
             manager().popStyle();
             manager().popMatrix();
         }
+    }
+
+    @Override
+    public void updateButton() {
+        super.setOpaque(false);
+        super.setBackgroundColor(super.rawColor);
+        super.setHover(false);
+        super.setSelected(false);
+        
+        HoverGEvent event1 = (HoverGEvent)this.getEvent(0);
+        ClickAtGEvent event2 = (ClickAtGEvent)this.getEvent(1);
+        
+        if (event1.isHover()) {
+            super.setOpaque(true);
+            super.setBackgroundColor(super.hoverColor);
+            super.setHover(true);
+        }
+        
+        super.setSelected(event2.isClicked());
     }
 }

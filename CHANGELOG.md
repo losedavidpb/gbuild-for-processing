@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2022-03-28
+
+### Added
+
+- Include utility to get float value of a color
+- Colors could be customized to have a fixed range
+- Provide constants for default customization of a color
+- Include font properties for text components
+- Utilities to define events associated to components
+- Include constants for text components
+- Buttons would provide information to know if it's been selected or hovered
+- Provide a method that updats components of a button if it's been hovered
+- Buttons with options has an event to check if key has been typed
+- Constants that defines properties for dialogs
+- Movement for dialogs has been implemented with events
+- Sliders that can be located vertically or horizontally
+
+### Changed
+
+- Change all constructors for colors to include direct declarations
+- Replace transparent property to opaque for all components
+- Update documentation for all components based on changes
+- Components of a colors could be changed if they are at a fixed range
+- Visual effects such as dragging, move, or hover effect are implemented with events
+- Change method's names related to text component for buttons with text
+
+### Fixed
+
+- Fix error message format
+- Fix external style customization for components
+- Fix fill and stroke operations at panels
+- Fix opaque property to truly incorporate to components
+- Fix locations for buttons at menus
+- Fix examples to be compatible with current version
+
+### Removed
+
+- Remove package info for now
+- Remove prop method at all components
+
 ## [4.0.2] - 2022-03-25
 
 ### Changed

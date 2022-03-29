@@ -7,20 +7,14 @@ import processing.core.PVector;
 
 /**
  * <p>
- * Component defined with a text
+ * Component for texts
  * </p>
  * 
  * <p>
- * Processing language evironment does not include an explicit data
- * type for texts, but it offers lots of functions that allows to
- * define properties for texts that will be drawn. This class was
- * designed in order to incorporate texts as a component that can
- * be modified with the equivalent Processing functions
- * </p>
- * 
- * <p>
- * This release does include the possibility to define the font for
- * texts, but this will be implemented for future revisions.
+ * Processing includes utilities to draw customized text, but
+ * does not consider it as a data type. To solve this, gBuild
+ * provides this class as the implementation of a text component
+ * that has a font, sixe, aligment, and so on.
  * </p>
  * 
  * <p>
@@ -36,6 +30,11 @@ public class GText extends GComponent {
     private PFont fontValue;
     private String value;
     
+    /**
+     * Default value for text string
+     */
+    public static final String TEXT_VALUE = "Hello, world!";
+
     /**
      * Default value for text size
      */
@@ -65,7 +64,7 @@ public class GText extends GComponent {
      */
     public GText(PApplet manager, GComponent parent) {
         super(manager, parent);
-        this.value = "Default";
+        this.value = TEXT_VALUE;
         this.textColor = TEXT_COLOR;
         this.tsize = TEXT_SIZE;
         this.tmode = TEXT_MODE;
@@ -81,104 +80,11 @@ public class GText extends GComponent {
     public GText(PApplet manager) {
         this(manager, null);
     }
-  
-    @Override
-    public void draw() {
-        if (this.isVisible()) {
-            manager().pushMatrix();
-            manager().pushStyle();
-            manager().translate(this.pos().x, this.pos().y);
-            manager().textAlign(this.talign);
-            manager().textMode(this.tmode);
-            manager().textSize(this.tsize);
-            textColor.applyFillColor(manager());
-            manager().text(this.value, 0, 0);
-            manager().popStyle();
-            manager().popMatrix();
-        }
-    }
-    
-    @Override
-    public Object prop(String name) {
-        switch ((String)name) {
-            case "mode": return this.mode();
-            case "align": return this.align();
-            case "size": return this.size();
-            case "value": return this.value();
-            case "color": return this.textColor.clone();
-            case "font": return this.fontValue;
-        }
-        
-        return super.prop(name);
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "mode":
-                    if (value instanceof Integer) {
-                        return this.setMode((Integer)value);
-                    }
-                break;
 
-                case "align":
-                    if (value instanceof Integer) {
-                        return this.setAlign((Integer)value);
-                    }
-                break;
-
-                case "size":
-                    if (value instanceof Integer) {
-                        this.setSize((Integer)value);
-                        return true;
-                    }
-                break;
-
-                case "value":
-                    if (value instanceof String) {
-                        this.setText((String)value);
-                        return true;
-                    }
-                break;
-                
-                case "color":
-                    if (value instanceof GColor) {
-                        this.setColor((GColor)value);
-                        return true;
-                    }
-                break;
-                
-                case "font":
-                    if (value instanceof PFont) {
-                        this.setFont((PFont)value);
-                        return true;
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
-    }
-    
-    // Deprecated
-    
-    @Deprecated
-    @Override
-    public PVector dim() {
-        manager().pushMatrix();
-        manager().textSize(tsize);
-        float dimx = manager().textWidth(value());
-        float dimy = manager().textAscent() + manager().textDescent();
-        manager().popMatrix();
-        return new PVector(dimx, dimy);
-    }
-    
     /**
      * Get the text that will be drawn
      * 
      * @return text string
-     * @deprecated
      */
     public String value() {
         return this.value;
@@ -197,7 +103,6 @@ public class GText extends GComponent {
      * </p>
      * 
      * @return text size
-     * @deprecated
      */
     public int size() {
         return this.tsize;
@@ -212,7 +117,6 @@ public class GText extends GComponent {
      * </p>
      * 
      * @return text alignment
-     * @deprecated
      */
     public int align() {
         return this.talign;
@@ -228,17 +132,15 @@ public class GText extends GComponent {
      * 
      * @return text mode
      * @see GText#setMode(int)
-     * @deprecated
      */
     public int mode() {
         return this.tmode;
     }
-    
+
     /**
-     * Get the RGB components for text component
+     * Get the components for text component
      * 
-     * @return RGB components
-     * @deprecated
+     * @return components
      */
     public float[] color() {
         return this.textColor.clone().color();
@@ -248,19 +150,16 @@ public class GText extends GComponent {
      * Get the font value for text component
      * 
      * @return font value
-     * @deprecated
      */
     public PFont font() {
         return this.fontValue;
     }
-    
+
     /**
      * Set the background color for text
      * 
-     * @param color red, green, and blue component
-     * @see GColor#setColor(java.lang.Float...)
+     * @param color components
      * @see GColor#setColor(java.lang.Integer...)
-     * @deprecated
      */
     public void setColor(GColor color) {
         this.textColor = new GColor(0, 0, 0);
@@ -270,21 +169,8 @@ public class GText extends GComponent {
     /**
      * Set the background color for text
      * 
-     * @param component red, green, and blue component
-     * @see GColor#setColor(java.lang.Float...)
-     * @deprecated
-     */
-    public void setColor(Float ... component) {
-        this.textColor = new GColor(0, 0, 0);
-        this.textColor.setColor(component);
-    }
-    
-    /**
-     * Set the background color for text
-     * 
-     * @param component red, green, and blue component
+     * @param component components
      * @see GColor#setColor(java.lang.Integer...)
-     * @deprecated
      */
     public void setColor(Integer ... component) {
         this.textColor = new GColor(0, 0, 0);
@@ -295,7 +181,6 @@ public class GText extends GComponent {
      * Specify the text that will be drawn
      * 
      * @param value text string
-     * @deprecated
      */
     public void setText(String value) {
         this.value = value;
@@ -314,7 +199,6 @@ public class GText extends GComponent {
      * </p>
      * 
      * @param tsize text size
-     * @deprecated
      */
     public void setSize(int tsize) {
         this.tsize = tsize;
@@ -334,13 +218,17 @@ public class GText extends GComponent {
      * </p>
      * 
      * @param talign text alignment
-     * @return if alignment was changed
-     * @deprecated
      */
-    public boolean setAlign(int talign) {
-        boolean cond = talign == PConstants.LEFT || talign == PConstants.RIGHT || talign == PConstants.CENTER;
-        if (cond == true) this.talign = talign;
-        return cond;
+    public void setAlign(int talign) {
+        boolean cond = talign == PConstants.LEFT || talign == PConstants.RIGHT;
+        cond = cond || talign == PConstants.CENTER;
+        
+        if (!cond) {
+            PApplet.println("error GText.setAlign: invalid text aligment");
+            System.exit(1);
+        }
+
+        this.talign = talign;
     }
     
     /**
@@ -355,22 +243,53 @@ public class GText extends GComponent {
      * </p>
      * 
      * @param tmode text mode
-     * @return if mode was changed
-     * @deprecated
      */
-    public boolean setMode(int tmode) {
+    public void setMode(int tmode) {
         boolean cond = tmode == PConstants.MODEL || tmode == PConstants.SHAPE;
-        if (cond == true) this.tmode = tmode;
-        return cond;
+        
+        if (!cond) {
+            PApplet.println("error GText.setMode: invalid text mode");
+            System.exit(1);
+        }
+
+        this.tmode = tmode;
     }
     
     /**
      * Set font value for text component
      * 
      * @param font font value
-     * @deprecated
      */
     public void setFont(PFont font) {
         this.fontValue = font;
+    }
+
+    @Deprecated
+    @Override
+    public PVector dim() {
+        manager().pushMatrix();
+        manager().textSize(tsize);
+        float dimx = manager().textWidth(value());
+        float dimy = manager().textAscent() + manager().textDescent();
+        manager().popMatrix();
+        return new PVector(dimx, dimy);
+    }
+  
+    @Override
+    public void draw() {
+        if (this.isVisible()) {
+            this.listenEvents();
+            
+            manager().pushMatrix();
+            manager().pushStyle();
+            manager().translate(this.pos().x, this.pos().y);
+            manager().textAlign(this.talign);
+            manager().textMode(this.tmode);
+            manager().textSize(this.tsize);
+            textColor.applyFillColor(manager());
+            manager().text(this.value, 0, 0);
+            manager().popStyle();
+            manager().popMatrix();
+        }
     }
 }

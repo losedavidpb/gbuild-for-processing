@@ -5,20 +5,14 @@ import processing.core.PImage;
 
 /**
  * <p>
- * Data type defined by an PImage.
+ * Component type for images
  * </p>
  * 
  * <p>
- * Processing language environment manages images using PImage
- * data type, and can be customized with other primitives. This
- * class is the equivalent implementation of this type of figure,
- * and is defined with a path, location, and dimension
- * </p>
- * 
- * <p>
- * On this release, this class does not allow to modify the appearance
- * of a PImage with other primitives, unless you manually use Processing
- * functions. In future versions, we will include more features
+ * Processing language environment manages images using PImage data
+ * type, which can be customized using other utilities. This class
+ * was designed to be the equivalent implementation of a PImage,
+ * but incorporating easy customization
  * </p>
  * 
  * <p>
@@ -29,9 +23,9 @@ import processing.core.PImage;
  * @author David Parreño Barbuzano
  */
 public class GImage extends GComponent {
-    private PImage image = null;
-    private GColor tintColor = null;
-    private boolean tintMode = false;
+    private PImage image;
+    private GColor tintColor;
+    private boolean tintMode;
     
     /** 
      * Create a new instance of an image.
@@ -42,6 +36,9 @@ public class GImage extends GComponent {
      */
     public GImage(PApplet manager, GComponent parent) {
         super(manager, parent);
+        this.image = new PImage();
+        this.tintColor = new GColor();
+        this.tintMode = false;
     }
     
     /** 
@@ -53,66 +50,16 @@ public class GImage extends GComponent {
     public GImage(PApplet manager) {
         this(manager, null);
     }
-  
-    @Override
-    public void draw() {
-        if (this.isVisible()) {
-            manager().pushStyle();
-            this.tintColor.applyTintColor(manager());
-            
-            if (this.image != null) {
-                manager().image(this.image,
-                    super.pos().x, super.pos().y,
-                    super.dim().x, super.dim().y
-                );
-            }
-            
-            manager().popStyle();
-        }
-    }
-    
-    @Override
-    public Object prop(String name) {
-        switch(name) {
-            case "tintMode": return this.isTintMode();
-            case "tintColor": return this.tintColor();
-            case "image": return this.image;
-        }
-        
-        return super.prop(name);
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch((String)name) {
-                case "image":
-                    if (value instanceof String) {
-                        return this.setImage((String)value);
-                    }
-                break;
 
-                case "tintMode":
-                    if (value instanceof Boolean) {
-                        this.setTintMode((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "tintColor":
-                    if (value instanceof GColor) {
-                        this.setTint((GColor)value);
-                        return this.isTintMode();
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
+    /**
+     * Get the pixels for current image
+     * 
+     * @return integer pixels
+     */
+    public int[] pixels() {
+        return this.image.pixels;
     }
-    
-    // Deprecated
-    
+
     /**
      * Get state for tint mode
      * 
@@ -123,15 +70,6 @@ public class GImage extends GComponent {
     }
     
     /**
-     * Get tint color for current image
-     * 
-     * @return color value
-     */
-    public GColor tintColor() {
-        return this.tintColor.clone();
-    }
-    
-    /**
      * Set if tint would be applied to current image
      * 
      * @param tintMode tint state
@@ -139,59 +77,43 @@ public class GImage extends GComponent {
     public void setTintMode(boolean tintMode) {
         this.tintMode = tintMode;
     }
-    
+
+    /**
+     * Get tint color for current image
+     * 
+     * @return color value
+     * @deprecated will be deleted for future revisions
+     */
+    public GColor tintColor() {
+        return this.tintColor.clone();
+    }
+
     /**
      * Set a tint value for each RGB component
-     * 
-     * <p>
-     * Tint color would be changed whether its mode
-     * is available, so set tint mode to true before
-     * calling this method
-     * </p>
      * 
      * @param color tint value
      */
     public void setTint(GColor color) {
-        if (this.tintMode) {
-            this.tintColor = new GColor(0, 0, 0);
-            this.tintColor.setColor(color);
-        }
+        this.tintColor.setColor(color);
     }
     
     /**
      * Set a tint value for each RGB component
      * 
-     * <p>
-     * Tint color would be changed whether its mode
-     * is available, so set tint mode to true before
-     * calling this method
-     * </p>
-     * 
      * @param component red, green, and blue float component
-     */
-    public void setTint(Float ... component) {
-        if (this.tintMode) {
-            this.tintColor = new GColor(component);
-        }
-    }
-    
-    /**
-     * Set a tint value for each RGB component
-     * 
-     * <p>
-     * Tint color would be changed whether its mode
-     * is available, so set tint mode to true before
-     * calling this method
-     * </p>
-     * 
-     * @param component red, green, and blue float component
+     * @deprecated will be deleted for future revisions
      */
     public void setTint(Integer ... component) {
-        if (this.tintMode) {
-            this.tintColor = new GColor(component);
-        }
+        this.tintColor = new GColor(component);
     }
-    
+
+    /**
+     * Create a new image
+     */
+    public void createImage() {
+        this.image = new PImage();
+    }
+
     /**
      * Specify a new image located at a different path
      * 
@@ -202,12 +124,30 @@ public class GImage extends GComponent {
      * </p>
      * 
      * @param path local or external path
-     * @return if image was loaded
-     * @deprecated will be deleted for future revisions
      */
-    public boolean setImage(String path) {
-        boolean cond = path != null;
-        if (cond) this.image = manager().loadImage(path);
-        return cond;
+    public void setImage(String path) {
+        if (path == null) {
+            PApplet.println("error GImage.setImage: path cannot be null");
+            System.exit(1);
+        }
+        
+        this.image = manager().loadImage(path);
+    }
+
+    @Override
+    public void draw() {
+        if (this.isVisible()) {
+            this.listenEvents();
+            
+            manager().pushStyle();
+            this.tintColor.applyTintColor(manager());
+            
+            manager().image(this.image,
+                super.pos().x, super.pos().y,
+                super.dim().x, super.dim().y
+            );
+            
+            manager().popStyle();
+        }
     }
 }

@@ -1,37 +1,54 @@
 package gbuild;
 
 import gbuild.dialog.GDialog;
+import gbuild.event.GEvent;
+import java.util.ArrayList;
+import java.util.List;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 /**
  * <p>
- * General definition of a gBuild UI component
+ * Definition of a UI component
  * </p>
  * 
  * <p>
- * Since Processing figures are drawn at a specific location
- * and dimension, this class considers a component as the set of
- * 2D/3D primitives or figures located at a position, with an anchor
- * and length, that can be visible or hided for user.
+ * Processing draws figures at a specific screen location and size.
+ * Considering this, gBuild defines a component as a set of 2D/3D
+ * primitives and Processing shapes that are located at a point of
+ * the screen and has an anchor and length.
  * </p>
  * 
  * <p>
- * Location is defined as a (x, y) position which depends on the parent
- * of the component. This means that the position would always be relative
- * to the parent, so (x, y) location is equal to (x_p + x_c, y_p + y_c),
- * where (x_p, y_p) is the parent's position and (x_c, y_c) is the initial
- * position of the component.
+ * Relative to drawing, gBuild includes for each component a visible
+ * property that specifies if that instance would be shown at the
+ * screen. It is important to understand that all components must
+ * check this property before starting the drawing phase.
+ * </p>
+ * 
+ * <p>
+ * Talking about location, gBuild situates a component considering
+ * the parent of that element. This means that the location of a
+ * component could be defined absolute or relative to its parent.
+ * </p>
+ * 
+ * <p>
+ * Since 4.1.0 release, gBuild includes event's features to manage
+ * I/O interactions at graphical components. In other words, an UI
+ * component could add events that would be listened whether draw
+ * function is executed and the component is visible.
  * </p>
  * 
  * @author David Parreño Barbuzano
+ * @since 4.1.0
  */
 public abstract class GComponent {
     private final PApplet manager;
     private final GComponent parent;
+    private final List<GEvent> events;
     private final PVector pos, dim;
     private boolean isVisible;
-    
+
     /**
      * Create a new gBuild component
      * 
@@ -50,11 +67,7 @@ public abstract class GComponent {
      * @param manager Processing manager
      */
     public GComponent(PApplet manager) {
-        this.manager = manager;
-        this.parent = null;
-        this.isVisible = true;
-        this.pos = new PVector(0, 0);
-        this.dim = new PVector(0, 0);
+        this(manager, null);
     }
     
     /**
@@ -76,6 +89,7 @@ public abstract class GComponent {
         this.isVisible = true;
         this.pos = new PVector(0, 0);
         this.dim = new PVector(0, 0);
+        this.events = new ArrayList<>();
     }
     
     /**
@@ -103,126 +117,52 @@ public abstract class GComponent {
     public GComponent parent() {
         return this.parent;
     }
-
-    /**
-     * Draw component on the screen
-     * 
-     * <p>
-     * This method would drawn the component taking into
-     * account all the customization done before.
-     * </p>
-     * 
-     * <p>
-     * It is important to notice that component would not
-     * be drawn if visible state is not true.
-     * </p>
-     * 
-     * @see GComponent#isVisible()
-     */
-    public abstract void draw();
     
     /**
-     * Set value to passed property.
+     * Add a new event for this component
      * 
-     * <p>
-     * If a component has more properties defined, it is
-     * necessary to override this method including them.
-     * </p>
-     * 
-     * @param params tuples (name, value) where name is
-     *               the property's name and value the
-     *               new definition for the property
+     * @param event event instance
      */
-    public void prop(Object ... params) {
-        for (int i = 0; i < params.length - 1; i += 2)
-            this.prop(params[i], params[i + 1]);
+    public void addEvent(GEvent event) {
+        this.events.add(event);
     }
     
     /**
-     * Get the value of passed property
+     * Get event located at passed index
      * 
-     * @param name property's name
-     * @return property's value
+     * @param index index associated to an event
+     * @return event associated to index
      */
-    public Object prop(String name) {
-        switch(name) {
-            case "isVisible": return this.isVisible();
-            case "xp": return this.pos().x;
-            case "yp": return this.pos().y;
-            case "x": return this.pos(true).x;
-            case "y": return this.pos(true).y;
-            case "w": return this.dim().x;
-            case "h": return this.dim().y;
-            default: return null;
-        }
-    }
-    
-    /**
-     * Set a new value to passed property
-     * 
-     * @param name property's name
-     * @param value property's value
-     * @return specifies if property was changed
-     */
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch((String)name) {
-                case "x":
-                    if (value instanceof Float) {
-                        this.pos((Float)value);
-                        return true;
-                    } else if (value instanceof Integer) {
-                        this.pos((Integer)value);
-                        return true;
-                    }
-                break;
-
-                case "y":
-                    if (value instanceof Float) {
-                        this.pos(null, (Float)value);
-                        return true;
-                    } else if (value instanceof Integer) {
-                        this.pos(null, (Integer)value);
-                        return true;
-                    }
-                break;
-
-                case "w":
-                    if (value instanceof Float) {
-                        this.dim((Float)value);
-                        return true;
-                    } else if (value instanceof Integer) {
-                        this.dim((Integer)value);
-                        return true;
-                    }
-                break;
-
-                case "h":
-                    if (value instanceof Float) {
-                        this.dim(null, (Float)value);
-                        return true;
-                    } else if (value instanceof Integer) {
-                        this.dim(null, (Integer)value);
-                        return true;
-                    }
-                break;
-                
-                case "isVisible":
-                    if (value instanceof Boolean) {
-                        this.isVisible = (Boolean)value;
-                        return true;
-                    }
-                break;
-            }
+    public GEvent getEvent(int index) {
+        if (!(index >= 0 && index <= this.events.size() - 1)) {
+            PApplet.println("error: index for event is not valid");
+            System.exit(1);
         }
         
-        return false;
+        return this.events.get(index);
+    }
+
+    /**
+     * Clear all events for current component
+     */
+    public void clearEvents() {
+        this.events.clear();
     }
     
-    // ----------------------------------------------------
-    // Deprecated
-    // ----------------------------------------------------
-    
+    /**
+     * Execute events associated to this component
+     * 
+     * <p>
+     * This function would be called when the component
+     * is visible and drawing phase is executed. However,
+     * it is possible to listen graphical events at any
+     * time if it is necessary
+     * </p>
+     */
+    public void listenEvents() {
+        this.events.forEach(e -> e.execute());
+    }
+
     /**
      * Return the location for component.
      * 
@@ -241,7 +181,6 @@ public abstract class GComponent {
      * @return a new instance for position
      * @see GComponent#pos(java.lang.Float...)
      * @see GComponent#pos(java.lang.Integer...)
-     * @deprecated
      */
     public PVector pos() {
         if (parent == null)
@@ -273,7 +212,6 @@ public abstract class GComponent {
      * @param noParent check if parent would be considered
      * @return a new instance for position
      * @see GComponent#pos()
-     * @deprecated
      */
     public PVector pos(boolean noParent) {
         return !noParent? pos() : new PVector(this.pos.x, this.pos.y);
@@ -289,7 +227,6 @@ public abstract class GComponent {
      * </p>
      * 
      * @return a new instance for dimension
-     * @deprecated 
      */
     public PVector dim() {
         return new PVector(
@@ -307,7 +244,6 @@ public abstract class GComponent {
      * </p>
      * 
      * @return visible state
-     * @deprecated 
      */
     public boolean isVisible() {
         return this.isVisible;
@@ -323,7 +259,6 @@ public abstract class GComponent {
      * </p>
      * 
      * @param isVisible visible state
-     * @deprecated 
      */
     public void setVisible(boolean isVisible) {
         this.isVisible = isVisible;
@@ -343,7 +278,6 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param coords integer coordinates (x, y)
-     * @deprecated
      */
     public void pos(Integer ... coords) {
         if (coords.length >= 1 && coords.length <= 2) {
@@ -375,8 +309,7 @@ public abstract class GComponent {
      *      <li>pos(null, y) when y will be set</li>
      *  </ol>
      * 
-     * @param coords float coordinates (x, y)
-     * @deprecated
+     * @param coords coordinates (x, y)
      */
     public void pos(Float ... coords) {
         if (coords.length >= 1 && coords.length <= 2) {
@@ -394,7 +327,7 @@ public abstract class GComponent {
             }
         }
     }
-
+    
     /**
      * Specify the dimension for component.
      * 
@@ -409,7 +342,6 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param dimensions integer dimensions (w, h)
-     * @deprecated
      */
     public void dim(Integer ... dimensions) {
         if (dimensions.length >= 1 && dimensions.length <= 2) {
@@ -427,7 +359,7 @@ public abstract class GComponent {
             }
         }
     }
-
+    
     /**
      * Specify the dimension for component.
      * 
@@ -442,7 +374,6 @@ public abstract class GComponent {
      *  </ol>
      * 
      * @param dimensions float dimensions (w, h)
-     * @deprecated
      */
     public void dim(Float ... dimensions) {
         if (dimensions.length >= 1 && dimensions.length <= 2) {
@@ -460,4 +391,22 @@ public abstract class GComponent {
             }
         }
     }
+
+
+    /**
+     * Draw component on the screen
+     * 
+     * <p>
+     * This method would draw the component taking into
+     * account all the customization done before.
+     * </p>
+     * 
+     * <p>
+     * It is important to notice that component would not
+     * be drawn if visible state is not true.
+     * </p>
+     * 
+     * @see GComponent#isVisible()
+     */
+    public abstract void draw();
 }

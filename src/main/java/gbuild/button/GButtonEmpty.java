@@ -1,9 +1,12 @@
 package gbuild.button;
 
 import gbuild.GComponent;
+import gbuild.event.ClickAtGEvent;
+import gbuild.event.HoverGEvent;
+import processing.core.PApplet;
+
 import static gbuild.GPanel.PANEL_DIM_X;
 import static gbuild.GPanel.PANEL_DIM_Y;
-import processing.core.PApplet;
 
 /**
  * <p>
@@ -47,17 +50,25 @@ public class GButtonEmpty extends GButton {
     @Override
     public void draw() {
         if (isVisible()) {
-            content.setColor(super.rawColor);
-            this.setSelected(false);
-            
-            if (manager().mouseX >= pos().x && manager().mouseX <= pos().x + dim().x) {
-                if (manager().mouseY >= pos().y && manager().mouseY <= pos().y + dim().y) {
-                    content.setColor(super.hoverColor);
-                    this.setSelected(true);
-                }
-            }
-            
+            this.listenEvents();
+            this.updateButton();
             this.content.draw();
         }
+    }
+
+    @Override
+    public void updateButton() {
+        content.setColor(super.rawColor);
+        this.setHover(false);
+        
+        HoverGEvent event1 = (HoverGEvent)this.getEvent(0);
+        ClickAtGEvent event2 = (ClickAtGEvent)this.getEvent(1);
+        
+        if (event1.isHover()) {
+            content.setColor(super.hoverColor);
+            this.setHover(true);
+        }
+        
+        this.setSelected(event2.isClicked());
     }
 }

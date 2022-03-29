@@ -7,16 +7,15 @@
 import gbuild.*;
 import gbuild.dialog.*;
 
-GDialog dialog;
+GDialogWithText dialog;
 
 void setup() {
   size(800, 800, P2D);
   
   dialog = new GDialogWithText(this);
-  
-  dialog.prop("title", "Title for Dialog");
-  dialog.prop("message", "This is an example");
-  dialog.prop("isVisible", true);
+  dialog.setTitle("Title for Dialog");
+  dialog.setMessage("This is an example");
+  dialog.setVisible(true);
 }
 
 void draw() {

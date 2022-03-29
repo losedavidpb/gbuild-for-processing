@@ -6,9 +6,9 @@ import gbuild.GPanel;
 import gbuild.GText;
 import gbuild.button.GButton;
 import gbuild.button.GButtonClose;
+import gbuild.event.DragGEvent;
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.core.PVector;
 
 /**
  * <p>
@@ -38,10 +38,9 @@ import processing.core.PVector;
  * @author David Parreño Barbuzano
  */
 public class GDialog extends GComponent {
-    private PVector firstMousePoint, lastMousePoint;
-    private boolean isClosed, isMovable, isMoving;
-    private String title;
+    private boolean isClosed, isMovable;
     private final GPanel top, bottom;
+    private String title;
     
     /**
      * Space between text stored at a dialog with text
@@ -66,154 +65,24 @@ public class GDialog extends GComponent {
         super.setVisible(false);
         this.isClosed = false;
         this.isMovable = true;
-        this.isMoving = false;
         
         this.top = new GPanel(manager);
+        this.top.setOpaque(true);
+        this.top.addEvent(new DragGEvent(this.top));
         
         this.bottom = new GPanel(manager, this.top);
+        this.bottom.setOpaque(true);
         this.bottom.setColor(255, 255, 255);
-        this.bottom.setTransparent(false);
-        this.bottom.setStrokeTransparent(true);
-    }
-
-    /**
-     * Move the dialog when user is dragging the mouse
-     * pointer on it whether can be moved
-     * 
-     * <p>
-     * This method would not move the dialog whether the component
-     * is not visible, user is not dragging the mouse on it, dialog
-     * is closed, or it is not movable.
-     * </p>
-     * 
-     * @see GDialog#isClosed() 
-     * @see GDialog#isClosed()
-     * @see GDialog#isVisible() 
-     */
-    public void move() {
-        if (this.isMovable()) {
-            // Check if user want's to move current dialog
-            if (this.isVisible() && !manager().mousePressed) {
-                if (this.isMoving) {
-                  this.top.pos(this.lastMousePoint.x, this.lastMousePoint.y);
-                }
-
-                this.firstMousePoint = null;
-                this.lastMousePoint = null;
-                this.isMoving = false;
-            }
-
-            // Check if user is pressing a mouse button
-            else if (this.isVisible() && manager().mousePressed) {
-                // Check if dialog is not moving
-                if (!this.isMoving) {
-                    // First position pressed must be on dialog
-                    if (manager().mouseX >= this.top.pos().x && manager().mouseX <= this.top.pos().x + this.top.dim().x) {
-                        if (manager().mouseY >= this.top.pos().y && manager().mouseY <= this.top.pos().y + this.top.dim().y) {
-                            this.firstMousePoint = new PVector(manager().mouseX, manager().mouseY);
-                            this.lastMousePoint = new PVector(manager().mouseX, manager().mouseY);
-                            this.isMoving = true;
-                        }
-                    }
-                } else {
-                    float px = manager().mouseX - this.firstMousePoint.x, py = manager().mouseY - this.firstMousePoint.y;
-                    this.lastMousePoint = new PVector(this.top.pos().x + px, this.top.pos().y + py);
-                    manager().translate(px, py);
-                }
-            }
-        }
+        this.bottom.setStrokeOpaque(true);
     }
     
-    @Override
-    public void draw() {
-        this.bottom.pos(0, (int)this.top.dim().y);
-        
-        if (this.bottom.dim().x > this.top.dim().x)
-            this.top.dim(this.bottom.dim().x);
-        else
-            this.bottom.dim(this.top.dim().x);
-        
-        ((GButtonClose)this.top.get(1)).pos(this.bottom.dim().x - 30);
-        
-        if (this.isVisible()) {
-            newDialog = true;
-            
-            manager().pushMatrix();
-            this.move();
-            this.top.draw();
-            this.bottom.draw();
-            
-            manager().popMatrix();
-        } else newDialog = false;
-    }
-    
-    @Override
-    public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "closeButtonIsSelected": return this.closeButtonIsSelected();
-                case "isMovable": return this.isMovable;
-                case "isClosed": return this.isClosed();
-                case "bottom": return this.bottom();
-                case "title": return this.title;
-            }
-        }
-        
-        return propertyValue;
-    }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        if (name instanceof String) {
-            switch ((String)name) {
-                case "isClosed":
-                    if (value instanceof Boolean) {
-                        this.setClosed((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "isMovable":
-                    if (value instanceof Boolean) {
-                        this.setMovable((Boolean)value);
-                        return true;
-                    }
-                break;
-
-                case "title":
-                    if (value instanceof String) {
-                        this.setTitle((String)value);
-                        return true;
-                    }
-                break;
-            }
-        }
-        
-        return super.prop(name, value);
-    }
-    
-    // Deprecated
-    
-    @Deprecated        
     @Override
     public void pos(Integer ... coords) {
         this.top.pos(coords);
         this.bottom.pos(0, (int)this.top.dim().y);
         
-        super.pos(this.top.pos().x, this.top.pos().y);
-        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
-    }
-    
-    @Deprecated
-    @Override
-    public void pos(Float ... coords) {
-        this.top.pos(coords);
-        this.bottom.pos(0, (int)this.top.dim().y);
-        
-        super.pos(this.top.pos().x, this.top.pos().y);
-        super.dim(this.top.dim().x, this.top.dim().y + this.bottom.dim().y);
+        super.pos((int)this.top.pos().x, (int)this.top.pos().y);
+        super.dim((int)this.top.dim().x, (int)this.top.dim().y + (int)this.bottom.dim().y);
     }
     
     /**
@@ -225,15 +94,14 @@ public class GDialog extends GComponent {
      * </p>
      * 
      * @param title title for dialog
-     * @deprecated
      */
     public final void setTitle(String title) {
         this.title = title;
         
         this.top.clear();
         this.top.pos(manager().width / 2, 50);
-        this.top.setStrokeTransparent(true);
-        this.top.setTransparent(false);
+        this.top.setStrokeOpaque(false);
+        this.top.setOpaque(true);
         this.top.setColor(90, 155, 217);
         
         GText textValue = new GText(manager(), this.top);
@@ -247,29 +115,20 @@ public class GDialog extends GComponent {
         this.top.add(textValue);
         
         GButtonClose closeButton = new GButtonClose(manager(), this.top);
-        closeButton.pos(10 + textValue.dim().x + 10, textValue.dim().y - 20);
+        closeButton.setOpaque(false);
+        closeButton.pos(10 + (int)textValue.dim().x + 10, (int)textValue.dim().y - 20);
         closeButton.dim(20, 20);
         
-        closeButton.setBackgroundColor((GColor)closeButton.prop("rawColor"));
+        closeButton.setBackgroundColor((GColor)closeButton.rawColor());
         
         this.top.add(closeButton);
         
-        this.top.dim(this.top.dim().x + 10);
-        super.pos(this.top.pos().x, this.top.pos().y);
-        super.dim(this.top.dim().x, this.top.dim().y);
+        this.top.dim((int)this.top.dim().x + 10);
+        super.pos((int)this.top.pos().x, (int)this.top.pos().y);
+        super.dim((int)this.top.dim().x, (int)this.top.dim().y);
         
         this.bottom.pos(0, (int)this.top.dim().y);
-        this.bottom.dim(this.top.dim().x, this.top.dim().y);
-    }
-    
-    /**
-     * Return if close button is been hovering
-     * 
-     * @return state selected
-     * @deprecated
-     */
-    public boolean closeButtonIsSelected() {
-        return ((GButton)this.top.get(1)).isSelected();
+        this.bottom.dim((int)this.top.dim().x, (int)this.top.dim().y);
     }
     
     /**
@@ -291,28 +150,21 @@ public class GDialog extends GComponent {
      * </p>
      * 
      * @return bottom content
-     * @deprecated
      */
     public GPanel bottom() {
         return this.bottom;
     }
     
-    @Deprecated
     @Override
     public void setVisible(boolean isVisible) {
         super.setVisible(isVisible);
-    
-        if (!this.isVisible()) {
-            this.isClosed = false;
-            this.isMoving = false;
-        }
+        if (!this.isVisible()) this.isClosed = false;
     }
     
     /**
      * Get if panel is closed
      * 
      * @return closed state
-     * @deprecated
      */
     public boolean isClosed() {
         return this.isClosed;
@@ -322,7 +174,6 @@ public class GDialog extends GComponent {
      * Get if panel can be moved
      * 
      * @return movable state
-     * @deprecated
      */
     public boolean isMovable() {
         return this.isMovable;
@@ -332,19 +183,54 @@ public class GDialog extends GComponent {
      * Specify if dialog is closed
      * 
      * @param isClosed closed state
-     * @deprecated
      */
     public void setClosed(boolean isClosed) {
         this.isClosed = isClosed;
+        
+        if (this.isClosed) {
+            this.setVisible(false);
+            GDialog.newDialog = false;
+        }
     }
     
     /**
      * Specify if dialog can be moved
      * 
      * @param isMovable movable state
-     * @deprecated
      */
     public void setMovable(boolean isMovable) {
+        if (this.isMovable != isMovable)
+            this.top.clearEvents();
+        
         this.isMovable = isMovable;
+        if (isMovable) top.addEvent(new DragGEvent(this.top));
+    }
+    
+    @Override
+    public void draw() {
+        if (!this.isClosed) {
+            if (this.isVisible()) {
+                this.fixSize();
+                ((GButton)this.top.get(1)).pos((int)this.bottom.dim().x - 30);
+            
+                this.listenEvents();
+                this.top.draw();
+                this.bottom.draw();
+                this.setClosed(((GButton)this.top.get(1)).isSelected());
+            }
+        }
+    }
+
+    // -------------------------------
+    // Private methods
+    // -------------------------------
+    
+    private void fixSize() {
+        this.bottom.pos(0, (int)this.top.dim().y);
+        
+        if (this.bottom.dim().x > this.top.dim().x)
+            this.top.dim((int)this.bottom.dim().x);
+        else
+            this.bottom.dim((int)this.top.dim().x);
     }
 }

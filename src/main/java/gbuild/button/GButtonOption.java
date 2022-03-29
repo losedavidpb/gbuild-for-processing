@@ -1,6 +1,7 @@
 package gbuild.button;
 
 import gbuild.GComponent;
+import gbuild.event.KeyTypedGEvent;
 import processing.core.PApplet;
 
 /**
@@ -26,6 +27,7 @@ import processing.core.PApplet;
  */
 public class GButtonOption extends GButtonWithText {
     private char keyValue;
+    private boolean isTyped;
     
     /**
      * Create a new instance of a button
@@ -36,6 +38,8 @@ public class GButtonOption extends GButtonWithText {
      */
     public GButtonOption(PApplet manager, GComponent parent) {
         super(manager, parent);
+        this.isTyped = false;
+        super.addEvent(new KeyTypedGEvent(this));
     }
     
     /**
@@ -48,57 +52,37 @@ public class GButtonOption extends GButtonWithText {
         this(manager, null);
     }
     
-    @Override
-    public Object prop(String name) {
-        Object propertyValue = super.prop(name);
-        
-        if (propertyValue == null) {
-            switch ((String)name) {
-                case "keyValue": return this.keyValue();
-                default: return null;
-            }
-        }
-        
-        return propertyValue;
+    /**
+     * Get if key value has been typed
+     * 
+     * @return if key has been typed
+     */
+    public boolean isTyped() {
+        return this.isTyped;
     }
-    
-    @Override
-    public boolean prop(Object name, Object value) {
-        boolean cond = super.prop(name, value);
-        
-        if (cond == false) {
-            if (name instanceof String) {
-                switch ((String)name) {
-                    case "keyValue":
-                        if (value instanceof Character) {
-                            this.setKeyValue((Character)value);
-                            return true;
-                        }
-                    break;
-                }
-            }
-        }
-        
-        return cond;
-    }
-    
-    // Deprecated
     
     /**
      * Get the key value associated to the option
      * 
      * @return key value
-     * @deprecated
      */
     public char keyValue() {
         return this.keyValue;
     }
     
     /**
+     * Set if key value has been typed
+     * 
+     * @param isTyped key typed state
+     */
+    public void setIsTyped(boolean isTyped) {
+        this.isTyped = isTyped;
+    }
+    
+    /**
      * Set the key value associated to the option
      * 
      * @param keyValue key value
-     * @deprecated
      */
     public void setKeyValue(char keyValue) {
         this.keyValue = keyValue;
