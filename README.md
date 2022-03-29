@@ -33,7 +33,7 @@ You can find some examples of use of this library at the following links:
 The following code is a simple example of gBuild:
 
 ```
-import api.gbuild.component.*;
+import gbuild.*;
 
 GPanel panel;
 
@@ -41,25 +41,18 @@ void setup() {
   size(800, 800, P2D);
 
   panel = new GPanel(this);
-  panel.prop("x", width / 2, "y", height / 2);
+  panel.pos(width / 2, height / 2);
 
   for (int i = 0; i < 100; i++) {
     if (random(-10, 10) >= 0) {
       GText text = new GText(this, panel);
-      text.prop(
-        "value", "Hello", "x", random(0, width),
-        "y", random(0, height)
-      );
-
+      text.setText("value");
+      text.pos(random(0, width), random(0, height));
       panel.add(text);
     } else {
       GImage image = new GImage(this, panel);
-      image.prop(
-        "image", "data/example.png",
-        "x", random(10, 50),
-        "y", random(10, 50)
-      );
-
+      image.setImage("data/example.png");
+      image.pos(ramdom(10, 50), random(10, 50));
       panel.add(image);
     }
   }
