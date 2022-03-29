@@ -29,7 +29,7 @@ You can find some examples of use of this library at the following links:
 - For panels: https://github.com/losedavidpb/gbuild-for-processing/blob/main/examples/panel
 - For dialogs: https://github.com/losedavidpb/gbuild-for-processing/blob/main/examples/dialog
 - For menus: https://github.com/losedavidpb/gbuild-for-processing/blob/main/examples/menu
-
+- For sliders: https://github.com/losedavidpb/gbuild-for-processing/blob/main/examples/slider
 The following code is a simple example of gBuild:
 
 ```
