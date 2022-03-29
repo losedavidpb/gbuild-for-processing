@@ -115,7 +115,7 @@ function _gbcc_javadoc() {
     javadoc -d ./reference -sourcepath ./src/main/java \
         -subpackages gbuild.button gbuild.dialog gbuild.menu gbuild.slider gbuild \
         -classpath ${GBUILD_MAVEN}repository/org/processing/core/3.3.7/core-3.3.7.jar \
-        -docencoding 'UTF-8' -doctitle 'gBuild 4.1.0 API' -quiet 2>/dev/null
+        -docencoding 'UTF-8' -doctitle 'gBuild 5.0.0 API' -quiet 2>/dev/null
 }
 
 # Processing Process.
